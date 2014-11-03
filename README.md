@@ -1,0 +1,4 @@
+wizard
+======
+
+Wizard score card
