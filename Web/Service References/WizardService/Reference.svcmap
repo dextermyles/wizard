@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="45ca4373-75c5-4d2b-8528-a09fa9182a90" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1717/Services/WizardService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="WizardService.xsd" MetadataType="Schema" ID="2ae5f035-e989-47b8-ad71-89690b694ea4" SourceId="1" SourceUrl="http://localhost:1717/Services/WizardService.svc?xsd=xsd0" />
+    <MetadataFile FileName="WizardService1.xsd" MetadataType="Schema" ID="011261a7-dd30-4561-b873-4f804aca2212" SourceId="1" SourceUrl="http://localhost:1717/Services/WizardService.svc?xsd=xsd1" />
+    <MetadataFile FileName="WizardService2.xsd" MetadataType="Schema" ID="bd20c46a-0f0a-493c-8dd3-38086f781187" SourceId="1" SourceUrl="http://localhost:1717/Services/WizardService.svc?xsd=xsd2" />
+    <MetadataFile FileName="WizardService.wsdl" MetadataType="Wsdl" ID="df1ee9f3-7529-4832-815a-d6daab10b96c" SourceId="1" SourceUrl="http://localhost:1717/Services/WizardService.svc?wsdl" />
+    <MetadataFile FileName="WizardService.disco" MetadataType="Disco" ID="cb7ed255-3576-4a58-ba31-2e7cdcd1612f" SourceId="1" SourceUrl="http://localhost:1717/Services/WizardService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -12,13 +12,46 @@ namespace Wizard.Services
     [ServiceContract]
     public interface IWizardService
     {
+        // Business Logic
         [OperationContract]
         Card[] GenerateDeck();
 
+        // Gets
         [OperationContract]
-        Player UpdatePlayer(int playerId, string name, string pictureUrl);
+        Game GetGameById(int gameId);
+
+        [OperationContract]
+        GameHistory GetGameHistoryByGameId(int gameId);
+
+        [OperationContract]
+        GameHistory GetGameHistoryById(int gameHistoryId);
+
+        [OperationContract]
+        HandHistory GetHandHistoryById(int handHistoryId);
+
+        [OperationContract]
+        HandHistory GetLastHandHistoryByGameId(int gameId);
+
+        [OperationContract]
+        Player GetPlayerById(int playerId);
+
+        [OperationContract]
+        Player GetPlayerByName(string name);
+
+        [OperationContract]
+        User GetUserById(int userId);
+
+        // Lists
+        Player[] ListPlayersByUserId(int userId);
+
+        // Updates
+        [OperationContract]
+        Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
 
         [OperationContract]
         Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData);
+
+        [OperationContract]
+        GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);
     }
 }

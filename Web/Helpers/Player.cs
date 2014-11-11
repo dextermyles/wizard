@@ -11,5 +11,6 @@ namespace Wizard.Helpers
         public int PlayerId = 0;
         public string Name = string.Empty;
         public string PictureURL = string.Empty;
+        public int UserId = 0;
     }
 }

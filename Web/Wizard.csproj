@@ -20,6 +20,8 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -88,6 +90,59 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Cards\clubs_10.png" />
+    <Content Include="Assets\Cards\clubs_11.png" />
+    <Content Include="Assets\Cards\clubs_12.png" />
+    <Content Include="Assets\Cards\clubs_13.png" />
+    <Content Include="Assets\Cards\clubs_14.png" />
+    <Content Include="Assets\Cards\clubs_2.png" />
+    <Content Include="Assets\Cards\clubs_3.png" />
+    <Content Include="Assets\Cards\clubs_4.png" />
+    <Content Include="Assets\Cards\clubs_5.png" />
+    <Content Include="Assets\Cards\clubs_6.png" />
+    <Content Include="Assets\Cards\clubs_7.png" />
+    <Content Include="Assets\Cards\clubs_9.png" />
+    <Content Include="Assets\Cards\diamonds_10.png" />
+    <Content Include="Assets\Cards\diamonds_11.png" />
+    <Content Include="Assets\Cards\diamonds_12.png" />
+    <Content Include="Assets\Cards\diamonds_13.png" />
+    <Content Include="Assets\Cards\diamonds_14.png" />
+    <Content Include="Assets\Cards\diamonds_2.png" />
+    <Content Include="Assets\Cards\diamonds_3.png" />
+    <Content Include="Assets\Cards\diamonds_4.png" />
+    <Content Include="Assets\Cards\diamonds_5.png" />
+    <Content Include="Assets\Cards\diamonds_6.png" />
+    <Content Include="Assets\Cards\diamonds_7.png" />
+    <Content Include="Assets\Cards\diamonds_8.png" />
+    <Content Include="Assets\Cards\diamonds_9.png" />
+    <Content Include="Assets\Cards\fluff.png" />
+    <Content Include="Assets\Cards\hearts_10.png" />
+    <Content Include="Assets\Cards\hearts_11.png" />
+    <Content Include="Assets\Cards\hearts_12.png" />
+    <Content Include="Assets\Cards\hearts_13.png" />
+    <Content Include="Assets\Cards\hearts_14.png" />
+    <Content Include="Assets\Cards\hearts_2.png" />
+    <Content Include="Assets\Cards\hearts_3.png" />
+    <Content Include="Assets\Cards\hearts_4.png" />
+    <Content Include="Assets\Cards\hearts_5.png" />
+    <Content Include="Assets\Cards\hearts_6.png" />
+    <Content Include="Assets\Cards\hearts_7.png" />
+    <Content Include="Assets\Cards\hearts_8.png" />
+    <Content Include="Assets\Cards\hearts_9.png" />
+    <Content Include="Assets\Cards\spades_10.png" />
+    <Content Include="Assets\Cards\spades_11.png" />
+    <Content Include="Assets\Cards\spades_12.png" />
+    <Content Include="Assets\Cards\spades_13.png" />
+    <Content Include="Assets\Cards\spades_14.png" />
+    <Content Include="Assets\Cards\spades_2.png" />
+    <Content Include="Assets\Cards\spades_3.png" />
+    <Content Include="Assets\Cards\spades_4.png" />
+    <Content Include="Assets\Cards\spades_5.png" />
+    <Content Include="Assets\Cards\spades_6.png" />
+    <Content Include="Assets\Cards\spades_7.png" />
+    <Content Include="Assets\Cards\spades_8.png" />
+    <Content Include="Assets\Cards\spades_9.png" />
+    <Content Include="Assets\Cards\wizard.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -106,6 +161,13 @@
     <Content Include="Scripts\jquery-1.9.0.min.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
+    <None Include="Service References\WizardService\WizardService.disco" />
+    <None Include="Service References\WizardService\configuration91.svcinfo" />
+    <None Include="Service References\WizardService\configuration.svcinfo" />
+    <None Include="Service References\WizardService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Services\WizardService.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -123,13 +185,20 @@
     <Compile Include="GameSessionHub.cs" />
     <Compile Include="Helpers\Card.cs" />
     <Compile Include="Helpers\CardData.cs" />
+    <Compile Include="Helpers\Functions.cs" />
     <Compile Include="Helpers\Game.cs" />
     <Compile Include="Helpers\GameHistory.cs" />
     <Compile Include="Helpers\HandHistory.cs" />
     <Compile Include="Helpers\Player.cs" />
     <Compile Include="Helpers\PlayerData.cs" />
     <Compile Include="Helpers\ScoreData.cs" />
+    <Compile Include="Helpers\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\WizardService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Services\Data\Game.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -159,6 +228,16 @@
       <DependentUpon>Game.xsd</DependentUpon>
     </Content>
     <Content Include="packages.config" />
+    <None Include="Service References\WizardService\WizardService.wsdl" />
+    <None Include="Service References\WizardService\WizardService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WizardService\WizardService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WizardService\WizardService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Services\Data\Game.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -193,6 +272,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\WizardService\" />
+  </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -219,6 +304,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

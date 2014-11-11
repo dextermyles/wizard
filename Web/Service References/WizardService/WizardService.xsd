@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:1717/Services/WizardService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Wizard.Helpers" />
+  <xs:element name="GenerateDeck">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GenerateDeckResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Wizard.Helpers" minOccurs="0" name="GenerateDeckResult" nillable="true" type="q1:ArrayOfCard" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdatePlayer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="playerId" type="xs:int" />
+        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="pictureUrl" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdatePlayerResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Wizard.Helpers" minOccurs="0" name="UpdatePlayerResult" nillable="true" type="q2:Player" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGame">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="gameId" type="xs:int" />
+        <xs:element minOccurs="0" name="ownerPlayerId" type="xs:int" />
+        <xs:element minOccurs="0" name="dateCompleted" nillable="true" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="numPlayers" type="xs:int" />
+        <xs:element minOccurs="0" name="maxHands" type="xs:int" />
+        <xs:element minOccurs="0" name="intialDealerPosition" type="xs:int" />
+        <xs:element minOccurs="0" name="scoreData" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Wizard.Helpers" minOccurs="0" name="UpdateGameResult" nillable="true" type="q3:Game" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

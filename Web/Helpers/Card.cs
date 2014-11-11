@@ -186,6 +186,36 @@ namespace Wizard.Helpers
     {
         public Suit Suit = 0;
         public int Value = 0; // 11=JACK,12=QUEEN,13=KING,14=ACE
+        public int OwnerPlayerId = 0;
+
+        private string image = string.Empty;
+
+        public string GetImagePath()
+        {
+            string appRootPath = AppDomain.CurrentDomain.BaseDirectory;
+            string filename = string.Empty;
+
+            if(Suit == Suit.Fluff)
+            {
+                filename = "fluff.png";
+            }
+            else if(Suit == Suit.Wizard)
+            {
+                filename = "wizard.png";
+            }
+            else
+            {
+                filename = Suit.ToString() + "_" + Value.ToString() + ".png";
+            }
+            
+            string fullPath = appRootPath +  "\\Assets\\Cards\\" + filename;
+
+            if(System.IO.File.Exists(fullPath)) {
+                return fullPath;
+            }
+
+            return string.Empty;
+        }
 
         public override string ToString()
         {
