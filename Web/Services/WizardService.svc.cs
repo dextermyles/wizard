@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -6,6 +7,7 @@ using System.ServiceModel;
 using System.Text;
 using Wizard.Helpers;
 using Wizard.Services;
+using RestSharp;
 
 namespace Wizard.Services
 {
@@ -30,9 +32,9 @@ namespace Wizard.Services
             try
             {
                 // get db results
-                Data.PlayerTableAdapters.PlayerTableAdapter playerApapter = new Data.PlayerTableAdapters.PlayerTableAdapter();
-                Data.Player.PlayerDataTable dtPlayer = playerApapter.UpdatePlayer(playerId, name, pictureUrl, userId);
-                Data.Player.PlayerRow row = (Data.Player.PlayerRow) dtPlayer.Rows[0];
+                Data.SessionTableAdapters.PlayerTableAdapter playerApapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.Session.PlayerDataTable dtPlayer = playerApapter.UpdatePlayer(playerId, name, pictureUrl, userId);
+                Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
 
                 if (row != null)
                 {
@@ -48,9 +50,10 @@ namespace Wizard.Services
                     return player;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return null;
@@ -82,9 +85,10 @@ namespace Wizard.Services
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return null;
@@ -113,9 +117,10 @@ namespace Wizard.Services
                     gameHistory.Won = row.Won;     
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return gameHistory;
@@ -266,6 +271,51 @@ namespace Wizard.Services
             }
 
             return playerList;
+        }
+
+        [OperationContract]
+        public void LogError(Exception ex)
+        {
+            // get api key
+            string apiKey = (string) ConfigurationManager.AppSettings["mailgun-api-key"];
+
+            // format error
+            StringBuilder errorMessage = new StringBuilder();
+
+            errorMessage.AppendLine("Error details:");
+            errorMessage.AppendLine(ex.Message + "\r\n");
+            errorMessage.AppendLine("Stack trace:");
+            errorMessage.AppendLine(ex.StackTrace);
+
+            // has inner exception
+            if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+            {
+                errorMessage.AppendLine("\r\nInner exception details:");
+                errorMessage.AppendLine(ex.InnerException.Message + "\r\n");
+                errorMessage.AppendLine("Inner exception stack trace:");
+                errorMessage.AppendLine(ex.InnerException.StackTrace);
+            }
+
+            // client
+            RestClient client = new RestClient();
+            client.BaseUrl = new Uri("https://api.mailgun.net/v2");
+            client.Authenticator = new HttpBasicAuthenticator("api", apiKey);
+            
+            // request
+            RestRequest request = new RestRequest();
+            request.AddParameter("domain","wizard.apphb.com", ParameterType.UrlSegment);
+            request.Resource = "{domain}/messages";
+            request.AddParameter("from", "Administrator <no-reply@wizard.apphb.com>");
+            request.AddParameter("to", "dexter.brock@gmail.com");
+            request.AddParameter("subject", "Error:" + ex.Source);
+            request.AddParameter("text", "Error:\n");
+            request.Method = Method.POST;
+
+            // response
+            IRestResponse response = client.Execute(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                return;
         }
     }
 }

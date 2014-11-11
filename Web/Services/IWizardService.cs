@@ -16,6 +16,9 @@ namespace Wizard.Services
         [OperationContract]
         Card[] GenerateDeck();
 
+        [OperationContract]
+        void LogError(Exception ex);
+
         // Gets
         [OperationContract]
         Game GetGameById(int gameId);

@@ -70,6 +70,9 @@
     <Reference Include="Owin">
       <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>packages\RestSharp.105.0.0\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
@@ -204,16 +207,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Game.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Services\Data\HandHistory.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HandHistory.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Data\Player.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Player.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Services\Data\Session.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -226,9 +219,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Services\Data\Player.xsc">
-      <DependentUpon>Player.xsd</DependentUpon>
-    </Content>
     <Content Include="Services\Data\Game.xsc">
       <DependentUpon>Game.xsd</DependentUpon>
     </Content>
@@ -250,25 +240,6 @@
     </None>
     <Content Include="Services\Data\Game.xss">
       <DependentUpon>Game.xsd</DependentUpon>
-    </Content>
-    <Content Include="Services\Data\HandHistory.xsc">
-      <DependentUpon>HandHistory.xsd</DependentUpon>
-    </Content>
-    <None Include="Services\Data\HandHistory.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>HandHistory.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="Services\Data\HandHistory.xss">
-      <DependentUpon>HandHistory.xsd</DependentUpon>
-    </Content>
-    <None Include="Services\Data\Player.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Player.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="Services\Data\Player.xss">
-      <DependentUpon>Player.xsd</DependentUpon>
     </Content>
     <Content Include="Services\Data\Session.xsc">
       <DependentUpon>Session.xsd</DependentUpon>
