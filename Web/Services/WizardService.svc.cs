@@ -308,7 +308,7 @@ namespace Wizard.Services
             request.AddParameter("from", "Administrator <no-reply@wizard.apphb.com>");
             request.AddParameter("to", "dexter.brock@gmail.com");
             request.AddParameter("subject", "Error:" + ex.Source);
-            request.AddParameter("text", "Error:\n");
+            request.AddParameter("text", errorMessage.ToString());
             request.Method = Method.POST;
 
             // response
