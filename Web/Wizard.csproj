@@ -214,6 +214,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Player.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Services\Data\Session.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Session.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Services\IWizardService.cs" />
     <Compile Include="Services\WizardService.svc.cs">
       <DependentUpon>WizardService.svc</DependentUpon>
@@ -264,6 +269,17 @@
     </None>
     <Content Include="Services\Data\Player.xss">
       <DependentUpon>Player.xsd</DependentUpon>
+    </Content>
+    <Content Include="Services\Data\Session.xsc">
+      <DependentUpon>Session.xsd</DependentUpon>
+    </Content>
+    <None Include="Services\Data\Session.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Session.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Services\Data\Session.xss">
+      <DependentUpon>Session.xsd</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
