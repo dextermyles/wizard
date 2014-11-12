@@ -17,7 +17,21 @@ namespace Wizard.Services
         Card[] GenerateDeck();
 
         [OperationContract]
+        bool EmailExists(string emailAddress);
+
+        [OperationContract]
+        bool UsernameExists(string username);
+
+        [OperationContract]
+        Session Login(string username, string password, string ipAddress);
+
+        [OperationContract]
+        NewUserResult NewUser(string username, string password, string emailAddress, string ipAddress, bool active = true);
+
         void LogError(Exception ex);
+
+        [OperationContract]
+        Session ValidateSession(string secret, string ipAddress);
 
         // Gets
         [OperationContract]
@@ -44,17 +58,23 @@ namespace Wizard.Services
         [OperationContract]
         User GetUserById(int userId);
 
+        [OperationContract]
+        User GetUserByUsername(string username);
+
         // Lists
         Player[] ListPlayersByUserId(int userId);
 
         // Updates
         [OperationContract]
-        Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
-
-        [OperationContract]
         Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData);
 
         [OperationContract]
         GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);
+
+        [OperationContract]
+        HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump);
+
+        [OperationContract]
+        Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId); 
     }
 }

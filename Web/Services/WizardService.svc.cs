@@ -129,16 +129,30 @@ namespace Wizard.Services
 
         public Game GetGameById(int gameId)
         {
-            Game game = null;
+            Game game = new Game();
 
             try
             {
+                Data.GameTableAdapters.GameTableAdapter adapter = new Data.GameTableAdapters.GameTableAdapter();
+                Data.Game.GameDataTable dtGame = adapter.GetGameById(gameId);
 
+                if (dtGame != null && dtGame.Rows.Count > 0)
+                {
+                    Data.Game.GameRow row = (Data.Game.GameRow)dtGame.Rows[0];
+
+                    game.DateCompleted = row.DateCompleted;
+                    game.DateCreated = row.DateCreated;
+                    game.GameId = row.GameId;
+                    game.InitialDealerPosition = row.InitialDealerPosition;
+                    game.MaxHands = row.MaxHands;
+                    game.NumPlayers = row.NumPlayers;
+                    game.OwnerPlayerId = row.OwnerPlayerId;
+                    game.ScoreData = row.ScoreData;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                LogError(ex);
             }
 
             return game;
@@ -146,15 +160,29 @@ namespace Wizard.Services
 
         public GameHistory GetGameHistoryByGameId(int gameId)
         {
-            GameHistory gameHistory = null;
+            GameHistory gameHistory = new GameHistory();
 
             try
             {
+                Data.GameTableAdapters.GameHistoryTableAdapter adapter = new Data.GameTableAdapters.GameHistoryTableAdapter();
+                Data.Game.GameHistoryDataTable dtGameHistory = adapter.GetGameHistoryByGameId(gameId);
 
+                if (dtGameHistory != null && dtGameHistory.Rows.Count > 0)
+                {
+                    Data.Game.GameHistoryRow row = (Data.Game.GameHistoryRow)dtGameHistory.Rows[0];
+
+                    gameHistory.DateCreated = row.DateCreated;
+                    gameHistory.GameHistoryId = row.GameHistoryId;
+                    gameHistory.GameId = row.GameId;
+                    gameHistory.PlayerId = row.PlayerId;
+                    gameHistory.Score = row.Score;
+                    gameHistory.Won = row.Won;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return gameHistory;
@@ -162,15 +190,29 @@ namespace Wizard.Services
 
         public GameHistory GetGameHistoryById(int gameHistoryId)
         {
-            GameHistory gameHistory = null;
+            GameHistory gameHistory = new GameHistory();
 
             try
             {
+                Data.GameTableAdapters.GameHistoryTableAdapter adapter = new Data.GameTableAdapters.GameHistoryTableAdapter();
+                Data.Game.GameHistoryDataTable dtGameHistory = adapter.GetGameHistoryById(gameHistoryId);
 
+                if (dtGameHistory != null && dtGameHistory.Rows.Count > 0)
+                {
+                    Data.Game.GameHistoryRow row = (Data.Game.GameHistoryRow)dtGameHistory.Rows[0];
+
+                    gameHistory.DateCreated = row.DateCreated;
+                    gameHistory.GameHistoryId = row.GameHistoryId;
+                    gameHistory.GameId = row.GameId;
+                    gameHistory.PlayerId = row.PlayerId;
+                    gameHistory.Score = row.Score;
+                    gameHistory.Won = row.Won;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return gameHistory;
@@ -178,15 +220,30 @@ namespace Wizard.Services
 
         public HandHistory GetHandHistoryById(int handHistoryId)
         {
-            HandHistory handHistory = null;
+            HandHistory handHistory = new HandHistory();
 
             try
             {
+                Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
+                Data.Game.HandHistoryDataTable dtHandHistory = adapter.GetHandHistoryById(handHistoryId);
 
+                if (dtHandHistory != null && dtHandHistory.Rows.Count > 0)
+                {
+                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHandHistory.Rows[0];
+
+                    handHistory.DateCreated = row.DateCreated;
+                    handHistory.DateLastModified = row.DateLastModified;
+                    handHistory.DeckData = row.DeckData;
+                    handHistory.GameId = row.GameId;
+                    handHistory.HandHistoryId = row.HandHistoryId;
+                    handHistory.PlayerData = row.PlayerData;
+                    handHistory.Trump = row.Trump;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);   
             }
 
             return handHistory;
@@ -194,15 +251,30 @@ namespace Wizard.Services
 
         public HandHistory GetLastHandHistoryByGameId(int gameId)
         {
-            HandHistory handHistory = null;
+            HandHistory handHistory = new HandHistory();
 
             try
             {
+                Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
+                Data.Game.HandHistoryDataTable dtHandHistory = adapter.GetLastHandHistoryByGameId(gameId);
 
+                if (dtHandHistory != null && dtHandHistory.Rows.Count > 0)
+                {
+                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHandHistory.Rows[0];
+
+                    handHistory.DateCreated = row.DateCreated;
+                    handHistory.DateLastModified = row.DateLastModified;
+                    handHistory.DeckData = row.DeckData;
+                    handHistory.GameId = row.GameId;
+                    handHistory.HandHistoryId = row.HandHistoryId;
+                    handHistory.PlayerData = row.PlayerData;
+                    handHistory.Trump = row.Trump;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return handHistory;
@@ -210,15 +282,27 @@ namespace Wizard.Services
 
         public Player GetPlayerById(int playerId)
         {
-            Player player = null;
+            Player player = new Player();
 
             try
             {
+                Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.Session.PlayerDataTable dtPlayer = adapter.GetPlayerById(playerId);
 
+                if (dtPlayer != null && dtPlayer.Rows.Count > 0)
+                {
+                    Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+
+                    player.Name = row.Name;
+                    player.PictureURL = row.PictureURL;
+                    player.PlayerId = row.PlayerId;
+                    player.UserId = row.UserId;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return player;
@@ -226,15 +310,27 @@ namespace Wizard.Services
 
         public Player GetPlayerByName(string name)
         {
-            Player player = null;
+            Player player = new Player();
 
             try
             {
+                Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.Session.PlayerDataTable dtPlayer = adapter.GetPlayerByName(name);
 
+                if (dtPlayer != null && dtPlayer.Rows.Count > 0)
+                {
+                    Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+
+                    player.Name = row.Name;
+                    player.PictureURL = row.PictureURL;
+                    player.PlayerId = row.PlayerId;
+                    player.UserId = row.UserId;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // error handling
+                LogError(ex);
             }
 
             return player;
@@ -242,15 +338,59 @@ namespace Wizard.Services
 
         public User GetUserById(int userId)
         {
-            User user = null;
+            User user = new User();
 
             try
             {
+                Data.SessionTableAdapters.UserTableAdapter adapter = new Data.SessionTableAdapters.UserTableAdapter();
+                Data.Session.UserDataTable dtUser = adapter.GetUserById(userId);
 
+                if (dtUser != null && dtUser.Rows.Count > 0)
+                {
+                    Data.Session.UserRow row = (Data.Session.UserRow)dtUser.Rows[0];
+
+                    user.Active = row.Active;
+                    user.DateCreated = row.DateCreated;
+                    user.EmailAddress = row.EmailAddress;
+                    user.Password = string.Empty;
+                    user.UserId = row.UserId;
+                    user.Username = row.Username;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-               // error handling
+                // error handling
+                LogError(ex);
+            }
+
+            return user;
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            User user = new User();
+
+            try
+            {
+                Data.SessionTableAdapters.UserTableAdapter adapter = new Data.SessionTableAdapters.UserTableAdapter();
+                Data.Session.UserDataTable dtUser = adapter.GetUserByUsername(username);
+
+                if (dtUser != null && dtUser.Rows.Count > 0)
+                {
+                    Data.Session.UserRow row = (Data.Session.UserRow)dtUser.Rows[0];
+
+                    user.Active = row.Active;
+                    user.DateCreated = row.DateCreated;
+                    user.EmailAddress = row.EmailAddress;
+                    user.Password = string.Empty;
+                    user.UserId = row.UserId;
+                    user.Username = row.Username;
+                }
+            }
+            catch (Exception ex)
+            {
+                // error handling
+                LogError(ex);
             }
 
             return user;
@@ -258,22 +398,40 @@ namespace Wizard.Services
 
         public Player[] ListPlayersByUserId(int userId)
         {
-            Player[] playerList = null;
+            List<Player> players = new List<Player>();
 
             try
             {
+                Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.Session.PlayerDataTable dtPlayers = adapter.ListPlayersByUserId(userId);
 
+                if (dtPlayers != null && dtPlayers.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dtPlayers.Rows.Count; i++)
+                    {
+                        Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayers.Rows[i];
+                        
+                        Player player = new Player();
+                        
+                        player.Name = row.Name;
+                        player.PictureURL = row.PictureURL;
+                        player.PlayerId = row.PlayerId;
+                        player.UserId = row.UserId;
+
+                        // add to list
+                        players.Add(player);
+                    }
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                // error handling
+                LogError(ex);
             }
 
-            return playerList;
+            return players.ToArray();
         }
 
-        [OperationContract]
         public void LogError(Exception ex)
         {
             // get api key
@@ -307,7 +465,7 @@ namespace Wizard.Services
             request.Resource = "{domain}/messages";
             request.AddParameter("from", "Administrator <no-reply@wizard.apphb.com>");
             request.AddParameter("to", "dexter.brock@gmail.com");
-            request.AddParameter("subject", "Error:" + ex.Source);
+            request.AddParameter("subject", "Error: " + ex.Source);
             request.AddParameter("text", errorMessage.ToString());
             request.Method = Method.POST;
 
@@ -316,6 +474,200 @@ namespace Wizard.Services
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 return;
+        }
+
+
+        public bool EmailExists(string emailAddress)
+        {
+            bool result = false;
+
+            // validation
+            if (string.IsNullOrEmpty(emailAddress))
+                return result;
+
+            try
+            {
+                Data.SessionTableAdapters.RegisterTableAdapter adapter = new Data.SessionTableAdapters.RegisterTableAdapter();
+                
+                int emailExists = (int) adapter.EmailExists(emailAddress);
+
+                if (emailExists > 0)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return result;
+        }
+
+        public bool UsernameExists(string username)
+        {
+            bool result = false;
+
+            // validation
+            if (string.IsNullOrEmpty(username))
+                return result;
+
+            try
+            {
+                Data.SessionTableAdapters.RegisterTableAdapter adapter = new Data.SessionTableAdapters.RegisterTableAdapter();
+
+                int usernameExists = (int)adapter.UsernameExists(username);
+
+                if (usernameExists > 0)
+                    result = true;
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return result;
+        }
+
+        public Session Login(string username, string password, string ipAddress)
+        {
+            Session session = new Session();
+
+            // validation
+            if (string.IsNullOrEmpty(username) || 
+                string.IsNullOrEmpty(password) || 
+                string.IsNullOrEmpty(ipAddress))
+                return session;
+
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+
+                Data.Session.SessionDataTable dtSession = adapter.Login(username, password, ipAddress);
+
+                if (dtSession != null && dtSession.Rows.Count > 0)
+                {
+                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    
+                    session.DateCreated = row.DateCreated;
+                    session.DateLastActive = row.DateLastActive;
+                    session.IpAddress = row.IpAddress;
+                    session.PlayerId = row.PlayerId;
+                    session.Secret = row.Secret;
+                    session.SessionId = row.SessionId;
+                    session.UserId = row.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+
+                throw;
+            }
+
+            return session;
+        }
+
+        public NewUserResult NewUser(string username, string password, string emailAddress, string ipAddress, bool active = true)
+        {
+            NewUserResult result = new NewUserResult();
+
+            // validation
+            if (string.IsNullOrEmpty(username) ||
+                string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(emailAddress) ||
+                string.IsNullOrEmpty(ipAddress))
+            {
+                result.Message = "Missing information";
+                result.Result = false;
+                result.Secret = string.Empty;
+
+                return result;
+            }
+
+            try
+            {
+                Data.SessionTableAdapters.RegisterTableAdapter adapter = new Data.SessionTableAdapters.RegisterTableAdapter();
+
+                Data.Session.RegisterDataTable dtRegister = adapter.NewUser(username, password, emailAddress, ipAddress, active);
+
+                if (dtRegister != null && dtRegister.Rows.Count > 0)
+                {
+                    System.Data.DataRow row = dtRegister.Rows[0];
+
+                    result.Message = (string) row["Message"];
+                    result.Result = (bool)row["Result"];
+                    result.Secret = (string)row["Secret"];
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+
+                throw;
+            }
+
+            return result;
+        }
+
+        public Session ValidateSession(string secret, string ipAddress)
+        {
+            Session session = new Session();
+
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+                Data.Session.SessionDataTable dtSession = adapter.ValidateSession(secret, ipAddress);
+
+                if (dtSession != null && dtSession.Rows.Count > 0)
+                {
+                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+
+                    session.DateCreated = row.DateCreated;
+                    session.DateLastActive = row.DateLastActive;
+                    session.IpAddress = row.IpAddress;
+                    session.PlayerId = row.PlayerId;
+                    session.Secret = row.Secret;
+                    session.SessionId = row.SessionId;
+                    session.UserId = row.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                // error handling
+                LogError(ex);
+            }
+
+            return session;
+        }
+
+        public HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump)
+        {
+            HandHistory history = new HandHistory();
+
+            try
+            {
+                Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
+                Data.Game.HandHistoryDataTable dtHistory = adapter.UpdateHandHistory(handHistoryId, gameId, deckData, playerData, trump);
+
+                if (dtHistory != null && dtHistory.Rows.Count > 0)
+                {
+                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHistory.Rows[0];
+
+                    history.DateCreated = row.DateCreated;
+                    history.DateLastModified = row.DateLastModified;
+                    history.DeckData = row.DeckData;
+                    history.GameId = row.GameId;
+                    history.HandHistoryId = row.HandHistoryId;
+                    history.PlayerData = row.PlayerData;
+                    history.Trump = row.Trump;
+                }
+            }
+            catch (Exception ex)
+            {
+                // error handling
+                LogError(ex);
+            }
+
+            return history;
         }
     }
 }
