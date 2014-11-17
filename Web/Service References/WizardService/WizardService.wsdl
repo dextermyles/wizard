@@ -13,11 +13,89 @@
   <wsdl:message name="IWizardService_GenerateDeck_OutputMessage">
     <wsdl:part name="parameters" element="tns:GenerateDeckResponse" />
   </wsdl:message>
-  <wsdl:message name="IWizardService_UpdatePlayer_InputMessage">
-    <wsdl:part name="parameters" element="tns:UpdatePlayer" />
+  <wsdl:message name="IWizardService_EmailExists_InputMessage">
+    <wsdl:part name="parameters" element="tns:EmailExists" />
   </wsdl:message>
-  <wsdl:message name="IWizardService_UpdatePlayer_OutputMessage">
-    <wsdl:part name="parameters" element="tns:UpdatePlayerResponse" />
+  <wsdl:message name="IWizardService_EmailExists_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EmailExistsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UsernameExists_InputMessage">
+    <wsdl:part name="parameters" element="tns:UsernameExists" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UsernameExists_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UsernameExistsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_Login_InputMessage">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_Login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_NewUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:NewUser" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_NewUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NewUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_ValidateSession_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSession" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_ValidateSession_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameHistoryByGameId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameHistoryByGameId" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameHistoryByGameId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameHistoryByGameIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameHistoryById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameHistoryById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameHistoryById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameHistoryByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetHandHistoryById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetHandHistoryById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetHandHistoryById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetHandHistoryByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetLastHandHistoryByGameId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastHandHistoryByGameId" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetLastHandHistoryByGameId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLastHandHistoryByGameIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetPlayerById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPlayerById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetPlayerById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPlayerByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetPlayerByName_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPlayerByName" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetPlayerByName_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPlayerByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetUserById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetUserById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetUserByUsername_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserByUsername" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetUserByUsername_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserByUsernameResponse" />
   </wsdl:message>
   <wsdl:message name="IWizardService_UpdateGame_InputMessage">
     <wsdl:part name="parameters" element="tns:UpdateGame" />
@@ -25,18 +103,100 @@
   <wsdl:message name="IWizardService_UpdateGame_OutputMessage">
     <wsdl:part name="parameters" element="tns:UpdateGameResponse" />
   </wsdl:message>
+  <wsdl:message name="IWizardService_UpdateGameHistory_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGameHistory" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdateGameHistory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGameHistoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdateHandHistory_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateHandHistory" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdateHandHistory_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateHandHistoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdatePlayer_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdatePlayer" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdatePlayer_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdatePlayerResponse" />
+  </wsdl:message>
   <wsdl:portType name="IWizardService">
     <wsdl:operation name="GenerateDeck">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GenerateDeck" message="tns:IWizardService_GenerateDeck_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GenerateDeckResponse" message="tns:IWizardService_GenerateDeck_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="UpdatePlayer">
-      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdatePlayer" message="tns:IWizardService_UpdatePlayer_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdatePlayerResponse" message="tns:IWizardService_UpdatePlayer_OutputMessage" />
+    <wsdl:operation name="EmailExists">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/EmailExists" message="tns:IWizardService_EmailExists_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/EmailExistsResponse" message="tns:IWizardService_EmailExists_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UsernameExists">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UsernameExists" message="tns:IWizardService_UsernameExists_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UsernameExistsResponse" message="tns:IWizardService_UsernameExists_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Login">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/Login" message="tns:IWizardService_Login_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/LoginResponse" message="tns:IWizardService_Login_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NewUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/NewUser" message="tns:IWizardService_NewUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/NewUserResponse" message="tns:IWizardService_NewUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateSession">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/ValidateSession" message="tns:IWizardService_ValidateSession_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/ValidateSessionResponse" message="tns:IWizardService_ValidateSession_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGameById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameById" message="tns:IWizardService_GetGameById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameByIdResponse" message="tns:IWizardService_GetGameById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGameHistoryByGameId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameHistoryByGameId" message="tns:IWizardService_GetGameHistoryByGameId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameHistoryByGameIdResponse" message="tns:IWizardService_GetGameHistoryByGameId_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGameHistoryById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameHistoryById" message="tns:IWizardService_GetGameHistoryById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameHistoryByIdResponse" message="tns:IWizardService_GetGameHistoryById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetHandHistoryById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetHandHistoryById" message="tns:IWizardService_GetHandHistoryById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetHandHistoryByIdResponse" message="tns:IWizardService_GetHandHistoryById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLastHandHistoryByGameId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId" message="tns:IWizardService_GetLastHandHistoryByGameId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameIdResponse" message="tns:IWizardService_GetLastHandHistoryByGameId_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlayerById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetPlayerById" message="tns:IWizardService_GetPlayerById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByIdResponse" message="tns:IWizardService_GetPlayerById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlayerByName">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByName" message="tns:IWizardService_GetPlayerByName_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByNameResponse" message="tns:IWizardService_GetPlayerByName_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetUserById" message="tns:IWizardService_GetUserById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetUserByIdResponse" message="tns:IWizardService_GetUserById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserByUsername">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetUserByUsername" message="tns:IWizardService_GetUserByUsername_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetUserByUsernameResponse" message="tns:IWizardService_GetUserByUsername_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="UpdateGame">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdateGame" message="tns:IWizardService_UpdateGame_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdateGameResponse" message="tns:IWizardService_UpdateGame_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGameHistory">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdateGameHistory" message="tns:IWizardService_UpdateGameHistory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdateGameHistoryResponse" message="tns:IWizardService_UpdateGameHistory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateHandHistory">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdateHandHistory" message="tns:IWizardService_UpdateHandHistory_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdateHandHistoryResponse" message="tns:IWizardService_UpdateHandHistory_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePlayer">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdatePlayer" message="tns:IWizardService_UpdatePlayer_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdatePlayerResponse" message="tns:IWizardService_UpdatePlayer_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IWizardService" type="tns:IWizardService">
@@ -50,8 +210,125 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="UpdatePlayer">
-      <soap:operation soapAction="http://tempuri.org/IWizardService/UpdatePlayer" style="document" />
+    <wsdl:operation name="EmailExists">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/EmailExists" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UsernameExists">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/UsernameExists" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Login">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/Login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NewUser">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/NewUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateSession">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/ValidateSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGameById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGameHistoryByGameId">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameHistoryByGameId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGameHistoryById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameHistoryById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHandHistoryById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetHandHistoryById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastHandHistoryByGameId">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPlayerById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetPlayerById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPlayerByName">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetPlayerByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetUserById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserByUsername">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetUserByUsername" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -61,6 +338,33 @@
     </wsdl:operation>
     <wsdl:operation name="UpdateGame">
       <soap:operation soapAction="http://tempuri.org/IWizardService/UpdateGame" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGameHistory">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/UpdateGameHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateHandHistory">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/UpdateHandHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePlayer">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/UpdatePlayer" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

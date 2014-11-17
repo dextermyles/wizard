@@ -9,9 +9,5 @@ namespace Wizard
 {
     public class GameSessionHub : Hub
     {
-        public void Hello()
-        {
-            Clients.All.hello();
-        }
     }
 }

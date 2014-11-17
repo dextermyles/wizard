@@ -8,6 +8,7 @@
   <xs:element name="ArrayOfCard" nillable="true" type="tns:ArrayOfCard" />
   <xs:complexType name="Card">
     <xs:sequence>
+      <xs:element minOccurs="0" name="OwnerPlayerId" type="xs:int" />
       <xs:element minOccurs="0" name="Suit" type="tns:Suit" />
       <xs:element minOccurs="0" name="Value" type="xs:int" />
     </xs:sequence>
@@ -24,14 +25,26 @@
     </xs:restriction>
   </xs:simpleType>
   <xs:element name="Suit" nillable="true" type="tns:Suit" />
-  <xs:complexType name="Player">
+  <xs:complexType name="Session">
     <xs:sequence>
-      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="PictureURL" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DateLastActive" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IpAddress" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PlayerId" type="xs:int" />
+      <xs:element minOccurs="0" name="Secret" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SessionId" type="xs:int" />
+      <xs:element minOccurs="0" name="UserId" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="Player" nillable="true" type="tns:Player" />
+  <xs:element name="Session" nillable="true" type="tns:Session" />
+  <xs:complexType name="NewUserResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Result" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Secret" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="NewUserResult" nillable="true" type="tns:NewUserResult" />
   <xs:complexType name="Game">
     <xs:sequence>
       <xs:element minOccurs="0" name="DateCompleted" nillable="true" type="xs:dateTime" />
@@ -45,4 +58,47 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Game" nillable="true" type="tns:Game" />
+  <xs:complexType name="GameHistory">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="GameHistoryId" type="xs:int" />
+      <xs:element minOccurs="0" name="GameId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlayerId" type="xs:int" />
+      <xs:element minOccurs="0" name="Score" type="xs:int" />
+      <xs:element minOccurs="0" name="Won" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GameHistory" nillable="true" type="tns:GameHistory" />
+  <xs:complexType name="HandHistory">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DateLastModified" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DeckData" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="GameId" type="xs:int" />
+      <xs:element minOccurs="0" name="HandHistoryId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlayerData" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Trump" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="HandHistory" nillable="true" type="tns:HandHistory" />
+  <xs:complexType name="Player">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PictureURL" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlayerId" type="xs:int" />
+      <xs:element minOccurs="0" name="UserId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Player" nillable="true" type="tns:Player" />
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="EmailAddress" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UserId" type="xs:int" />
+      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="User" nillable="true" type="tns:User" />
 </xs:schema>
