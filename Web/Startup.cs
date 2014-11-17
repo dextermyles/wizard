@@ -1,8 +1,8 @@
 ﻿using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(Wizard.Startup))]
-namespace Wizard
+[assembly: OwinStartup(typeof(WizardGame.Startup))]
+namespace WizardGame
 {
     public class Startup
     {

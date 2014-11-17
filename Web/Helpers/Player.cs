@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 
-namespace Wizard.Helpers
+namespace WizardGame.Helpers
 {
     public class Player
     {

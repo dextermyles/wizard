@@ -5,7 +5,7 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 
-namespace Wizard
+namespace WizardGame
 {
     public class GameSessionHub : Hub
     {

@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="Wizard.Services.WizardService" CodeBehind="WizardService.svc.cs" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="WizardGame.Services.WizardService" CodeBehind="WizardService.svc.cs" %>

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
-using Wizard.Helpers;
-using Wizard.Services;
+using WizardGame.Helpers;
+using WizardGame.Services;
 using RestSharp;
 
-namespace Wizard.Services
+namespace WizardGame.Services
 {
     public class WizardService : IWizardService
     {
@@ -42,10 +42,16 @@ namespace Wizard.Services
                     Player player = new Player();
 
                     // update object with db results
+                    if (!row.IsNameNull())
+                        player.Name = row.Name;
+
+                    if (!row.IsPictureURLNull())
+                        player.PictureURL = row.PictureURL;
+
                     player.PlayerId = row.PlayerId;
-                    player.Name = row.Name;
-                    player.PictureURL = row.PictureURL;
-                    player.UserId = row.UserId;
+
+                    if (!row.IsUserIdNull())
+                        player.UserId = row.UserId;
 
                     return player;
                 }
@@ -73,13 +79,22 @@ namespace Wizard.Services
                     Game game = new Game();
 
                     game.GameId = row.GameId;
-                    game.DateCompleted = row.DateCompleted;
-                    game.DateCreated = row.DateCreated;
+
+                    if (!row.IsDateCompletedNull())
+                        game.DateCompleted = row.DateCompleted;
+
+                    if (!row.IsDateCreatedNull())
+                        game.DateCreated = row.DateCreated;
+
                     game.InitialDealerPosition = row.InitialDealerPosition;
                     game.MaxHands = row.MaxHands;
                     game.NumPlayers = row.NumPlayers;
-                    game.OwnerPlayerId = row.OwnerPlayerId;
-                    game.ScoreData = row.ScoreData;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        game.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsScoreDataNull())
+                        game.ScoreData = row.ScoreData;
 
                     return game;
                 }
@@ -140,14 +155,23 @@ namespace Wizard.Services
                 {
                     Data.Game.GameRow row = (Data.Game.GameRow)dtGame.Rows[0];
 
-                    game.DateCompleted = row.DateCompleted;
-                    game.DateCreated = row.DateCreated;
                     game.GameId = row.GameId;
+
+                    if (!row.IsDateCompletedNull())
+                        game.DateCompleted = row.DateCompleted;
+
+                    if (!row.IsDateCreatedNull())
+                        game.DateCreated = row.DateCreated;
+
                     game.InitialDealerPosition = row.InitialDealerPosition;
                     game.MaxHands = row.MaxHands;
                     game.NumPlayers = row.NumPlayers;
-                    game.OwnerPlayerId = row.OwnerPlayerId;
-                    game.ScoreData = row.ScoreData;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        game.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsScoreDataNull())
+                        game.ScoreData = row.ScoreData;
                 }
             }
             catch (Exception ex)
@@ -231,13 +255,23 @@ namespace Wizard.Services
                 {
                     Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHandHistory.Rows[0];
 
-                    handHistory.DateCreated = row.DateCreated;
-                    handHistory.DateLastModified = row.DateLastModified;
-                    handHistory.DeckData = row.DeckData;
+                    if (!row.IsDateCreatedNull())
+                        handHistory.DateCreated = row.DateCreated;
+
+                    if (!row.IsDateLastModifiedNull())
+                        handHistory.DateLastModified = row.DateLastModified;
+
+                    if (!row.IsDeckDataNull())
+                        handHistory.DeckData = row.DeckData;
+
                     handHistory.GameId = row.GameId;
                     handHistory.HandHistoryId = row.HandHistoryId;
-                    handHistory.PlayerData = row.PlayerData;
-                    handHistory.Trump = row.Trump;
+
+                    if (!row.IsPlayerDataNull())
+                        handHistory.PlayerData = row.PlayerData;
+
+                    if (!row.IsTrumpNull())
+                        handHistory.Trump = row.Trump;
                 }
             }
             catch (Exception ex)
@@ -262,13 +296,23 @@ namespace Wizard.Services
                 {
                     Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHandHistory.Rows[0];
 
-                    handHistory.DateCreated = row.DateCreated;
-                    handHistory.DateLastModified = row.DateLastModified;
-                    handHistory.DeckData = row.DeckData;
+                    if (!row.IsDateCreatedNull())
+                        handHistory.DateCreated = row.DateCreated;
+
+                    if (!row.IsDateLastModifiedNull())
+                        handHistory.DateLastModified = row.DateLastModified;
+
+                    if (!row.IsDeckDataNull())
+                        handHistory.DeckData = row.DeckData;
+
                     handHistory.GameId = row.GameId;
                     handHistory.HandHistoryId = row.HandHistoryId;
-                    handHistory.PlayerData = row.PlayerData;
-                    handHistory.Trump = row.Trump;
+
+                    if (!row.IsPlayerDataNull())
+                        handHistory.PlayerData = row.PlayerData;
+
+                    if (!row.IsTrumpNull())
+                        handHistory.Trump = row.Trump;
                 }
             }
             catch (Exception ex)
@@ -293,10 +337,16 @@ namespace Wizard.Services
                 {
                     Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
 
-                    player.Name = row.Name;
-                    player.PictureURL = row.PictureURL;
+                    if (!row.IsNameNull())
+                        player.Name = row.Name;
+
+                    if (!row.IsPictureURLNull())
+                        player.PictureURL = row.PictureURL;
+
                     player.PlayerId = row.PlayerId;
-                    player.UserId = row.UserId;
+                    
+                    if (!row.IsUserIdNull())
+                        player.UserId = row.UserId;
                 }
             }
             catch (Exception ex)
@@ -321,10 +371,16 @@ namespace Wizard.Services
                 {
                     Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
 
-                    player.Name = row.Name;
-                    player.PictureURL = row.PictureURL;
+                    if (!row.IsNameNull())
+                        player.Name = row.Name;
+
+                    if (!row.IsPictureURLNull())
+                        player.PictureURL = row.PictureURL;
+
                     player.PlayerId = row.PlayerId;
-                    player.UserId = row.UserId;
+
+                    if (!row.IsUserIdNull())
+                        player.UserId = row.UserId;
                 }
             }
             catch (Exception ex)
@@ -351,8 +407,13 @@ namespace Wizard.Services
 
                     user.Active = row.Active;
                     user.DateCreated = row.DateCreated;
-                    user.EmailAddress = row.EmailAddress;
-                    user.Password = string.Empty;
+
+                    if (!row.IsEmailAddressNull())
+                        user.EmailAddress = row.EmailAddress;
+
+                    if (!row.IsPasswordNull())
+                        user.Password = string.Empty;
+
                     user.UserId = row.UserId;
                     user.Username = row.Username;
                 }
@@ -381,8 +442,13 @@ namespace Wizard.Services
 
                     user.Active = row.Active;
                     user.DateCreated = row.DateCreated;
-                    user.EmailAddress = row.EmailAddress;
-                    user.Password = string.Empty;
+
+                    if (!row.IsEmailAddressNull())
+                        user.EmailAddress = row.EmailAddress;
+
+                    if (!row.IsPasswordNull())
+                        user.Password = string.Empty;
+
                     user.UserId = row.UserId;
                     user.Username = row.Username;
                 }
@@ -412,11 +478,17 @@ namespace Wizard.Services
                         Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayers.Rows[i];
                         
                         Player player = new Player();
-                        
-                        player.Name = row.Name;
-                        player.PictureURL = row.PictureURL;
+
+                        if (!row.IsNameNull())
+                            player.Name = row.Name;
+
+                        if (!row.IsPictureURLNull())
+                            player.PictureURL = row.PictureURL;
+
                         player.PlayerId = row.PlayerId;
-                        player.UserId = row.UserId;
+
+                        if (!row.IsUserIdNull())
+                            player.UserId = row.UserId;
 
                         // add to list
                         players.Add(player);
@@ -549,11 +621,20 @@ namespace Wizard.Services
                     
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
-                    session.IpAddress = row.IpAddress;
-                    session.PlayerId = row.PlayerId;
-                    session.Secret = row.Secret;
+                    
+                    if (!row.IsIpAddressNull())
+                        session.IpAddress = row.IpAddress;
+
+                    if (!row.IsPlayerIdNull())
+                        session.PlayerId = row.PlayerId;
+
+                    if (!row.IsSecretNull())
+                        session.Secret = row.Secret;
+
                     session.SessionId = row.SessionId;
-                    session.UserId = row.UserId;
+
+                    if(!row.IsUserIdNull())
+                        session.UserId = row.UserId;
                 }
             }
             catch (Exception ex)
@@ -623,11 +704,20 @@ namespace Wizard.Services
 
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
-                    session.IpAddress = row.IpAddress;
-                    session.PlayerId = row.PlayerId;
-                    session.Secret = row.Secret;
+
+                    if (!row.IsIpAddressNull())
+                        session.IpAddress = row.IpAddress;
+
+                    if (!row.IsPlayerIdNull())
+                        session.PlayerId = row.PlayerId;
+
+                    if (!row.IsSecretNull())
+                        session.Secret = row.Secret;
+
                     session.SessionId = row.SessionId;
-                    session.UserId = row.UserId;
+
+                    if (!row.IsUserIdNull())
+                        session.UserId = row.UserId;
                 }
             }
             catch (Exception ex)
@@ -652,13 +742,23 @@ namespace Wizard.Services
                 {
                     Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHistory.Rows[0];
 
-                    history.DateCreated = row.DateCreated;
-                    history.DateLastModified = row.DateLastModified;
-                    history.DeckData = row.DeckData;
+                    if(!row.IsDateCreatedNull())
+                        history.DateCreated = row.DateCreated;
+
+                    if(!row.IsDateLastModifiedNull())
+                        history.DateLastModified = row.DateLastModified;
+
+                    if(!row.IsDeckDataNull())
+                        history.DeckData = row.DeckData;
+
                     history.GameId = row.GameId;
                     history.HandHistoryId = row.HandHistoryId;
-                    history.PlayerData = row.PlayerData;
-                    history.Trump = row.Trump;
+                    
+                    if (!row.IsPlayerDataNull())
+                        history.PlayerData = row.PlayerData;
+
+                    if (!row.IsTrumpNull())
+                        history.Trump = row.Trump;
                 }
             }
             catch (Exception ex)
@@ -668,6 +768,46 @@ namespace Wizard.Services
             }
 
             return history;
+        }
+
+
+        public Session UpdateSession(string secret, int userId, int playerId, string ipAddress)
+        {
+            Session session = new Session();
+
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+                Data.Session.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, ipAddress);
+
+                if (dtSession != null && dtSession.Rows.Count > 0)
+                {
+                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    
+                    session.DateCreated = row.DateCreated;
+                    session.DateLastActive = row.DateLastActive;
+
+                    if (!row.IsIpAddressNull())
+                        session.IpAddress = row.IpAddress;
+
+                    if (!row.IsPlayerIdNull())
+                        session.PlayerId = row.PlayerId;
+
+                    if (!row.IsSecretNull())
+                        session.Secret = row.Secret;
+
+                    session.SessionId = row.SessionId;
+
+                    if (!row.IsUserIdNull())
+                        session.UserId = row.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return session;
         }
     }
 }

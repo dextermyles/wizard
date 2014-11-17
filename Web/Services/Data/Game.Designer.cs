@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace Wizard.Services.Data {
+namespace WizardGame.Services.Data {
     
     
     /// <summary>
@@ -1943,7 +1943,7 @@ namespace Wizard.Services.Data {
         }
     }
 }
-namespace Wizard.Services.Data.GameTableAdapters {
+namespace WizardGame.Services.Data.GameTableAdapters {
     
     
     /// <summary>

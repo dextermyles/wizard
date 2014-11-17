@@ -5,9 +5,9 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 
-using Wizard.Helpers;
+using WizardGame.Helpers;
 
-namespace Wizard.Services
+namespace WizardGame.Services
 {
     [ServiceContract]
     public interface IWizardService
@@ -75,6 +75,9 @@ namespace Wizard.Services
         HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump);
 
         [OperationContract]
-        Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId); 
+        Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
+
+        [OperationContract]
+        Session UpdateSession(string secret, int userId, int playerId, string ipAddress);
     }
 }
