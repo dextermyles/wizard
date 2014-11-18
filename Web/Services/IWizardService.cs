@@ -34,7 +34,10 @@ namespace WizardGame.Services
         void LogError(Exception ex);
 
         [OperationContract]
-        Session ValidateSession(string secret, string ipAddress);
+        Session ValidateSession(string secret);
+
+        // Deletes
+        void DeleteSession(string secret);
 
         // Gets
         [OperationContract]

@@ -1,10 +1,10 @@
 ﻿// Start the connection
 $.connection.hub.start().done(init);
 
-var gameSessionProxy = $.connection.gameSessionHub;
+var hub = $.connection.gameSessionHub;
 
 function init() {
-    logMessage("-- Connected to server --");
+    logMessage("-- connected to server: " + $.connection.hub.id + " --");
 }
 
 function logMessage(message) {

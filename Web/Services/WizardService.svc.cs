@@ -701,14 +701,14 @@ namespace WizardGame.Services
             return result;
         }
 
-        public Session ValidateSession(string secret, string ipAddress)
+        public Session ValidateSession(string secret)
         {
             Session session = new Session();
 
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.ValidateSession(secret, ipAddress);
+                Data.Session.SessionDataTable dtSession = adapter.ValidateSession(secret, Functions.GetUserIPAddress());
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
@@ -900,6 +900,20 @@ namespace WizardGame.Services
             }
 
             return user;
+        }
+
+
+        public void DeleteSession(string secret)
+        {
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+                adapter.DeleteSession(secret);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
         }
     }
 }

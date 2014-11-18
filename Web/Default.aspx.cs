@@ -12,34 +12,33 @@ namespace WizardGame
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // facebook login
+            // http post
             if (Page.IsPostBack)
             {
+                // get post vars
                 string strFacebookEmail = txtFacebookEmail.Value;
                 string strFacebookUserId = txtFacebookUserId.Value;
+                bool remember = cbRemember.Checked;
+                bool isFacebookLogin = (txtIsFacebookLogin.Value == "1") ? true : false;
 
-                // perform login
-                if (!string.IsNullOrEmpty(strFacebookEmail) && !string.IsNullOrEmpty(strFacebookUserId))
+                // validate
+                if (isFacebookLogin 
+                    && !string.IsNullOrEmpty(strFacebookEmail) 
+                    && !string.IsNullOrEmpty(strFacebookUserId))
                 {
+                    // service
                     WizardService wizWS = new WizardService();
 
+                    // perform facebook login
                     var session = wizWS.FacebookLogin(strFacebookEmail, strFacebookUserId);
 
-                    // validate login
-                    if (session != null && !string.IsNullOrEmpty(session.Secret))
-                    {
-                        // valid
-                        // redirect
-                        Response.Redirect("~/Home.aspx", true);
-                    }
-                    else
-                    {
-                        // show error box
-                        MessageBox.Visible = true;
-                        MessageBoxText.InnerHtml = "<strong>Error</strong>: Unknown error occured";
-                    }
+                    // validate session
+                    ValidateSession(session, remember);
                 }
             }
+
+            // validate existing cookie
+            ValidateCookie();
         }
 
         // Perform login
@@ -50,15 +49,47 @@ namespace WizardGame
             string password = txtPassword.Value;
             bool remember = cbRemember.Checked;
 
+            // service
             WizardService wizWS = new WizardService();
 
+            // perform login
             var session = wizWS.Login(username, password, Functions.GetUserIPAddress());
 
+            // validate session
+            ValidateSession(session, remember);
+        }
+
+        private void ValidateSession(Session session, bool remember = false)
+        {
             // validate login
             if (session != null && !string.IsNullOrEmpty(session.Secret))
             {
+                // save cookies
+                string secret = session.Secret;
+                int sessionId = session.SessionId;
+                DateTime dateCreated;
+
+                if(session.DateCreated.HasValue)
+                    dateCreated = session.DateCreated.Value;
+
+                // cookie
+                HttpCookie cookie = new HttpCookie("OfficeWizard");
+                
+                // expiry
+                cookie.Expires = DateTime.Now.AddDays(1);
+                cookie.Values.Add("secret", secret);
+
+                // remember user
+                if (remember)
+                {
+                    cookie.Values.Add("remember", "true");
+                    cookie.Expires = DateTime.Now.AddDays(30);
+                }
+
+                // save cookie
+                Response.Cookies.Add(cookie);
+
                 // valid
-                // redirect
                 Response.Redirect("~/Home.aspx", true);
             }
             else
@@ -66,6 +97,42 @@ namespace WizardGame
                 // show error box
                 MessageBox.Visible = true;
                 MessageBoxText.InnerHtml = "<strong>Error</strong>: Invalid username or password";
+            }
+        }
+
+        private void ValidateCookie()
+        {
+            // check for existing cookie
+            HttpCookie cookie = Request.Cookies["OfficeWizard"];
+
+            // validate
+            if (cookie != null)
+            {
+                // get secret from cookie
+                string secret = cookie.Values["secret"];
+
+                if (!string.IsNullOrEmpty(secret))
+                {
+                    // service
+                    WizardService wizWS = new WizardService();
+
+                    // make sure secret is valid
+                    var session = wizWS.ValidateSession(secret);
+
+                    // invalid secret
+                    if (string.IsNullOrEmpty(session.Secret))
+                    {
+                        // clear existing cookes
+                        cookie.Expires = DateTime.Now.AddDays(-1);
+
+                        Response.Cookies.Add(cookie);
+                    }
+                    else
+                    {
+                        // validate session result
+                        ValidateSession(session);
+                    }
+                }
             }
         }
     }

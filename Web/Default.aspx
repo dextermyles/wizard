@@ -28,6 +28,9 @@
                     // log
                     logMessage('-- facebook login complete --');
 
+                    // is facebook login
+                    $("#MainContent_txtIsFacebookLogin").val(1);
+
                     // query api
                     beginLogin();
 
@@ -94,14 +97,16 @@
                 Remember me
             </label>
         </div>
-        <asp:Button ID="btnLogin" CssClass="btn btn-lg btn-primary btn-block" Text="Sign in" runat="server" OnClick="btnLogin_Click" />
+        <asp:Button ID="btnLogin" CssClass="btn btn-lg btn-success btn-block" Text="Sign in" runat="server" OnClick="btnLogin_Click" />
         <button id="btnFacebook" class="btn btn-lg btn-primary btn-block" onclick="fb_login(); return false;">Sign in with Facebook</button>
         <input type="hidden" id="txtFacebookEmail" name="txtFacebookEmail" runat="server" />
         <input type="hidden" id="txtFacebookUserId" name="txtFacebookUserId" runat="server" />
+        <input type="hidden" id="txtIsFacebookLogin" name="isFacebookLogin" runat="server" value="0" />
     </div>
     <style type="text/css">
         .login {
             width: 420px;
+            margin-top: 70px;
         }
     </style>
 </asp:Content>
