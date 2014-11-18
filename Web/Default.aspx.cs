@@ -12,7 +12,34 @@ namespace WizardGame
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // facebook login
+            if (Page.IsPostBack)
+            {
+                string strFacebookEmail = txtFacebookEmail.Value;
+                string strFacebookUserId = txtFacebookUserId.Value;
 
+                // perform login
+                if (!string.IsNullOrEmpty(strFacebookEmail) && !string.IsNullOrEmpty(strFacebookUserId))
+                {
+                    WizardService wizWS = new WizardService();
+
+                    var session = wizWS.FacebookLogin(strFacebookEmail, strFacebookUserId);
+
+                    // validate login
+                    if (session != null && !string.IsNullOrEmpty(session.Secret))
+                    {
+                        // valid
+                        // redirect
+                        Response.Redirect("~/Home.aspx", true);
+                    }
+                    else
+                    {
+                        // show error box
+                        MessageBox.Visible = true;
+                        MessageBoxText.InnerHtml = "<strong>Error</strong>: Unknown error occured";
+                    }
+                }
+            }
         }
 
         // Perform login

@@ -4,15 +4,9 @@
     <script>
         // facebook status changed callback
         function statusChangeCallback(response) {
-            console.log('statusChangeCallback');
-            console.log(response);
-
             if (response.status === 'connected') {
                 // Logged into your app and Facebook.
                 logMessage('-- logged into app --');
-
-                beginLogin();
-
             } else if (response.status === 'not_authorized') {
                 // The person is logged into Facebook, but not your app.
                 logMessage('user not authorized');
@@ -31,23 +25,15 @@
         function fb_login() {
             FB.login(function (response) {
                 if (response.authResponse) {
-                    logMessage('Welcome!  Fetching your information.... ');
-                    //console.log(response); // dump complete info
-                    access_token = response.authResponse.accessToken; //get access token
-                    user_id = response.authResponse.userID; //get FB UID
+                    // log
+                    logMessage('-- facebook login complete --');
 
-                    FB.api('/me', function (response) {
-                        user_email = response.email; //get user email
-                        // you can store this data into your database 
-                        logMessage('player: ' + response.first_name + ' ' + response.last_name);
-                        logMessage('userID: ' + response.id);
-                        logMessage('email: ' + user_email);
-                    });
+                    // query api
+                    beginLogin();
 
                 } else {
                     //user hit cancel button
                     logMessage('User cancelled login or did not fully authorize.');
-
                 }
             }, {
                 scope: 'email'
@@ -55,14 +41,21 @@
         }
 
         function beginLogin() {
-            logMessage('-- getting user details from facebook --');
+            // log
+            logMessage('-- querying facebook api --');
 
             // perform fbook sync/login
             FB.api('/me', function (response) {
+                // log
                 logMessage('-- details retrieved --');
-                console.log(response); // log js object
-                logMessage('player: ' + response.first_name + ' ' + response.last_name);
-                logMessage('userID: ' + response.id);
+                console.log(response);
+
+                // update hidden fields with facebook values
+                $("#MainContent_txtFacebookEmail").val(response.email);
+                $("#MainContent_txtFacebookUserId").val(response.id);
+
+                // submit login
+                $("#MainForm").submit();
             });
         };
 
@@ -103,6 +96,8 @@
         </div>
         <asp:Button ID="btnLogin" CssClass="btn btn-lg btn-primary btn-block" Text="Sign in" runat="server" OnClick="btnLogin_Click" />
         <button id="btnFacebook" class="btn btn-lg btn-primary btn-block" onclick="fb_login(); return false;">Sign in with Facebook</button>
+        <input type="hidden" id="txtFacebookEmail" name="txtFacebookEmail" runat="server" />
+        <input type="hidden" id="txtFacebookUserId" name="txtFacebookUserId" runat="server" />
     </div>
     <style type="text/css">
         .login {

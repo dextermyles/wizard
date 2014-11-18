@@ -13,5 +13,7 @@ namespace WizardGame.Helpers
         public string EmailAddress = string.Empty;
         public DateTime? DateCreated = null;
         public bool Active = false;
+        public string FB_UserId = string.Empty;
+        public DateTime? FB_SyncDate = null;
     }
 }

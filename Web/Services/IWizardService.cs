@@ -26,6 +26,9 @@ namespace WizardGame.Services
         Session Login(string username, string password, string ipAddress);
 
         [OperationContract]
+        Session FacebookLogin(string fb_email, string fb_userId);
+
+        [OperationContract]
         NewUserResult NewUser(string username, string password, string emailAddress, string ipAddress, bool active = true);
 
         void LogError(Exception ex);
@@ -79,5 +82,8 @@ namespace WizardGame.Services
 
         [OperationContract]
         Session UpdateSession(string secret, int userId, int playerId, string ipAddress);
+
+        [OperationContract]
+        User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId);
     }
 }

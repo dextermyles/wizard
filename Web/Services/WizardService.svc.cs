@@ -416,6 +416,12 @@ namespace WizardGame.Services
 
                     user.UserId = row.UserId;
                     user.Username = row.Username;
+
+                    if (!row.IsFB_UserIdNull())
+                        user.FB_UserId = row.FB_UserId;
+
+                    if (!row.IsFB_SyncDateNull())
+                        user.FB_SyncDate = row.FB_SyncDate;
                 }
             }
             catch (Exception ex)
@@ -451,6 +457,12 @@ namespace WizardGame.Services
 
                     user.UserId = row.UserId;
                     user.Username = row.Username;
+
+                    if (!row.IsFB_UserIdNull())
+                        user.FB_UserId = row.FB_UserId;
+
+                    if (!row.IsFB_SyncDateNull())
+                        user.FB_SyncDate = row.FB_SyncDate;
                 }
             }
             catch (Exception ex)
@@ -808,6 +820,86 @@ namespace WizardGame.Services
             }
 
             return session;
+        }
+
+
+        public Session FacebookLogin(string fb_email, string fb_userId)
+        {
+            Session session = new Session();
+
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+                Data.Session.SessionDataTable dtSession = adapter.FacebookLogin(fb_email, fb_userId, Functions.GetUserIPAddress());
+
+                if (dtSession != null && dtSession.Rows.Count > 0)
+                {
+                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+
+                    session.DateCreated = row.DateCreated;
+                    session.DateLastActive = row.DateLastActive;
+
+                    if (!row.IsIpAddressNull())
+                        session.IpAddress = row.IpAddress;
+
+                    if (!row.IsPlayerIdNull())
+                        session.PlayerId = row.PlayerId;
+
+                    if (!row.IsSecretNull())
+                        session.Secret = row.Secret;
+
+                    session.SessionId = row.SessionId;
+
+                    if (!row.IsUserIdNull())
+                        session.UserId = row.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return session;
+        }
+
+        public User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId)
+        {
+            User user = new User();
+
+            try
+            {
+                Data.SessionTableAdapters.UserTableAdapter adapter = new Data.SessionTableAdapters.UserTableAdapter();
+                Data.Session.UserDataTable dtUser = adapter.UpdateUser(userId, username, password, emailAddress, active, fb_userId);
+
+                if (dtUser != null && dtUser.Rows.Count > 0)
+                {
+                    Data.Session.UserRow row = (Data.Session.UserRow)dtUser.Rows[0];
+
+                    user.Active = row.Active;
+                    user.DateCreated = row.DateCreated;
+
+                    if (!row.IsEmailAddressNull())
+                        user.EmailAddress = row.EmailAddress;
+
+                    if (!row.IsPasswordNull())
+                        user.Password = string.Empty;
+
+                    user.UserId = row.UserId;
+                    user.Username = row.Username;
+
+                    if (!row.IsFB_UserIdNull())
+                        user.FB_UserId = row.FB_UserId;
+
+                    if (!row.IsFB_SyncDateNull())
+                        user.FB_SyncDate = row.FB_SyncDate;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return user;
         }
     }
 }
