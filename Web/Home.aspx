@@ -38,6 +38,30 @@
             </ul>
         </div>
         <div class="col-md-6">
+            <!-- available games -->
+            <div class="panel panel-default hidden-xs">
+                <div class="panel-heading">
+                    <strong>Available games to join</strong>
+                </div>
+                <table class="table table-responsive panel-body">
+                    <thead>
+                        <tr>
+                            <th>Lobby</th>
+                            <th>Host</th>
+                            <th class="text-center"># Players</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">No game lobbies available</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    <a href="#">Show all</a>
+                </div>
+            </div>
+            <!-- match history -->
             <div class="panel panel-default hidden-xs">
                 <div class="panel-heading">
                     <strong>Match history</strong>
@@ -87,7 +111,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="return false;">Close</button>
                     <asp:Button ID="btnNewPlayer" runat="server" CssClass="btn btn-primary" Text="Create player" OnClick="btnNewPlayer_Click" />
                 </div>
             </div>
