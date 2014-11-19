@@ -10,60 +10,60 @@
 namespace WizardGame {
     
     
-    public partial class Home {
+    public partial class Register {
         
         /// <summary>
-        /// PlayerName control.
+        /// MessageBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox PlayerName;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MessageBox;
         
         /// <summary>
-        /// PlayerPhoto control.
+        /// MessageBoxText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload PlayerPhoto;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MessageBoxText;
         
         /// <summary>
-        /// UseFacebookProfilePhoto control.
+        /// txtUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl UseFacebookProfilePhoto;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtUsername;
         
         /// <summary>
-        /// cbUseFacebookPhoto control.
+        /// txtEmailAddress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbUseFacebookPhoto;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtEmailAddress;
         
         /// <summary>
-        /// txtFacebookPhotoUrl control.
+        /// txtPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtFacebookPhotoUrl;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword txtPassword;
         
         /// <summary>
-        /// btnNewPlayer control.
+        /// btnRegister control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNewPlayer;
+        protected global::System.Web.UI.WebControls.Button btnRegister;
     }
 }

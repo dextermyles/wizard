@@ -78,7 +78,6 @@
         <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="emailAddress" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="ipAddress" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="active" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
@@ -94,7 +93,6 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="secret" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="ipAddress" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -103,6 +101,30 @@
       <xs:sequence>
         <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="ValidateSessionResult" nillable="true" type="q5:Session" />
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteSession">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="secret" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteSessionResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteOldSessions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="maxDays" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteOldSessionsResponse">
+    <xs:complexType>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="GetGameById">
@@ -203,6 +225,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetSessionBySecret">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="secret" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSessionBySecretResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="GetSessionBySecretResult" nillable="true" type="q13:Session" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetUserById">
     <xs:complexType>
       <xs:sequence>
@@ -213,7 +249,7 @@
   <xs:element name="GetUserByIdResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="GetUserByIdResult" nillable="true" type="q13:User" />
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="GetUserByIdResult" nillable="true" type="q14:User" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -227,7 +263,7 @@
   <xs:element name="GetUserByUsernameResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="GetUserByUsernameResult" nillable="true" type="q14:User" />
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="GetUserByUsernameResult" nillable="true" type="q15:User" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -247,7 +283,7 @@
   <xs:element name="UpdateGameResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateGameResult" nillable="true" type="q15:Game" />
+        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateGameResult" nillable="true" type="q16:Game" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -265,7 +301,7 @@
   <xs:element name="UpdateGameHistoryResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateGameHistoryResult" nillable="true" type="q16:GameHistory" />
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateGameHistoryResult" nillable="true" type="q17:GameHistory" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -283,7 +319,7 @@
   <xs:element name="UpdateHandHistoryResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateHandHistoryResult" nillable="true" type="q17:HandHistory" />
+        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateHandHistoryResult" nillable="true" type="q18:HandHistory" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -300,7 +336,7 @@
   <xs:element name="UpdatePlayerResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdatePlayerResult" nillable="true" type="q18:Player" />
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdatePlayerResult" nillable="true" type="q19:Player" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -317,7 +353,7 @@
   <xs:element name="UpdateSessionResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateSessionResult" nillable="true" type="q19:Session" />
+        <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateSessionResult" nillable="true" type="q20:Session" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -336,7 +372,7 @@
   <xs:element name="UpdateUserResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateUserResult" nillable="true" type="q20:User" />
+        <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" minOccurs="0" name="UpdateUserResult" nillable="true" type="q21:User" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

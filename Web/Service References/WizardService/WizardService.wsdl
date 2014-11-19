@@ -49,6 +49,18 @@
   <wsdl:message name="IWizardService_ValidateSession_OutputMessage">
     <wsdl:part name="parameters" element="tns:ValidateSessionResponse" />
   </wsdl:message>
+  <wsdl:message name="IWizardService_DeleteSession_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteSession" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_DeleteSession_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_DeleteOldSessions_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteOldSessions" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_DeleteOldSessions_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteOldSessionsResponse" />
+  </wsdl:message>
   <wsdl:message name="IWizardService_GetGameById_InputMessage">
     <wsdl:part name="parameters" element="tns:GetGameById" />
   </wsdl:message>
@@ -90,6 +102,12 @@
   </wsdl:message>
   <wsdl:message name="IWizardService_GetPlayerByName_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetPlayerByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetSessionBySecret_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSessionBySecret" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetSessionBySecret_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSessionBySecretResponse" />
   </wsdl:message>
   <wsdl:message name="IWizardService_GetUserById_InputMessage">
     <wsdl:part name="parameters" element="tns:GetUserById" />
@@ -168,6 +186,14 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/ValidateSession" message="tns:IWizardService_ValidateSession_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/ValidateSessionResponse" message="tns:IWizardService_ValidateSession_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="DeleteSession">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/DeleteSession" message="tns:IWizardService_DeleteSession_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/DeleteSessionResponse" message="tns:IWizardService_DeleteSession_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteOldSessions">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/DeleteOldSessions" message="tns:IWizardService_DeleteOldSessions_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/DeleteOldSessionsResponse" message="tns:IWizardService_DeleteOldSessions_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetGameById">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameById" message="tns:IWizardService_GetGameById_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameByIdResponse" message="tns:IWizardService_GetGameById_OutputMessage" />
@@ -195,6 +221,10 @@
     <wsdl:operation name="GetPlayerByName">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByName" message="tns:IWizardService_GetPlayerByName_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByNameResponse" message="tns:IWizardService_GetPlayerByName_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionBySecret">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetSessionBySecret" message="tns:IWizardService_GetSessionBySecret_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetSessionBySecretResponse" message="tns:IWizardService_GetSessionBySecret_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetUserById">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetUserById" message="tns:IWizardService_GetUserById_InputMessage" />
@@ -294,6 +324,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="DeleteSession">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/DeleteSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteOldSessions">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/DeleteOldSessions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetGameById">
       <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameById" style="document" />
       <wsdl:input>
@@ -350,6 +398,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetPlayerByName">
       <soap:operation soapAction="http://tempuri.org/IWizardService/GetPlayerByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSessionBySecret">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetSessionBySecret" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

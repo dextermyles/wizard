@@ -116,7 +116,7 @@ namespace WizardGame
                     // service
                     WizardService wizWS = new WizardService();
 
-                    // make sure secret is valid
+                    // validate secret
                     var session = wizWS.ValidateSession(secret);
 
                     // invalid secret

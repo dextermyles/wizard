@@ -8,6 +8,34 @@ namespace WizardGame.Helpers
 {
     public static class Functions
     {
+        public static Session GetSessionFromCookie()
+        {
+            // session
+            Session session = null;
+
+            // check for existing cookie
+            HttpCookie cookie = HttpContext.Current.Request.Cookies["OfficeWizard"];
+
+            // validate
+            if (cookie != null)
+            {
+                // get secret from cookie
+                string secret = cookie.Values["secret"];
+
+                // validate
+                if (!string.IsNullOrEmpty(secret))
+                {
+                    // service
+                    WizardService wizWS = new WizardService();
+
+                    // get session data
+                    session = wizWS.GetSessionBySecret(secret);
+                }
+            }
+
+            return session;
+        }
+
         public static string GetUserIPAddress()
         {
             string VisitorsIPAddr = string.Empty;

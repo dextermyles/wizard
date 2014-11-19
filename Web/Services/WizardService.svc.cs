@@ -659,15 +659,14 @@ namespace WizardGame.Services
             return session;
         }
 
-        public NewUserResult NewUser(string username, string password, string emailAddress, string ipAddress, bool active = true)
+        public NewUserResult NewUser(string username, string password, string emailAddress, bool active = true)
         {
             NewUserResult result = new NewUserResult();
 
             // validation
             if (string.IsNullOrEmpty(username) ||
                 string.IsNullOrEmpty(password) ||
-                string.IsNullOrEmpty(emailAddress) ||
-                string.IsNullOrEmpty(ipAddress))
+                string.IsNullOrEmpty(emailAddress))
             {
                 result.Message = "Missing information";
                 result.Result = false;
@@ -680,7 +679,7 @@ namespace WizardGame.Services
             {
                 Data.SessionTableAdapters.RegisterTableAdapter adapter = new Data.SessionTableAdapters.RegisterTableAdapter();
 
-                Data.Session.RegisterDataTable dtRegister = adapter.NewUser(username, password, emailAddress, ipAddress, active);
+                Data.Session.RegisterDataTable dtRegister = adapter.NewUser(username, password, emailAddress, Functions.GetUserIPAddress(), active);
 
                 if (dtRegister != null && dtRegister.Rows.Count > 0)
                 {
@@ -783,14 +782,14 @@ namespace WizardGame.Services
         }
 
 
-        public Session UpdateSession(string secret, int userId, int playerId, string ipAddress)
+        public Session UpdateSession(string secret, int userId, int playerId)
         {
             Session session = new Session();
 
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, ipAddress);
+                Data.Session.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, Functions.GetUserIPAddress());
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
@@ -914,6 +913,57 @@ namespace WizardGame.Services
             {
                 LogError(ex);
             }
+        }
+
+        public void DeleteOldSessions(int maxDays = 3)
+        {
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+                adapter.DeleteOldSessions(maxDays);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+
+
+        public Session GetSessionBySecret(string secret)
+        {
+            Session session = new Session();
+
+            try
+            {
+                Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
+                Data.Session.SessionDataTable dtSession = adapter.GetSessionBySecret(secret, Functions.GetUserIPAddress());
+
+                if (dtSession != null && dtSession.Rows.Count > 0)
+                {
+                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+
+                    session.DateCreated = row.DateCreated;
+                    session.DateLastActive = row.DateLastActive;
+
+                    if (!row.IsIpAddressNull())
+                        session.IpAddress = row.IpAddress;
+
+                    if (!row.IsPlayerIdNull())
+                        session.PlayerId = row.PlayerId;
+
+                    if (!row.IsSecretNull())
+                        session.Secret = row.Secret;
+
+                    if (!row.IsUserIdNull())
+                        session.UserId = row.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return session;
         }
     }
 }

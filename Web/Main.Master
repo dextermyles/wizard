@@ -1,7 +1,8 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main.Master.cs" Inherits="WizardGame.Main" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <title>Office Wizard</title>
     <!-- css -->
     <link rel="stylesheet" media="all" href="Content/themes/base/theme.css" />
@@ -52,7 +53,8 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="Default.aspx">Welcome</a></li>
                     <% if (IsValidSession) { %>
-                    <li class=""><a href="Play.aspx">Play</a></li>
+                    <li class=""><a href="#">Leaderboard</a></li>
+                    <li class=""><a href="#">Rules</a></li>
                     <% } // end if %>
                 </ul>
                 <% if (IsValidSession) { %>
@@ -67,13 +69,15 @@
         <div>
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
-        </div>
+        </div> 
     </form>
-    <footer class="footer">
+    <footer class="footer hidden-xs">
         <div class="container">
             <textarea id="logwindow" class="text-muted" style="width:100%; height: 54px; background-color: transparent; border: none; resize: none;" readonly></textarea>
         </div>
     </footer>
+    <!-- facebook dev library -->
+    <script type="text/javascript" src="Scripts/facebook.js"></script>
     <!-- game library -->
     <script type="text/javascript" src="Scripts/game.js"></script>
     <!-- bootstrap -->

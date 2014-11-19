@@ -29,7 +29,7 @@ namespace WizardGame.Services
         Session FacebookLogin(string fb_email, string fb_userId);
 
         [OperationContract]
-        NewUserResult NewUser(string username, string password, string emailAddress, string ipAddress, bool active = true);
+        NewUserResult NewUser(string username, string password, string emailAddress, bool active = true);
 
         void LogError(Exception ex);
 
@@ -37,7 +37,11 @@ namespace WizardGame.Services
         Session ValidateSession(string secret);
 
         // Deletes
+        [OperationContract]
         void DeleteSession(string secret);
+
+        [OperationContract]
+        void DeleteOldSessions(int maxDays = 3);
 
         // Gets
         [OperationContract]
@@ -62,6 +66,9 @@ namespace WizardGame.Services
         Player GetPlayerByName(string name);
 
         [OperationContract]
+        Session GetSessionBySecret(string secret);
+
+        [OperationContract]
         User GetUserById(int userId);
 
         [OperationContract]
@@ -84,7 +91,7 @@ namespace WizardGame.Services
         Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
 
         [OperationContract]
-        Session UpdateSession(string secret, int userId, int playerId, string ipAddress);
+        Session UpdateSession(string secret, int userId, int playerId);
 
         [OperationContract]
         User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId);
