@@ -225,6 +225,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Scripts\modernizr-latest.js" />
     <Content Include="Services\WizardService.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -384,7 +385,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>1717</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://wizard.apphb.com/</IISUrl>
+          <IISUrl>http://localhost/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
