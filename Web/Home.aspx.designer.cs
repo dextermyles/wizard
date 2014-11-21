@@ -22,6 +22,15 @@ namespace WizardGame {
         protected global::System.Web.UI.WebControls.TextBox PlayerName;
         
         /// <summary>
+        /// VoicePackList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList VoicePackList;
+        
+        /// <summary>
         /// PlayerPhoto control.
         /// </summary>
         /// <remarks>

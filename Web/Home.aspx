@@ -2,7 +2,13 @@
 
 <asp:Content ID="ContentHead" ContentPlaceHolderID="HeadContent" runat="server">
     <script>
-
+        function selectUseFacebookPhoto() {
+            // make sure we have the url
+            if (facebookPhotoUrl != null && facebookPhotoUrl.length > 0) {
+                $("#facebook-photo-preview").html("<img src='" + facebookPhotoUrl + "' alt='profile photo' />");
+                $("#facebook-photo-preview").fadeIn("slow");
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
@@ -12,7 +18,7 @@
         </div>
         <div class="col-md-6">
             <ul class="list-group">
-                <% if (UserPlayers != null && UserPlayers.Length == 0)
+                <% if (UserPlayers != null /*&& UserPlayers.Length == 0*/)
                    { %>
                 <li class="list-group-item">
                     <button class="btn btn-lg btn-default btn-block" data-toggle="modal" data-target="#newPlayerModal" onclick="return false;">
@@ -94,9 +100,20 @@
                     <h4 class="modal-title" id="newPlayerModalLabel">New player</h4>
                 </div>
                 <div class="modal-body">
+                     <p class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Please enter some information about your player.</p>
                     <div class="form-group">
                         <label for="recipient-name" class="control-label">Name</label>
                         <asp:TextBox ID="PlayerName" CssClass="form-control" runat="server" />
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Voice pack</label>
+                        <asp:DropDownList ID="VoicePackList" runat="server" CssClass="form-control">
+                            <asp:ListItem Text="Rob" Value="rob"></asp:ListItem>
+                            <asp:ListItem Text="Dexter" Value="dexter"></asp:ListItem>
+                            <asp:ListItem Text="Scott" Value="scott"></asp:ListItem>
+                            <asp:ListItem Text="Kevin" Value="kevin"></asp:ListItem>
+                            <asp:ListItem Text="Tony" Value="tony"></asp:ListItem>
+                        </asp:DropDownList>
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="control-label">Photo</label>
@@ -104,10 +121,13 @@
                     </div>
                     <div class="checkbox" id="UseFacebookProfilePhoto" runat="server">
                         <label>
-                            <asp:CheckBox ID="cbUseFacebookPhoto" runat="server" />
+                            <asp:CheckBox ID="cbUseFacebookPhoto" runat="server" onclick="selectUseFacebookPhoto();" />
                             Use profile photo from Facebook
                             <input type="hidden" id="txtFacebookPhotoUrl" name="txtFacebookPhotoUrl" runat="server" value="" />
                         </label>
+                    </div>
+                    <div class="form-group facebook-photo-preview hidden">
+
                     </div>
                 </div>
                 <div class="modal-footer">

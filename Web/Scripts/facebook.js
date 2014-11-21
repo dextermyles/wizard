@@ -1,5 +1,6 @@
 ﻿// facebook init
 var isFacebookLoggedIn = false;
+var facebookPhotoUrl = "";
 
 window.fbAsyncInit = function () {
     FB.init({
@@ -98,6 +99,9 @@ function getFacebookPictureURL() {
         logMessage('-- PictureURL received --');
 
         var picture_url = response.data.url;
+
+        // update global value
+        facebookPhotoUrl = picture_url;
 
         // update form element
         $("#MainContent_txtFacebookPhotoUrl").val(picture_url);
