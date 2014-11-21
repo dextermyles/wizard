@@ -196,6 +196,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Home.aspx" />
+    <Content Include="HostGame.aspx" />
     <Content Include="Logout.aspx" />
     <Content Include="Main.Master" />
     <Content Include="Default.aspx" />
@@ -247,12 +248,20 @@
     </Compile>
     <Compile Include="GameSessionHub.cs" />
     <Compile Include="Helpers\ConnectionManager.cs" />
+    <Compile Include="Helpers\GameLobby.cs" />
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Home.aspx.designer.cs">
       <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HostGame.aspx.cs">
+      <DependentUpon>HostGame.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HostGame.aspx.designer.cs">
+      <DependentUpon>HostGame.aspx</DependentUpon>
     </Compile>
     <Compile Include="Logout.aspx.cs">
       <DependentUpon>Logout.aspx</DependentUpon>

@@ -14,5 +14,6 @@ namespace WizardGame.Helpers
         public int PlayerId = 0;
         public string IpAddress = string.Empty;
         public string Secret = string.Empty;
+        public string ConnectionId = string.Empty;
     }
 }

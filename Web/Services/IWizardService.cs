@@ -43,9 +43,15 @@ namespace WizardGame.Services
         [OperationContract]
         void DeleteOldSessions(int maxDays = 3);
 
+        [OperationContract]
+        void DeleteGameLobbyById(int gameLobbyId);
+
         // Gets
         [OperationContract]
         Game GetGameById(int gameId);
+
+        [OperationContract]
+        GameLobby GetGameLobbyById(int gameLobbyId);
 
         [OperationContract]
         GameHistory GetGameHistoryByGameId(int gameId);
@@ -79,7 +85,10 @@ namespace WizardGame.Services
 
         // Updates
         [OperationContract]
-        Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData);
+        Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId);
+
+        [OperationContract]
+        GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);
 
         [OperationContract]
         GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);
@@ -91,7 +100,7 @@ namespace WizardGame.Services
         Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
 
         [OperationContract]
-        Session UpdateSession(string secret, int userId, int playerId);
+        Session UpdateSession(string secret, int userId, int playerId, string connectionId);
 
         [OperationContract]
         User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId);

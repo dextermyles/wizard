@@ -15,5 +15,7 @@ namespace WizardGame.Helpers
         public int MaxHands = 0;
         public int InitialDealerPosition = 0;
         public string ScoreData = string.Empty;
+        public string GroupNameId = string.Empty;
+        public int GameLobbyId = 0;
     }
 }

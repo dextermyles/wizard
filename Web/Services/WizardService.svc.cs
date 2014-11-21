@@ -65,13 +65,13 @@ namespace WizardGame.Services
             return null;
         }
 
-        public Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData)
+        public Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId)
         {
             try
             {
                 // get db results
                 Data.GameTableAdapters.GameTableAdapter gameAdapter = new Data.GameTableAdapters.GameTableAdapter();
-                Data.Game.GameDataTable dtGame = gameAdapter.UpdateGame(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData);
+                Data.Game.GameDataTable dtGame = gameAdapter.UpdateGame(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData, groupNameId, gameLobbyId);
                 Data.Game.GameRow row = (Data.Game.GameRow) dtGame.Rows[0];
 
                 if (row != null)
@@ -95,6 +95,11 @@ namespace WizardGame.Services
 
                     if (!row.IsScoreDataNull())
                         game.ScoreData = row.ScoreData;
+
+                    if(!row.IsGroupNameIdNull())
+                        game.GroupNameId = row.GroupNameId;
+
+                    game.GameLobbyId = row.GameLobbyId;
 
                     return game;
                 }
@@ -172,6 +177,11 @@ namespace WizardGame.Services
 
                     if (!row.IsScoreDataNull())
                         game.ScoreData = row.ScoreData;
+
+                    if (!row.IsGroupNameIdNull())
+                        game.GroupNameId = row.GroupNameId;
+
+                    game.GameLobbyId = row.GameLobbyId; 
                 }
             }
             catch (Exception ex)
@@ -729,6 +739,9 @@ namespace WizardGame.Services
 
                     if (!row.IsUserIdNull())
                         session.UserId = row.UserId;
+
+                    if (!row.IsConnectionIdNull())
+                        session.ConnectionId = row.ConnectionId;
                 }
             }
             catch (Exception ex)
@@ -782,14 +795,14 @@ namespace WizardGame.Services
         }
 
 
-        public Session UpdateSession(string secret, int userId, int playerId)
+        public Session UpdateSession(string secret, int userId, int playerId, string connectionId)
         {
             Session session = new Session();
 
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, Functions.GetUserIPAddress());
+                Data.Session.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, Functions.GetUserIPAddress(), connectionId);
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
@@ -811,6 +824,9 @@ namespace WizardGame.Services
 
                     if (!row.IsUserIdNull())
                         session.UserId = row.UserId;
+
+                    if(!row.IsConnectionIdNull())
+                        session.ConnectionId = row.ConnectionId;
                 }
             }
             catch (Exception ex)
@@ -851,6 +867,9 @@ namespace WizardGame.Services
 
                     if (!row.IsUserIdNull())
                         session.UserId = row.UserId;
+
+                    if (!row.IsConnectionIdNull())
+                        session.ConnectionId = row.ConnectionId;
                 }
             }
             catch (Exception ex)
@@ -956,6 +975,9 @@ namespace WizardGame.Services
 
                     if (!row.IsUserIdNull())
                         session.UserId = row.UserId;
+
+                    if (!row.IsConnectionIdNull())
+                        session.ConnectionId = row.ConnectionId;
                 }
             }
             catch (Exception ex)
@@ -964,6 +986,111 @@ namespace WizardGame.Services
             }
 
             return session;
+        }
+
+
+        public void DeleteGameLobbyById(int gameLobbyId)
+        {
+            try
+            {
+                Data.GameTableAdapters.GameLobbyTableAdapter adapter = new Data.GameTableAdapters.GameLobbyTableAdapter();
+                adapter.DeleteGameLobbyById(gameLobbyId);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+
+        public GameLobby GetGameLobbyById(int gameLobbyId)
+        {
+            GameLobby gameLobby = new GameLobby();
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyTableAdapter adapter = new Data.GameTableAdapters.GameLobbyTableAdapter();
+                Data.Game.GameLobbyDataTable dtGameLobby = adapter.GetGameLobbyById(gameLobbyId);
+
+                if (dtGameLobby != null && dtGameLobby.Rows.Count > 0)
+                {
+                    Data.Game.GameLobbyRow row = (Data.Game.GameLobbyRow)dtGameLobby.Rows[0];
+
+                    gameLobby.DateCreated = row.DateCreated;
+                    gameLobby.GameLobbyId = row.GameLobbyId;
+                    
+                    if(!row.IsGroupNameIdNull())
+                        gameLobby.GroupNameId = row.GroupNameId;
+
+                    if (!row.IsInProgressNull())
+                        gameLobby.InProgress = row.InProgress;
+
+                    gameLobby.MaxPlayers = row.MaxPlayers;
+                    
+                    if (!row.IsNameNull())
+                        gameLobby.Name = row.Name;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        gameLobby.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsPasswordNull())
+                        gameLobby.Password = row.Password;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return gameLobby;
+        }
+
+        public GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress)
+        {
+            GameLobby gameLobby = new GameLobby();
+
+            // validation
+            if (maxPlayers < 3)
+                maxPlayers = 3;
+
+            if (maxPlayers > 6)
+                maxPlayers = 6;
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyTableAdapter adapter = new Data.GameTableAdapters.GameLobbyTableAdapter();
+                Data.Game.GameLobbyDataTable dtGameLobby = adapter.UpdateGameLobby(gameLobbyId, ownerPlayerId, name, maxPlayers, groupNameId, password, inProgress);
+
+                if (dtGameLobby != null && dtGameLobby.Rows.Count > 0)
+                {
+                    Data.Game.GameLobbyRow row = (Data.Game.GameLobbyRow)dtGameLobby.Rows[0];
+
+                    gameLobby.DateCreated = row.DateCreated;
+                    gameLobby.GameLobbyId = row.GameLobbyId;
+
+                    if (!row.IsGroupNameIdNull())
+                        gameLobby.GroupNameId = row.GroupNameId;
+
+                    if (!row.IsInProgressNull())
+                        gameLobby.InProgress = row.InProgress;
+
+                    gameLobby.MaxPlayers = row.MaxPlayers;
+
+                    if (!row.IsNameNull())
+                        gameLobby.Name = row.Name;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        gameLobby.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsPasswordNull())
+                        gameLobby.Password = row.Password;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return gameLobby;
         }
     }
 }

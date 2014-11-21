@@ -45,6 +45,30 @@ namespace WizardGame
             {
                 UseFacebookProfilePhoto.Visible = false;
             }
+
+            // update page details
+            UpdatePageDetails();
+        }
+
+        private void UpdatePageDetails()
+        {
+            // update welcome text with player name
+            if (UserData != null)
+            {
+                // show username
+                if (!string.IsNullOrEmpty(UserData.Username))
+                {
+                    WelcomeTitle.InnerText = "Welcome, " + UserData.Username + "!";
+                }
+                else
+                {
+                    // check player list for a player name
+                    if (UserPlayers != null && UserPlayers.Length > 0)
+                    {
+                        WelcomeTitle.InnerText = "Welcome, " + UserPlayers[0].Name + "!";
+                    }
+                }
+            }
         }
 
         protected void btnNewPlayer_Click(object sender, EventArgs e)
@@ -56,10 +80,13 @@ namespace WizardGame
             if(player != null && player.PlayerId > 0) 
             {
                 // update session
-                UserSession = wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, player.PlayerId);
+                UserSession = wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, player.PlayerId, UserSession.ConnectionId);
 
-                // update list of players for user
-                UserPlayers = wizWS.ListPlayersByUserId(UserSession.UserId);
+                if (UserSession != null)
+                {
+                    // update list of players for user
+                    UserPlayers = wizWS.ListPlayersByUserId(UserSession.UserId);
+                }
             }
         }
     }

@@ -14,52 +14,53 @@
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <div class="page-header hidden-xs" style="margin-top: 14px;">
-            <h1>Get started</h1>
+            <h1 id="WelcomeTitle" runat="server">Welcome, guest!</h1>
         </div>
         <div class="col-md-6">
-            <ul class="list-group">
-                <% if (UserPlayers != null /*&& UserPlayers.Length == 0*/)
-                   { %>
-                <li class="list-group-item">
-                    <button class="btn btn-lg btn-default btn-block" data-toggle="modal" data-target="#newPlayerModal" onclick="return false;">
-                        Create your Player
-                    </button>
-                </li>
-                <% } // UserPlayers %>
-                <li class="list-group-item">
-                    <button class="btn btn-lg btn-default btn-block">
-                        Host Game
-                    </button>
-                </li>
-                <li class="list-group-item">
-                    <button class="btn btn-lg btn-default btn-block">
-                        Join Game
-                    </button>
-                </li>
-                <li class="list-group-item">
-                    <button class="btn btn-lg btn-default btn-block">
-                        Account settings
-                    </button>
-                </li>
-            </ul>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Getting started</strong>
+                </div>
+                <ul class="panel-body list-group">
+                    <% if (UserPlayers != null && UserPlayers.Length == 0)
+                       { %>
+                    <li class="list-group-item">
+                        <button class="btn btn-lg btn-default btn-block" data-toggle="modal" data-target="#newPlayerModal" onclick="return false;">
+                            Create your Player
+                        </button>
+                    </li>
+                    <% } // UserPlayers %>
+                    <li class="list-group-item">
+                        <a class="btn btn-lg btn-default btn-block" href="HostGame.aspx">
+                            Host Game
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="btn btn-lg btn-default btn-block" href="AvailableGames.aspx">
+                            Join Game
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="col-md-6">
             <!-- available games -->
-            <div class="panel panel-default hidden-xs">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <strong>Available games to join</strong>
                 </div>
                 <table class="table table-responsive panel-body">
                     <thead>
                         <tr>
-                            <th>Lobby</th>
-                            <th>Host</th>
-                            <th class="text-center"># Players</th>
+                            <th style="width:40%;">Lobby</th>
+                            <th style="width:30%;">Host</th>
+                            <th class="text-center" style="width: 15%;"># Players</th>
+                            <th style="width: 15%;">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="3">No game lobbies available</td>
+                            <td colspan="4">No game lobbies available</td>
                         </tr>
                     </tbody>
                 </table>
@@ -68,6 +69,7 @@
                 </div>
             </div>
             <!-- match history -->
+            <!--
             <div class="panel panel-default hidden-xs">
                 <div class="panel-heading">
                     <strong>Match history</strong>
@@ -90,6 +92,7 @@
                     <a href="#">Show all</a>
                 </div>
             </div>
+            -->
         </div>
     </div>
     <div class="modal fade" id="newPlayerModal" tabindex="-1" role="dialog" aria-labelledby="newPlayerModalLabel" aria-hidden="true">
@@ -100,7 +103,7 @@
                     <h4 class="modal-title" id="newPlayerModalLabel">New player</h4>
                 </div>
                 <div class="modal-body">
-                     <p class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Please enter some information about your player.</p>
+                    <p class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span>Please enter some information about your player.</p>
                     <div class="form-group">
                         <label for="recipient-name" class="control-label">Name</label>
                         <asp:TextBox ID="PlayerName" CssClass="form-control" runat="server" />
@@ -121,13 +124,12 @@
                     </div>
                     <div class="checkbox" id="UseFacebookProfilePhoto" runat="server">
                         <label>
-                            <asp:CheckBox ID="cbUseFacebookPhoto" runat="server" onclick="selectUseFacebookPhoto();" />
+                            <asp:CheckBox ID="cbUseFacebookPhoto" runat="server" OnClick="selectUseFacebookPhoto();" />
                             Use profile photo from Facebook
                             <input type="hidden" id="txtFacebookPhotoUrl" name="txtFacebookPhotoUrl" runat="server" value="" />
                         </label>
                     </div>
                     <div class="form-group facebook-photo-preview hidden">
-
                     </div>
                 </div>
                 <div class="modal-footer">
