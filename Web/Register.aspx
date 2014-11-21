@@ -18,8 +18,6 @@
             <p id="MessageBoxText" runat="server" />
         </div>
         <div class="form-group">
-
-
             <asp:Label AssociatedControlID="txtUsername" runat="server">Username</asp:Label>
             <input id="txtUsername" name="txtUsername" runat="server" type="text" class="form-control" placeholder="Username" required autofocus autocomplete="off" />
         </div>

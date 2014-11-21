@@ -6,12 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
-    [Authorize]
     public class GameSessionHub : Hub
     {
+        private WizardService wizWS = new WizardService();
+
         public override Task OnConnected()
         {
             // Add your own code here.
@@ -38,6 +41,42 @@ namespace WizardGame
             // user as offline after a period of inactivity; in that case 
             // mark the user as online again.
             return base.OnReconnected();
+        }
+
+        public void SendChatMessage(string playerName, string message, string groupNameId)
+        {
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // call receiveChatMessage on client
+            Clients.Group(groupNameId).receiveChatMessage(playerName, message);
+        }
+
+        public async Task JoinGameLobby(int playerId, string groupNameId)
+        {
+            // add user to group
+            await Groups.Add(Context.ConnectionId, groupNameId);
+
+            // get player data
+            Player player = wizWS.GetPlayerById(playerId);
+
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // call playerJoinedLobby on client
+            Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
+        }
+
+        public async Task LeaveGameLobby(string playerName, string groupNameId)
+        {
+            // connection id
+            string connectionId = Context.ConnectionId;
+
+            // remove user from group
+            await Groups.Remove(connectionId, groupNameId);
+
+            // client playerLeftLobby on client
+            Clients.Group(groupNameId).playerLeftLobby(playerName, connectionId);
         }
     }
 }
