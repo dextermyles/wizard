@@ -15,6 +15,7 @@ namespace WizardGame
         public Player PlayerData = null;
         public User UserData = null;
         public GameLobby GameLobby = null;
+        public bool IsGameHost = false;
 
         private WizardService wizWS = new WizardService();
         private int gameLobbyId = 0;
@@ -57,7 +58,21 @@ namespace WizardGame
                 GameLobbyTitle.InnerText = "Game Lobby: " + GameLobby.Name;
 
                 // get player data
-                PlayerData = wizWS.GetPlayerById(GameLobby.OwnerPlayerId);
+                PlayerData = wizWS.GetPlayerById(UserSession.PlayerId);
+
+                // validate
+                if (PlayerData != null)
+                {
+                    // player is the host
+                    if (GameLobby.OwnerPlayerId == PlayerData.PlayerId)
+                        IsGameHost = true;
+                }
+                else
+                {
+                    // error redirect
+                    Response.Redirect("~/Home.aspx?Error=No player assigned to user account");
+                    Response.End();
+                }
             }
             else
             {

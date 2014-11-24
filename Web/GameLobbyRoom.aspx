@@ -160,8 +160,17 @@
                         <div class="input-group">
                             <input type="text" id="txtChatMessage" name="txtChatMessage" class="form-control" placeholder="Send a message to other players" />
                             <span class="input-group-btn">
-                                <input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-warning" value="Clear" onclick="clearChatWindow(); return false;" />
+                                <input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-default" value="Clear" onclick="clearChatWindow(); return false;" />
                                 <input type="button" id="btnSendChat" name="btnSendChat" class="btn btn-primary" value="Send" onclick="sendChatMessage(); return false;" />
+                                <script>
+                                    // bind enter event to chat text box
+                                    $("#txtChatMessage").bind("keypress", function (event) {
+                                        // enter key pressed
+                                        if (event.keyCode == 13) {
+                                            sendChatMessage();
+                                        }
+                                    });
+                                </script>
                             </span>
                         </div>
                     </div>
@@ -181,6 +190,26 @@
                 <div class="panel-footer">
                     Connected: <span class="total-players">1</span>
                 </div>
+            </div>
+            <div class="form-group">
+                <% 
+                    // check if player is game host
+                    if (IsGameHost)
+                    {
+                        // player is the game host
+                %>
+                <asp:Button runat="server" ID="btnStartGame" CssClass="btn btn-lg btn-primary btn-block" Text="Start game" disabled />
+                <asp:Button runat="server" ID="btnCancelGame" CssClass="btn btn-lg btn-default btn-block" Text="Cancel game" />
+                <% 
+                    }
+                    else
+                    {
+                        // player is not the host 
+                %>
+                <asp:Button runat="server" ID="btnQuitGame" CssClass="btn btn-lg btn-primary btn-block" Text="Quit game" />
+                <% 
+                    }
+                %>
             </div>
         </div>
     </div>

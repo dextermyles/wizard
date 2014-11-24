@@ -16,12 +16,12 @@
         <div class="page-header hidden-xs" style="margin-top: 14px;">
             <h1 id="WelcomeTitle" runat="server">Welcome, guest!</h1>
         </div>
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <strong>Getting started</strong>
                 </div>
-                <ul class="panel-body list-group">
+                <ul class="list-group">
                     <% if (UserPlayers != null && UserPlayers.Length == 0)
                        { %>
                     <li class="list-group-item">
@@ -43,7 +43,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <!-- available games -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -53,14 +53,13 @@
                     <thead>
                         <tr>
                             <th style="width:40%;">Lobby</th>
-                            <th style="width:30%;">Host</th>
-                            <th class="text-center" style="width: 15%;"># Players</th>
-                            <th style="width: 15%;">&nbsp;</th>
+                            <th class="text-center" style="width:40%;">Host</th>
+                            <th class="text-center" style="width: 20%;">Players</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4">No game lobbies available</td>
+                            <td colspan="3">No game lobbies available</td>
                         </tr>
                     </tbody>
                 </table>

@@ -65,7 +65,11 @@ namespace WizardGame
                     // check player list for a player name
                     if (UserPlayers != null && UserPlayers.Length > 0)
                     {
+                        // update welcome title
                         WelcomeTitle.InnerText = "Welcome, " + UserPlayers[0].Name + "!";
+
+                        // by default assign first player to session (will later be done via character select screen)
+                        wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, UserPlayers[0].PlayerId, UserSession.ConnectionId);
                     }
                 }
             }
