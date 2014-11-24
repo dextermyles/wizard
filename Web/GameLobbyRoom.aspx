@@ -43,6 +43,9 @@
         // Start the connection
         $.connection.hub.start().done(onConnectionInit);
 
+        // display connecting message
+        appendChatMessage("Server", "Connecting to game lobby... Please wait");
+
         // get reference to hub
         var hub = $.connection.gameSessionHub;
 
@@ -204,7 +207,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly>Connecting to game lobby... Please wait\n</textarea>
+                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly></textarea>
                         <style type="text/css">
                             #txtChatWindow {
                                 width: 100%;
