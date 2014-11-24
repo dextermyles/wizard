@@ -54,6 +54,9 @@ namespace WizardGame.Services
         Game GetGameById(int gameId);
 
         [OperationContract]
+        GameLobby GetGameLobbyByConnectionId(string connectionId);
+
+        [OperationContract]
         GameLobby GetGameLobbyById(int gameLobbyId);
 
         [OperationContract]
@@ -67,6 +70,9 @@ namespace WizardGame.Services
 
         [OperationContract]
         HandHistory GetLastHandHistoryByGameId(int gameId);
+
+        [OperationContract]
+        Player GetPlayerByConnectionId(string connectionId);
 
         [OperationContract]
         Player GetPlayerById(int playerId);

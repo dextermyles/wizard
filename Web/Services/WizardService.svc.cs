@@ -334,6 +334,40 @@ namespace WizardGame.Services
             return handHistory;
         }
 
+        public Player GetPlayerByConnectionId(string connectionId)
+        {
+            Player player = new Player();
+
+            try
+            {
+                Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.Session.PlayerDataTable dtPlayer = adapter.GetPlayerByConnectionId(connectionId);
+
+                if (dtPlayer != null && dtPlayer.Rows.Count > 0)
+                {
+                    Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+
+                    if (!row.IsNameNull())
+                        player.Name = row.Name;
+
+                    if (!row.IsPictureURLNull())
+                        player.PictureURL = row.PictureURL;
+
+                    player.PlayerId = row.PlayerId;
+
+                    if (!row.IsUserIdNull())
+                        player.UserId = row.UserId;
+                }
+            }
+            catch (Exception ex)
+            {
+                // error handling
+                LogError(ex);
+            }
+
+            return player;
+        }
+
         public Player GetPlayerById(int playerId)
         {
             Player player = new Player();
@@ -1000,6 +1034,48 @@ namespace WizardGame.Services
             {
                 LogError(ex);
             }
+        }
+
+        public GameLobby GetGameLobbyByConnectionId(string connectionId)
+        {
+            GameLobby gameLobby = new GameLobby();
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyTableAdapter adapter = new Data.GameTableAdapters.GameLobbyTableAdapter();
+                Data.Game.GameLobbyDataTable dtGameLobby = adapter.GetGameLobbyByConnectionId(connectionId);
+
+                if (dtGameLobby != null && dtGameLobby.Rows.Count > 0)
+                {
+                    Data.Game.GameLobbyRow row = (Data.Game.GameLobbyRow)dtGameLobby.Rows[0];
+
+                    gameLobby.DateCreated = row.DateCreated;
+                    gameLobby.GameLobbyId = row.GameLobbyId;
+
+                    if (!row.IsGroupNameIdNull())
+                        gameLobby.GroupNameId = row.GroupNameId;
+
+                    if (!row.IsInProgressNull())
+                        gameLobby.InProgress = row.InProgress;
+
+                    gameLobby.MaxPlayers = row.MaxPlayers;
+
+                    if (!row.IsNameNull())
+                        gameLobby.Name = row.Name;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        gameLobby.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsPasswordNull())
+                        gameLobby.Password = row.Password;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return gameLobby;
         }
 
         public GameLobby GetGameLobbyById(int gameLobbyId)

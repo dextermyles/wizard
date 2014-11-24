@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:Session" ZOrder="1" X="45" Y="18" Height="275" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="160" />
     <Shape ID="DesignTable:User" ZOrder="3" X="357" Y="15" Height="241" Width="229" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="160" />
     <Shape ID="DesignTable:Register" ZOrder="4" X="602" Y="17" Height="156" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="75" />
-    <Shape ID="DesignTable:Player" ZOrder="2" X="47" Y="308" Height="190" Width="298" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="92" />
+    <Shape ID="DesignTable:Player" ZOrder="2" X="47" Y="308" Height="207" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="92" />
   </Shapes>
   <Connectors />
 </DiagramLayout>

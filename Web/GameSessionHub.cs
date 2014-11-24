@@ -31,6 +31,15 @@ namespace WizardGame
             // connection id
             string connectionId = Context.ConnectionId;
 
+            // get game lobby
+            GameLobby gameLobby = wizWS.GetGameLobbyByConnectionId(connectionId);
+
+            // get player
+            Player player = wizWS.GetPlayerByConnectionId(connectionId);
+
+            // broadcast player left
+            Clients.Group(gameLobby.GroupNameId).playerLeftLobby(player.Name, connectionId);
+
             // remove player from game lobby
             wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
 
