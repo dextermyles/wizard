@@ -5,7 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Text;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
@@ -30,7 +31,7 @@ namespace WizardGame
         protected void Page_Load(object sender, EventArgs e)
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // get user session info
             UserSession = Helpers.Functions.GetSessionFromCookie();
@@ -40,9 +41,6 @@ namespace WizardGame
 
             // get user data
             UserData = wizWS.GetUserById(UserSession.UserId);
-
-            // close service
-            wizWS.Close();
 
             // hide facebook profile photo option
             if (string.IsNullOrEmpty(UserData.FB_UserId))
@@ -63,13 +61,10 @@ namespace WizardGame
             if (UserPlayers != null && UserPlayers.Length > 0)
             {
                 // service
-                WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+                WizardService wizWS = new WizardService();
 
                 // by default assign first player to session (will later be done via character select screen)
                 wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, UserPlayers[0].PlayerId, UserSession.ConnectionId);
-
-                // close service
-                wizWS.Close();
             }
         }
 
@@ -98,7 +93,7 @@ namespace WizardGame
         public string ListGameLobbiesHtml()
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             StringBuilder html = new StringBuilder();
             GameLobby[] gameLobbies = wizWS.ListAllGameLobbies(false);
@@ -127,16 +122,13 @@ namespace WizardGame
                 html.AppendLine("</tr>");
             }
 
-            // close service
-            wizWS.Close();
-
             return html.ToString();
         }
 
         protected void btnNewPlayer_Click(object sender, EventArgs e)
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // new player
             Player player = wizWS.UpdatePlayer(0, PlayerName.Text, PlayerPhoto.FileName, UserSession.UserId);
@@ -153,9 +145,6 @@ namespace WizardGame
                     UserPlayers = wizWS.ListPlayersByUserId(UserSession.UserId);
                 }
             }
-
-            // close service
-            wizWS.Close();
         }
     }
 }

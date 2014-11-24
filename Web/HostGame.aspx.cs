@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
@@ -34,7 +35,7 @@ namespace WizardGame
         protected void btnHostGame_Click(object sender, EventArgs e)
         {
             // service
-            WizardService.WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // player list
             Player[] playerList = wizWS.ListPlayersByUserId(UserSession.UserId);

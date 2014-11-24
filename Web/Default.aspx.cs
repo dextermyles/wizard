@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
@@ -27,13 +28,10 @@ namespace WizardGame
                     && !string.IsNullOrEmpty(strFacebookUserId))
                 {
                     // service
-                    WizardServiceClient wizWS = new WizardServiceClient();
+                    WizardService wizWS = new WizardService();
 
                     // perform facebook login
                     var session = wizWS.FacebookLogin(strFacebookEmail, strFacebookUserId);
-
-                    // close service
-                    wizWS.Close();
 
                     // validate session
                     ValidateSession(session, remember);
@@ -53,7 +51,7 @@ namespace WizardGame
             bool remember = cbRemember.Checked;
 
             // service
-            WizardServiceClient wizWS = new WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // perform login
             var session = wizWS.Login(username, password, Helpers.Functions.GetUserIPAddress());
@@ -117,13 +115,10 @@ namespace WizardGame
                 if (!string.IsNullOrEmpty(secret))
                 {
                     // service
-                    WizardServiceClient wizWS = new WizardServiceClient();
+                    WizardService wizWS = new WizardService();
 
                     // validate secret
                     var session = wizWS.ValidateSession(secret);
-
-                    // close service
-                    wizWS.Close();
 
                     // invalid secret
                     if (session != null && !string.IsNullOrEmpty(session.Secret))

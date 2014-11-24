@@ -5,7 +5,8 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
@@ -18,7 +19,7 @@ namespace WizardGame
         public bool IsGameHost = false;
         public GameLobbyPlayers[] LobbyPlayers = null;
 
-        private WizardServiceClient wizWS = new WizardServiceClient();
+        private WizardService wizWS = new WizardService();
         private int gameLobbyId = 0;
 
         protected override void OnLoad(EventArgs e)
@@ -72,7 +73,6 @@ namespace WizardGame
                 {
                     // error redirect
                     Response.Redirect("~/Home.aspx?Error=No player assigned to user account");
-                    Response.End();
                 }
 
                 // get lobby players
@@ -82,7 +82,6 @@ namespace WizardGame
             {
                 // error redirect
                 Response.Redirect("~/Home.aspx?Error=Game lobby not found");
-                Response.End();
             }
         }
 
