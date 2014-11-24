@@ -28,9 +28,12 @@ namespace WizardGame
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            // Add your own code here.
-            // For example: in a chat application, mark the user as offline, 
-            // delete the association between the current connection id and user name.
+            // connection id
+            string connectionId = Context.ConnectionId;
+
+            // remove player from game lobby
+            wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
+
             return base.OnDisconnected(stopCalled);
         }
 
