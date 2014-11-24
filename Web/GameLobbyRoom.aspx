@@ -54,7 +54,8 @@
             appendChatMessage(playerName, "Joined the game lobby.")
 
             // add player to list
-            $(".player-list").append("<li class=list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
+            if(!isPlayerInList(playerName))
+                $(".player-list").append("<li class='list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
 
             // update player count
             updatePlayerCount();
@@ -170,6 +171,18 @@
 
             // update player count
             $(".total-players").html(totalPlayers.toString());
+        }
+
+        function isPlayerInList(playerName) {
+            if ($(".player-list li:contains('" + playerName + "')").length > 0) {
+                logMessage("-- player is already in list --");
+
+                return true;
+            }​
+
+            logMessage("-- player is not in list --");
+
+            return false;
         }
     </script>
 </asp:Content>
