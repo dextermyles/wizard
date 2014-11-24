@@ -23,6 +23,12 @@
         // is connected to server
         var isConnected = false;
 
+        // max players
+        var maxPlayers = <%=GameLobby.MaxPlayers%>;
+
+        // connected players
+        var totalPlayers = 0;
+
         var keepAliveInterval = 0;
 
         currentPlayer.PlayerId = '<%= PlayerData.PlayerId %>';
@@ -116,6 +122,15 @@
             appendChatMessage(playerName, message);
         }
 
+        // gameStarted
+        hub.client.gameStarted = function gameStarted(gameData) {
+            console.log(gameData);
+
+            logMessage("-- game started by host --");
+
+            appendChatMessage("Server", "Game will start in 3 seconds");
+        }
+
         // logMessage
         hub.client.logMessage = function logMessage(message) {
             // append to log window
@@ -200,7 +215,7 @@
         };
 
         function updatePlayerCount() {
-            var totalPlayers = 0;
+            
 
             // count items in player list
             $(".player-list li").each(function (i, e) {
@@ -208,7 +223,12 @@
             });
 
             // update player count
-            $(".total-players").html(totalPlayers.toString());
+            $(".total-players").html(totalPlayers.toString() + " / " + maxPlayers);
+
+            // has min players connected
+            if(totalPlayers > 2) {
+                $("#MainContent_btnStartGame").removeAttr("disabled");
+            }
         }
 
         function isPlayerInList(playerName) {
@@ -229,11 +249,22 @@
                 hub.server.ping()
                     .done(function () {
                         logMessage("-- keep-alive request sent to server --");
-                    })
-                    .error(function (error) {
-                        logMessage("-- " + error + " --");
                     });
             }
+        }
+
+        function startGame() {
+            if(isConnected) {
+                if(totalPlayers > 2) {
+                    hub.server.startGame(gameLobbyId, groupNameId)
+                        .done(function() {
+                            logMessage("-- start game sent to server --");
+                        });
+                }
+                else {
+                    alert("Not enough players to start the game");
+                }
+            } 
         }
 
         /******************************************

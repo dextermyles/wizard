@@ -64,6 +64,32 @@ namespace WizardGame
             Clients.Group(groupNameId).receiveChatMessage(playerName, message);
         }
 
+        public void StartGame(int gameLobbyId, string groupNameId)
+        {
+            // create game
+            GameLobby gameLobby = wizWS.GetGameLobbyById(gameLobbyId);
+            GameLobbyPlayers[] lobbyPlayers = wizWS.ListGameLobbyPlayers(gameLobbyId);
+
+            if(gameLobby != null && lobbyPlayers != null)
+            {
+                // max hands
+                int maxHands = (60 / lobbyPlayers.Length);
+                
+                // random dealer position
+                Random r = new Random();
+                int dealerPosition = r.Next(0, lobbyPlayers.Length);
+                
+                // create game
+                Game game = wizWS.UpdateGame(0, gameLobby.OwnerPlayerId, null, lobbyPlayers.Length, maxHands, dealerPosition, "{}", string.Empty, gameLobbyId);
+
+                // set in progress flag
+                wizWS.UpdateGameLobby(gameLobbyId, gameLobby.OwnerPlayerId, gameLobby.Name, gameLobby.MaxPlayers, gameLobby.GroupNameId, gameLobby.Password, true);
+                
+                // redirect players to game
+                Clients.Group(groupNameId).gameStarted(game);
+            }
+        }
+
         public async Task JoinGameLobby(int playerId, int gameLobbyId, string groupNameId)
         {
             // add user to group
