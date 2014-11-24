@@ -93,7 +93,7 @@ namespace WizardGame
                 Response.Cookies.Add(cookie);
 
                 // valid
-                Response.Redirect("~/Home.aspx", true);
+                Response.Redirect("~/Home.aspx");
             }
             else
             {

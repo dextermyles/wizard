@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using WizardGame.Services;
+using WizardGame.WizardService;
 
 namespace WizardGame.Helpers
 {
@@ -26,7 +26,7 @@ namespace WizardGame.Helpers
                 if (!string.IsNullOrEmpty(secret))
                 {
                     // service
-                    WizardService.WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+                    WizardServiceClient wizWS = new WizardService.WizardServiceClient();
 
                     // get session data
                     session = wizWS.GetSessionBySecret(secret);

@@ -21,7 +21,7 @@ namespace WizardGame
             if (!Helpers.Functions.IsValidSession())
             {
                 // redirect to login page
-                Response.Redirect("~/Default.aspx");
+                Response.Redirect("~/Default.aspx?Error=Session is not valid");
             }
 
             base.OnLoad(e);
