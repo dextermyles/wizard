@@ -126,7 +126,14 @@ namespace WizardGame
                     wizWS.Close();
 
                     // invalid secret
-                    if (session != null && !string.IsNullOrEmpty(session.Secret))
+                    if (string.IsNullOrEmpty(session.Secret))
+                    {
+                        // clear existing cookes
+                        cookie.Expires = DateTime.Now.AddDays(-1);
+
+                        Response.Cookies.Add(cookie);
+                    }
+                    else
                     {
                         // validate session result
                         ValidateSession(session);
