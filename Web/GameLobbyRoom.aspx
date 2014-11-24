@@ -55,6 +55,9 @@
 
             // add player to list
             $(".player-list").append("<li class=list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
+
+            // update player count
+            updatePlayerCount();
         };
 
         // playerLeftLobby
@@ -67,6 +70,9 @@
 
             // remove name from player list
             $("#player-" + playerName).remove();
+
+            // update player count
+            updatePlayerCount();
         };
 
         // receiveChatMessage
@@ -153,6 +159,18 @@
             // append new message
             $("#txtChatWindow").val(oldMessages + chatStr);
         };
+
+        function updatePlayerCount() {
+            var totalPlayers = 0;
+
+            // count items in player list
+            $(".player-list li").each(function (i, e) {
+                totalPlayers++;
+            });
+
+            // update player count
+            $(".total-players").html(totalPlayers.toString());
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -204,12 +222,10 @@
                     <strong>Players</strong>
                 </div>
                 <ul class="list-group player-list">
-                    <li class="list-group-item">
-                        <% if (PlayerData != null && !string.IsNullOrEmpty(PlayerData.Name)) { Response.Write(PlayerData.Name); }%>
-                    </li>
+                    <%= ListGameLobbyPlayersHtml()%>
                 </ul>
                 <div class="panel-footer">
-                    Connected: <span class="total-players">1</span>
+                    Connected: <span class="total-players"><%=LobbyPlayers.Length %></span>
                 </div>
             </div>
             <div class="form-group">

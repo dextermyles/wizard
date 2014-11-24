@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.Services;
 using WizardGame.Helpers;
+using WizardGame.Services;
 
 namespace WizardGame
 {
@@ -16,6 +17,7 @@ namespace WizardGame
         public User UserData = null;
         public GameLobby GameLobby = null;
         public bool IsGameHost = false;
+        public GameLobbyPlayers[] LobbyPlayers = null;
 
         private WizardService wizWS = new WizardService();
         private int gameLobbyId = 0;
@@ -60,6 +62,9 @@ namespace WizardGame
                 // get player data
                 PlayerData = wizWS.GetPlayerById(UserSession.PlayerId);
 
+                // get lobby players
+                LobbyPlayers = wizWS.ListGameLobbyPlayers(GameLobby.GameLobbyId);
+
                 // validate
                 if (PlayerData != null && PlayerData.PlayerId > 0)
                 {
@@ -80,6 +85,23 @@ namespace WizardGame
                 Response.Redirect("~/Home.aspx?Error=Game lobby not found");
                 Response.End();
             }
+        }
+
+        public string ListGameLobbyPlayersHtml()
+        {
+            StringBuilder html = new StringBuilder();
+
+            for (int i = 0; i < LobbyPlayers.Length; i++)
+            {
+                GameLobbyPlayers lobbyPlayer = LobbyPlayers[i];
+                Player player = wizWS.GetPlayerById(lobbyPlayer.PlayerId);
+
+                string playerName = (player != null) ? player.Name : "Error";
+
+                html.AppendLine("<li class='list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
+            }
+
+            return html.ToString();
         }
 
         protected void btnStartGame_Click(object sender, EventArgs e)
