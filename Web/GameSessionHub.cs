@@ -52,7 +52,7 @@ namespace WizardGame
             Clients.Group(groupNameId).receiveChatMessage(playerName, message);
         }
 
-        public async Task JoinGameLobby(int playerId, string groupNameId)
+        public async Task JoinGameLobby(int playerId, int gameLobbyId, string groupNameId)
         {
             // add user to group
             await Groups.Add(Context.ConnectionId, groupNameId);
@@ -65,6 +65,9 @@ namespace WizardGame
 
             // call playerJoinedLobby on client
             Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
+
+            // add player to game lobby
+            wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId);
         }
 
         public async Task LeaveGameLobby(string playerName, string groupNameId)
@@ -77,6 +80,9 @@ namespace WizardGame
 
             // client playerLeftLobby on client
             Clients.Group(groupNameId).playerLeftLobby(playerName, connectionId);
+
+            // remove player from lobby table
+            wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
         }
     }
 }

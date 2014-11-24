@@ -62,9 +62,6 @@ namespace WizardGame
                 // get player data
                 PlayerData = wizWS.GetPlayerById(UserSession.PlayerId);
 
-                // get lobby players
-                LobbyPlayers = wizWS.ListGameLobbyPlayers(GameLobby.GameLobbyId);
-
                 // validate
                 if (PlayerData != null && PlayerData.PlayerId > 0)
                 {
@@ -78,6 +75,9 @@ namespace WizardGame
                     Response.Redirect("~/Home.aspx?Error=No player assigned to user account");
                     Response.End();
                 }
+
+                // get lobby players
+                LobbyPlayers = wizWS.ListGameLobbyPlayers(GameLobby.GameLobbyId);
             }
             else
             {

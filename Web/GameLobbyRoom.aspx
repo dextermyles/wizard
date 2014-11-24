@@ -17,6 +17,9 @@
         // server group id
         var groupNameId = '<%=GameLobby.GroupNameId%>';
 
+        // game lobby id
+        var gameLobbyId = '<%=GameLobby.GameLobbyId%>';
+
         // is connected to server
         var isConnected = false;
 
@@ -98,7 +101,7 @@
             logMessage("-- calling joinGameLobby(" + playerId + "," + groupNameId + ") on server --");
 
             // call joinGameLobby on server
-            hub.server.joinGameLobby(playerId, groupNameId)
+            hub.server.joinGameLobby(playerId, gameLobbyId, groupNameId)
                 .done(function () {
                     logMessage("-- joinGameLobby executed on server --");
                 })

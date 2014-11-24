@@ -9,8 +9,8 @@
     <Shape ID="DesignTable:Game" ZOrder="3" X="17" Y="-6" Height="258" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="194" />
     <Shape ID="DesignTable:GameHistory" ZOrder="5" X="339" Y="12" Height="207" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="126" />
     <Shape ID="DesignTable:HandHistory" ZOrder="4" X="64" Y="265" Height="224" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="143" />
-    <Shape ID="DesignTable:GameLobby" ZOrder="2" X="665" Y="57" Height="292" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="194" />
-    <Shape ID="DesignTable:GameLobbyPlayers" ZOrder="1" X="375" Y="256" Height="190" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="109" />
+    <Shape ID="DesignTable:GameLobby" ZOrder="1" X="701" Y="19" Height="292" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="194" />
+    <Shape ID="DesignTable:GameLobbyPlayers" ZOrder="2" X="375" Y="256" Height="190" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="109" />
   </Shapes>
   <Connectors />
 </DiagramLayout>
