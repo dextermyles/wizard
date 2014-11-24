@@ -81,5 +81,20 @@ namespace WizardGame
                 Response.End();
             }
         }
+
+        protected void btnStartGame_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnCancelGame_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnQuitGame_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

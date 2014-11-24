@@ -198,15 +198,15 @@
                     {
                         // player is the game host
                 %>
-                <asp:Button runat="server" ID="btnStartGame" CssClass="btn btn-lg btn-primary btn-block" Text="Start game" disabled />
-                <asp:Button runat="server" ID="btnCancelGame" CssClass="btn btn-lg btn-default btn-block" Text="Cancel game" />
+                <asp:Button runat="server" ID="btnStartGame" CssClass="btn btn-lg btn-primary btn-block" Text="Start game" disabled OnClick="btnStartGame_Click" />
+                <asp:Button runat="server" ID="btnCancelGame" CssClass="btn btn-lg btn-default btn-block" Text="Cancel game" OnClick="btnCancelGame_Click" />
                 <% 
                     }
                     else
                     {
                         // player is not the host 
                 %>
-                <asp:Button runat="server" ID="btnQuitGame" CssClass="btn btn-lg btn-primary btn-block" Text="Quit game" />
+                <asp:Button runat="server" ID="btnQuitGame" CssClass="btn btn-lg btn-primary btn-block" Text="Quit game" OnClick="btnQuitGame_Click" />
                 <% 
                     }
                 %>

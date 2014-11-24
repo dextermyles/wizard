@@ -1092,5 +1092,55 @@ namespace WizardGame.Services
 
             return gameLobby;
         }
+
+
+        public GameLobby[] ListAllGameLobbies(bool showInProgress)
+        {
+            List<GameLobby> gameLobbies = new List<GameLobby>();
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyTableAdapter adapter = new Data.GameTableAdapters.GameLobbyTableAdapter();
+                Data.Game.GameLobbyDataTable dtGameLobbies = adapter.ListAllGameLobbies(showInProgress);
+
+                if (dtGameLobbies != null && dtGameLobbies.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dtGameLobbies.Rows.Count - 1; i++)
+                    {
+                        GameLobby gameLobby = new GameLobby();
+                        Data.Game.GameLobbyRow row = (Data.Game.GameLobbyRow)dtGameLobbies.Rows[i];
+
+                        gameLobby.DateCreated = row.DateCreated;
+                        gameLobby.GameLobbyId = row.GameLobbyId;
+                        
+                        if (!row.IsGroupNameIdNull())
+                            gameLobby.GroupNameId = row.GroupNameId;
+                        
+                        if (!row.IsInProgressNull())
+                            gameLobby.InProgress = row.InProgress;
+                        
+                        gameLobby.MaxPlayers = row.MaxPlayers;
+                       
+                        if (!row.IsNameNull())
+                            gameLobby.Name = row.Name;
+                        
+                        if (!row.IsOwnerPlayerIdNull())
+                            gameLobby.OwnerPlayerId = row.OwnerPlayerId;
+                        
+                        if (!row.IsPasswordNull())
+                            gameLobby.Password = row.Password;
+
+                        // add to list
+                        gameLobbies.Add(gameLobby);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return gameLobbies.ToArray();
+        }
     }
 }

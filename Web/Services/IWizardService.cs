@@ -82,6 +82,7 @@ namespace WizardGame.Services
 
         // Lists
         Player[] ListPlayersByUserId(int userId);
+        GameLobby[] ListAllGameLobbies(bool showInProgress);
 
         // Updates
         [OperationContract]
