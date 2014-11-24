@@ -43,9 +43,6 @@
         // Start the connection
         $.connection.hub.start().done(onConnectionInit);
 
-        // display connecting message
-        appendChatMessage("Server", "Connecting to game lobby... Please wait");
-
         // get reference to hub
         var hub = $.connection.gameSessionHub;
 
@@ -193,6 +190,14 @@
             logMessage("-- " + playerName + " is not in list --");
             return false; 
         };
+
+        /******************************************
+         * functions that are called on page load *
+         ******************************************/
+        $(document).ready(function () {
+            // display connecting message
+            appendChatMessage("Server", "Connecting to game lobby... Please wait");
+        });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
