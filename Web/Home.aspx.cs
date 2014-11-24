@@ -105,7 +105,7 @@ namespace WizardGame
                     html.AppendLine("<tr>");
                     html.AppendLine("<td>" + gameLobby.Name.Trim() + "</td>");
                     html.AppendLine("<td style='text-align:center;'>" + hostName + "</td>");
-                    html.AppendLine("<td style='text-align:center;'>-</td>");
+                    html.AppendLine("<td style='text-align:center;'>" + gameLobby.NumPlayersInLobby + " / " + gameLobby.MaxPlayers + "</td>");
                     html.AppendLine("<td style='text-align:center;'><a href='GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "'>Join</a></td>");
                     html.AppendLine("</tr>");
                 }

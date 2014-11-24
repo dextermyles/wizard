@@ -564,6 +564,9 @@ namespace WizardGame.WizardService {
         private string NameField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int NumPlayersInLobbyField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int OwnerPlayerIdField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -653,6 +656,19 @@ namespace WizardGame.WizardService {
                 if ((object.ReferenceEquals(this.NameField, value) != true)) {
                     this.NameField = value;
                     this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int NumPlayersInLobby {
+            get {
+                return this.NumPlayersInLobbyField;
+            }
+            set {
+                if ((this.NumPlayersInLobbyField.Equals(value) != true)) {
+                    this.NumPlayersInLobbyField = value;
+                    this.RaisePropertyChanged("NumPlayersInLobby");
                 }
             }
         }

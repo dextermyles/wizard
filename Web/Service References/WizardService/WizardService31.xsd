@@ -69,6 +69,7 @@
       <xs:element minOccurs="0" name="InProgress" type="xs:boolean" />
       <xs:element minOccurs="0" name="MaxPlayers" type="xs:int" />
       <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NumPlayersInLobby" type="xs:int" />
       <xs:element minOccurs="0" name="OwnerPlayerId" type="xs:int" />
       <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
     </xs:sequence>
