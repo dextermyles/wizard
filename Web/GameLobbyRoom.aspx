@@ -37,7 +37,7 @@
             // tell server we are joining the lobby
             joinGameLobby(currentPlayer.PlayerId, groupNameId);
 
-            appendChatMessage("Connected to game lobby!");
+            appendChatMessage("Server", "Connected to game lobby!");
         };
 
         // Start the connection
@@ -204,7 +204,9 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly>Connecting to game lobby... Please wait</textarea>
+                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly>Connecting to game lobby... Please wait
+
+                        </textarea>
                         <style type="text/css">
                             #txtChatWindow {
                                 width: 100%;
