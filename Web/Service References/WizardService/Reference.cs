@@ -1341,212 +1341,107 @@ namespace WizardGame.WizardService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GenerateDeck", ReplyAction="http://tempuri.org/IWizardService/GenerateDeckResponse")]
         WizardGame.WizardService.Card[] GenerateDeck();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GenerateDeck", ReplyAction="http://tempuri.org/IWizardService/GenerateDeckResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Card[]> GenerateDeckAsync();
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/EmailExists", ReplyAction="http://tempuri.org/IWizardService/EmailExistsResponse")]
         bool EmailExists(string emailAddress);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/EmailExists", ReplyAction="http://tempuri.org/IWizardService/EmailExistsResponse")]
-        System.Threading.Tasks.Task<bool> EmailExistsAsync(string emailAddress);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UsernameExists", ReplyAction="http://tempuri.org/IWizardService/UsernameExistsResponse")]
         bool UsernameExists(string username);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UsernameExists", ReplyAction="http://tempuri.org/IWizardService/UsernameExistsResponse")]
-        System.Threading.Tasks.Task<bool> UsernameExistsAsync(string username);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/Login", ReplyAction="http://tempuri.org/IWizardService/LoginResponse")]
         WizardGame.WizardService.Session Login(string username, string password, string ipAddress);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/Login", ReplyAction="http://tempuri.org/IWizardService/LoginResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Session> LoginAsync(string username, string password, string ipAddress);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/FacebookLogin", ReplyAction="http://tempuri.org/IWizardService/FacebookLoginResponse")]
         WizardGame.WizardService.Session FacebookLogin(string fb_email, string fb_userId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/FacebookLogin", ReplyAction="http://tempuri.org/IWizardService/FacebookLoginResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Session> FacebookLoginAsync(string fb_email, string fb_userId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/NewUser", ReplyAction="http://tempuri.org/IWizardService/NewUserResponse")]
         WizardGame.WizardService.NewUserResult NewUser(string username, string password, string emailAddress, bool active);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/NewUser", ReplyAction="http://tempuri.org/IWizardService/NewUserResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.NewUserResult> NewUserAsync(string username, string password, string emailAddress, bool active);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ValidateSession", ReplyAction="http://tempuri.org/IWizardService/ValidateSessionResponse")]
         WizardGame.WizardService.Session ValidateSession(string secret);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ValidateSession", ReplyAction="http://tempuri.org/IWizardService/ValidateSessionResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Session> ValidateSessionAsync(string secret);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteSession", ReplyAction="http://tempuri.org/IWizardService/DeleteSessionResponse")]
         void DeleteSession(string secret);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteSession", ReplyAction="http://tempuri.org/IWizardService/DeleteSessionResponse")]
-        System.Threading.Tasks.Task DeleteSessionAsync(string secret);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteOldSessions", ReplyAction="http://tempuri.org/IWizardService/DeleteOldSessionsResponse")]
         void DeleteOldSessions(int maxDays);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteOldSessions", ReplyAction="http://tempuri.org/IWizardService/DeleteOldSessionsResponse")]
-        System.Threading.Tasks.Task DeleteOldSessionsAsync(int maxDays);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/DeleteGameLobbyByIdResponse")]
         void DeleteGameLobbyById(int gameLobbyId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/DeleteGameLobbyByIdResponse")]
-        System.Threading.Tasks.Task DeleteGameLobbyByIdAsync(int gameLobbyId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeletePlayerFromGameLobby", ReplyAction="http://tempuri.org/IWizardService/DeletePlayerFromGameLobbyResponse")]
         void DeletePlayerFromGameLobby(int playerId, int gameLobbyId, string connectionId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeletePlayerFromGameLobby", ReplyAction="http://tempuri.org/IWizardService/DeletePlayerFromGameLobbyResponse")]
-        System.Threading.Tasks.Task DeletePlayerFromGameLobbyAsync(int playerId, int gameLobbyId, string connectionId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameById", ReplyAction="http://tempuri.org/IWizardService/GetGameByIdResponse")]
         WizardGame.WizardService.Game GetGameById(int gameId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameById", ReplyAction="http://tempuri.org/IWizardService/GetGameByIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Game> GetGameByIdAsync(int gameId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByConnectionIdResponse")]
         WizardGame.WizardService.GameLobby GetGameLobbyByConnectionId(string connectionId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByConnectionIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByConnectionIdAsync(string connectionId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByIdResponse")]
         WizardGame.WizardService.GameLobby GetGameLobbyById(int gameLobbyId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByIdAsync(int gameLobbyId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByGameIdResponse")]
         WizardGame.WizardService.GameHistory GetGameHistoryByGameId(int gameId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByGameIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByGameIdAsync(int gameId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByIdResponse")]
         WizardGame.WizardService.GameHistory GetGameHistoryById(int gameHistoryId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByIdAsync(int gameHistoryId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetHandHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetHandHistoryByIdResponse")]
         WizardGame.WizardService.HandHistory GetHandHistoryById(int handHistoryId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetHandHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetHandHistoryByIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetHandHistoryByIdAsync(int handHistoryId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetLastHandHistoryByGameIdResponse")]
         WizardGame.WizardService.HandHistory GetLastHandHistoryByGameId(int gameId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetLastHandHistoryByGameIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetLastHandHistoryByGameIdAsync(int gameId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByConnectionIdResponse")]
         WizardGame.WizardService.Player GetPlayerByConnectionId(string connectionId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByConnectionIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByConnectionIdAsync(string connectionId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerById", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByIdResponse")]
         WizardGame.WizardService.Player GetPlayerById(int playerId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerById", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByIdAsync(int playerId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByName", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByNameResponse")]
         WizardGame.WizardService.Player GetPlayerByName(string name);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByName", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByNameResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByNameAsync(string name);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetSessionBySecret", ReplyAction="http://tempuri.org/IWizardService/GetSessionBySecretResponse")]
         WizardGame.WizardService.Session GetSessionBySecret(string secret);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetSessionBySecret", ReplyAction="http://tempuri.org/IWizardService/GetSessionBySecretResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Session> GetSessionBySecretAsync(string secret);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserById", ReplyAction="http://tempuri.org/IWizardService/GetUserByIdResponse")]
         WizardGame.WizardService.User GetUserById(int userId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserById", ReplyAction="http://tempuri.org/IWizardService/GetUserByIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByIdAsync(int userId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserByUsername", ReplyAction="http://tempuri.org/IWizardService/GetUserByUsernameResponse")]
         WizardGame.WizardService.User GetUserByUsername(string username);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserByUsername", ReplyAction="http://tempuri.org/IWizardService/GetUserByUsernameResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByUsernameAsync(string username);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListPlayersByUserId", ReplyAction="http://tempuri.org/IWizardService/ListPlayersByUserIdResponse")]
         WizardGame.WizardService.Player[] ListPlayersByUserId(int userId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListPlayersByUserId", ReplyAction="http://tempuri.org/IWizardService/ListPlayersByUserIdResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Player[]> ListPlayersByUserIdAsync(int userId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListAllGameLobbies", ReplyAction="http://tempuri.org/IWizardService/ListAllGameLobbiesResponse")]
         WizardGame.WizardService.GameLobby[] ListAllGameLobbies(bool showInProgress);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListAllGameLobbies", ReplyAction="http://tempuri.org/IWizardService/ListAllGameLobbiesResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby[]> ListAllGameLobbiesAsync(bool showInProgress);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/ListGameLobbyPlayersResponse")]
         WizardGame.WizardService.GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/ListGameLobbyPlayersResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers[]> ListGameLobbyPlayersAsync(int gameLobbyId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGame", ReplyAction="http://tempuri.org/IWizardService/UpdateGameResponse")]
         WizardGame.WizardService.Game UpdateGame(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGame", ReplyAction="http://tempuri.org/IWizardService/UpdateGameResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Game> UpdateGameAsync(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobby", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyResponse")]
         WizardGame.WizardService.GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobby", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> UpdateGameLobbyAsync(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyPlayersResponse")]
         WizardGame.WizardService.GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyPlayersResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers> UpdateGameLobbyPlayersAsync(int gameLobbyId, int playerId, string connectionId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateGameHistoryResponse")]
         WizardGame.WizardService.GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateGameHistoryResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> UpdateGameHistoryAsync(int gameHistoryId, int gameId, int playerId, int score, int won);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateHandHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateHandHistoryResponse")]
         WizardGame.WizardService.HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateHandHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateHandHistoryResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> UpdateHandHistoryAsync(int handHistoryId, int gameId, string deckData, string playerData, string trump);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdatePlayer", ReplyAction="http://tempuri.org/IWizardService/UpdatePlayerResponse")]
         WizardGame.WizardService.Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdatePlayer", ReplyAction="http://tempuri.org/IWizardService/UpdatePlayerResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Player> UpdatePlayerAsync(int playerId, string name, string pictureUrl, int userId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateSession", ReplyAction="http://tempuri.org/IWizardService/UpdateSessionResponse")]
         WizardGame.WizardService.Session UpdateSession(string secret, int userId, int playerId, string connectionId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateSession", ReplyAction="http://tempuri.org/IWizardService/UpdateSessionResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.Session> UpdateSessionAsync(string secret, int userId, int playerId, string connectionId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateUser", ReplyAction="http://tempuri.org/IWizardService/UpdateUserResponse")]
         WizardGame.WizardService.User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateUser", ReplyAction="http://tempuri.org/IWizardService/UpdateUserResponse")]
-        System.Threading.Tasks.Task<WizardGame.WizardService.User> UpdateUserAsync(int userId, string username, string password, string emailAddress, bool active, string fb_userId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1580,280 +1475,140 @@ namespace WizardGame.WizardService {
             return base.Channel.GenerateDeck();
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Card[]> GenerateDeckAsync() {
-            return base.Channel.GenerateDeckAsync();
-        }
-        
         public bool EmailExists(string emailAddress) {
             return base.Channel.EmailExists(emailAddress);
-        }
-        
-        public System.Threading.Tasks.Task<bool> EmailExistsAsync(string emailAddress) {
-            return base.Channel.EmailExistsAsync(emailAddress);
         }
         
         public bool UsernameExists(string username) {
             return base.Channel.UsernameExists(username);
         }
         
-        public System.Threading.Tasks.Task<bool> UsernameExistsAsync(string username) {
-            return base.Channel.UsernameExistsAsync(username);
-        }
-        
         public WizardGame.WizardService.Session Login(string username, string password, string ipAddress) {
             return base.Channel.Login(username, password, ipAddress);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> LoginAsync(string username, string password, string ipAddress) {
-            return base.Channel.LoginAsync(username, password, ipAddress);
         }
         
         public WizardGame.WizardService.Session FacebookLogin(string fb_email, string fb_userId) {
             return base.Channel.FacebookLogin(fb_email, fb_userId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> FacebookLoginAsync(string fb_email, string fb_userId) {
-            return base.Channel.FacebookLoginAsync(fb_email, fb_userId);
-        }
-        
         public WizardGame.WizardService.NewUserResult NewUser(string username, string password, string emailAddress, bool active) {
             return base.Channel.NewUser(username, password, emailAddress, active);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.NewUserResult> NewUserAsync(string username, string password, string emailAddress, bool active) {
-            return base.Channel.NewUserAsync(username, password, emailAddress, active);
         }
         
         public WizardGame.WizardService.Session ValidateSession(string secret) {
             return base.Channel.ValidateSession(secret);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> ValidateSessionAsync(string secret) {
-            return base.Channel.ValidateSessionAsync(secret);
-        }
-        
         public void DeleteSession(string secret) {
             base.Channel.DeleteSession(secret);
-        }
-        
-        public System.Threading.Tasks.Task DeleteSessionAsync(string secret) {
-            return base.Channel.DeleteSessionAsync(secret);
         }
         
         public void DeleteOldSessions(int maxDays) {
             base.Channel.DeleteOldSessions(maxDays);
         }
         
-        public System.Threading.Tasks.Task DeleteOldSessionsAsync(int maxDays) {
-            return base.Channel.DeleteOldSessionsAsync(maxDays);
-        }
-        
         public void DeleteGameLobbyById(int gameLobbyId) {
             base.Channel.DeleteGameLobbyById(gameLobbyId);
-        }
-        
-        public System.Threading.Tasks.Task DeleteGameLobbyByIdAsync(int gameLobbyId) {
-            return base.Channel.DeleteGameLobbyByIdAsync(gameLobbyId);
         }
         
         public void DeletePlayerFromGameLobby(int playerId, int gameLobbyId, string connectionId) {
             base.Channel.DeletePlayerFromGameLobby(playerId, gameLobbyId, connectionId);
         }
         
-        public System.Threading.Tasks.Task DeletePlayerFromGameLobbyAsync(int playerId, int gameLobbyId, string connectionId) {
-            return base.Channel.DeletePlayerFromGameLobbyAsync(playerId, gameLobbyId, connectionId);
-        }
-        
         public WizardGame.WizardService.Game GetGameById(int gameId) {
             return base.Channel.GetGameById(gameId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Game> GetGameByIdAsync(int gameId) {
-            return base.Channel.GetGameByIdAsync(gameId);
         }
         
         public WizardGame.WizardService.GameLobby GetGameLobbyByConnectionId(string connectionId) {
             return base.Channel.GetGameLobbyByConnectionId(connectionId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByConnectionIdAsync(string connectionId) {
-            return base.Channel.GetGameLobbyByConnectionIdAsync(connectionId);
-        }
-        
         public WizardGame.WizardService.GameLobby GetGameLobbyById(int gameLobbyId) {
             return base.Channel.GetGameLobbyById(gameLobbyId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByIdAsync(int gameLobbyId) {
-            return base.Channel.GetGameLobbyByIdAsync(gameLobbyId);
         }
         
         public WizardGame.WizardService.GameHistory GetGameHistoryByGameId(int gameId) {
             return base.Channel.GetGameHistoryByGameId(gameId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByGameIdAsync(int gameId) {
-            return base.Channel.GetGameHistoryByGameIdAsync(gameId);
-        }
-        
         public WizardGame.WizardService.GameHistory GetGameHistoryById(int gameHistoryId) {
             return base.Channel.GetGameHistoryById(gameHistoryId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByIdAsync(int gameHistoryId) {
-            return base.Channel.GetGameHistoryByIdAsync(gameHistoryId);
         }
         
         public WizardGame.WizardService.HandHistory GetHandHistoryById(int handHistoryId) {
             return base.Channel.GetHandHistoryById(handHistoryId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetHandHistoryByIdAsync(int handHistoryId) {
-            return base.Channel.GetHandHistoryByIdAsync(handHistoryId);
-        }
-        
         public WizardGame.WizardService.HandHistory GetLastHandHistoryByGameId(int gameId) {
             return base.Channel.GetLastHandHistoryByGameId(gameId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetLastHandHistoryByGameIdAsync(int gameId) {
-            return base.Channel.GetLastHandHistoryByGameIdAsync(gameId);
         }
         
         public WizardGame.WizardService.Player GetPlayerByConnectionId(string connectionId) {
             return base.Channel.GetPlayerByConnectionId(connectionId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByConnectionIdAsync(string connectionId) {
-            return base.Channel.GetPlayerByConnectionIdAsync(connectionId);
-        }
-        
         public WizardGame.WizardService.Player GetPlayerById(int playerId) {
             return base.Channel.GetPlayerById(playerId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByIdAsync(int playerId) {
-            return base.Channel.GetPlayerByIdAsync(playerId);
         }
         
         public WizardGame.WizardService.Player GetPlayerByName(string name) {
             return base.Channel.GetPlayerByName(name);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByNameAsync(string name) {
-            return base.Channel.GetPlayerByNameAsync(name);
-        }
-        
         public WizardGame.WizardService.Session GetSessionBySecret(string secret) {
             return base.Channel.GetSessionBySecret(secret);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> GetSessionBySecretAsync(string secret) {
-            return base.Channel.GetSessionBySecretAsync(secret);
         }
         
         public WizardGame.WizardService.User GetUserById(int userId) {
             return base.Channel.GetUserById(userId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByIdAsync(int userId) {
-            return base.Channel.GetUserByIdAsync(userId);
-        }
-        
         public WizardGame.WizardService.User GetUserByUsername(string username) {
             return base.Channel.GetUserByUsername(username);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByUsernameAsync(string username) {
-            return base.Channel.GetUserByUsernameAsync(username);
         }
         
         public WizardGame.WizardService.Player[] ListPlayersByUserId(int userId) {
             return base.Channel.ListPlayersByUserId(userId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Player[]> ListPlayersByUserIdAsync(int userId) {
-            return base.Channel.ListPlayersByUserIdAsync(userId);
-        }
-        
         public WizardGame.WizardService.GameLobby[] ListAllGameLobbies(bool showInProgress) {
             return base.Channel.ListAllGameLobbies(showInProgress);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby[]> ListAllGameLobbiesAsync(bool showInProgress) {
-            return base.Channel.ListAllGameLobbiesAsync(showInProgress);
         }
         
         public WizardGame.WizardService.GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId) {
             return base.Channel.ListGameLobbyPlayers(gameLobbyId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers[]> ListGameLobbyPlayersAsync(int gameLobbyId) {
-            return base.Channel.ListGameLobbyPlayersAsync(gameLobbyId);
-        }
-        
         public WizardGame.WizardService.Game UpdateGame(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId) {
             return base.Channel.UpdateGame(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData, groupNameId, gameLobbyId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Game> UpdateGameAsync(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId) {
-            return base.Channel.UpdateGameAsync(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData, groupNameId, gameLobbyId);
         }
         
         public WizardGame.WizardService.GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress) {
             return base.Channel.UpdateGameLobby(gameLobbyId, ownerPlayerId, name, maxPlayers, groupNameId, password, inProgress);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> UpdateGameLobbyAsync(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress) {
-            return base.Channel.UpdateGameLobbyAsync(gameLobbyId, ownerPlayerId, name, maxPlayers, groupNameId, password, inProgress);
-        }
-        
         public WizardGame.WizardService.GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId) {
             return base.Channel.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers> UpdateGameLobbyPlayersAsync(int gameLobbyId, int playerId, string connectionId) {
-            return base.Channel.UpdateGameLobbyPlayersAsync(gameLobbyId, playerId, connectionId);
         }
         
         public WizardGame.WizardService.GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won) {
             return base.Channel.UpdateGameHistory(gameHistoryId, gameId, playerId, score, won);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> UpdateGameHistoryAsync(int gameHistoryId, int gameId, int playerId, int score, int won) {
-            return base.Channel.UpdateGameHistoryAsync(gameHistoryId, gameId, playerId, score, won);
-        }
-        
         public WizardGame.WizardService.HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump) {
             return base.Channel.UpdateHandHistory(handHistoryId, gameId, deckData, playerData, trump);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> UpdateHandHistoryAsync(int handHistoryId, int gameId, string deckData, string playerData, string trump) {
-            return base.Channel.UpdateHandHistoryAsync(handHistoryId, gameId, deckData, playerData, trump);
         }
         
         public WizardGame.WizardService.Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId) {
             return base.Channel.UpdatePlayer(playerId, name, pictureUrl, userId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> UpdatePlayerAsync(int playerId, string name, string pictureUrl, int userId) {
-            return base.Channel.UpdatePlayerAsync(playerId, name, pictureUrl, userId);
-        }
-        
         public WizardGame.WizardService.Session UpdateSession(string secret, int userId, int playerId, string connectionId) {
             return base.Channel.UpdateSession(secret, userId, playerId, connectionId);
         }
         
-        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> UpdateSessionAsync(string secret, int userId, int playerId, string connectionId) {
-            return base.Channel.UpdateSessionAsync(secret, userId, playerId, connectionId);
-        }
-        
         public WizardGame.WizardService.User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId) {
             return base.Channel.UpdateUser(userId, username, password, emailAddress, active, fb_userId);
-        }
-        
-        public System.Threading.Tasks.Task<WizardGame.WizardService.User> UpdateUserAsync(int userId, string username, string password, string emailAddress, bool active, string fb_userId) {
-            return base.Channel.UpdateUserAsync(userId, username, password, emailAddress, active, fb_userId);
         }
     }
 }

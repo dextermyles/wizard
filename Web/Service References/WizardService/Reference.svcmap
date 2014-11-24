@@ -2,7 +2,6 @@
 <ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="02853b63-332e-464b-9a8c-fcb4be0b2f1a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
-    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
     <EnableDataBinding>true</EnableDataBinding>
     <ExcludedTypes />
     <ImportXmlTypes>false</ImportXmlTypes>
@@ -22,11 +21,11 @@
     <MetadataSource Address="http://wizard.apphb.com/Services/WizardService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="WizardService3.xsd" MetadataType="Schema" ID="b43e6a67-6f68-4bd8-be0b-e67433ffffc6" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd0" />
-    <MetadataFile FileName="WizardService1.disco" MetadataType="Disco" ID="ed0e7bab-8785-4a63-83b2-3104a2b38181" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?disco" />
-    <MetadataFile FileName="WizardService31.xsd" MetadataType="Schema" ID="142aa81c-ff6f-4a89-a60e-fa9d6ec44558" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd2" />
-    <MetadataFile FileName="WizardService32.xsd" MetadataType="Schema" ID="9a606b4e-647f-453c-b347-92575866bc5e" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd1" />
-    <MetadataFile FileName="WizardService1.wsdl" MetadataType="Wsdl" ID="23e3bf8f-1a77-4ad3-8593-bb3041abc339" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?wsdl" />
+    <MetadataFile FileName="WizardService3.xsd" MetadataType="Schema" ID="160a00a0-c268-4863-9d46-d25de0c5bd81" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd0" />
+    <MetadataFile FileName="WizardService1.disco" MetadataType="Disco" ID="eb7aebec-1503-4a0d-9bba-5127bb5bd89b" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?disco" />
+    <MetadataFile FileName="WizardService31.xsd" MetadataType="Schema" ID="0c4aef48-04eb-4797-8518-3608c4989970" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd2" />
+    <MetadataFile FileName="WizardService32.xsd" MetadataType="Schema" ID="218a3ed8-b51d-4594-9e74-96fce836b296" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd1" />
+    <MetadataFile FileName="WizardService1.wsdl" MetadataType="Wsdl" ID="5d416d1a-ada8-48a6-87cd-0e6629b4b3a4" SourceId="1" SourceUrl="http://wizard.apphb.com/Services/WizardService.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
