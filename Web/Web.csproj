@@ -250,13 +250,13 @@
     <Content Include="Service References\WizardService\WizardGame.WizardService.User.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
-    <None Include="Service References\WizardService\WizardService.disco" />
     <None Include="Service References\WizardService\configuration91.svcinfo" />
     <None Include="Service References\WizardService\configuration.svcinfo" />
     <None Include="Service References\WizardService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Service References\WizardService\WizardService1.disco" />
     <Content Include="Services\WizardService.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -368,14 +368,14 @@
       <DependentUpon>Game.xsd</DependentUpon>
     </Content>
     <Content Include="packages.config" />
-    <None Include="Service References\WizardService\WizardService.wsdl" />
-    <None Include="Service References\WizardService\WizardService.xsd">
+    <None Include="Service References\WizardService\WizardService1.wsdl" />
+    <None Include="Service References\WizardService\WizardService3.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\WizardService\WizardService1.xsd">
+    <None Include="Service References\WizardService\WizardService31.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\WizardService\WizardService2.xsd">
+    <None Include="Service References\WizardService\WizardService32.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Services\Data\Game.xsd">

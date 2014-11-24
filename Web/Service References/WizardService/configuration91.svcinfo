@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="IR302j44fG5q7cYUmP39vmQhQVs=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="X9xAeemZVue6RqkdfvQgB/1MdjE=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IWizardService">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_IWizardService" contract="WizardService.IWizardService" bindingType="basicHttpBinding" address="http://localhost:8080/Services/WizardService.svc" bindingConfiguration="BasicHttpBinding_IWizardService">
+    <endpoint name="BasicHttpBinding_IWizardService" contract="WizardService.IWizardService" bindingType="basicHttpBinding" address="http://wizard.apphb.com/Services/WizardService.svc" bindingConfiguration="BasicHttpBinding_IWizardService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:8080/Services/WizardService.svc</serializedValue>
+          <serializedValue>http://wizard.apphb.com/Services/WizardService.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
