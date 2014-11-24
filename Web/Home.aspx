@@ -49,7 +49,7 @@
                 <div class="panel-heading">
                     <strong>Available games to join</strong>
                 </div>
-                <table class="table table-responsive panel-body">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th style="width:40%;">Lobby</th>
@@ -58,9 +58,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="3">No game lobbies available</td>
-                        </tr>
+                        <%= ListGameLobbiesHtml() %>
                     </tbody>
                 </table>
                 <div class="panel-footer">

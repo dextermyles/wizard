@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using WizardGame.Helpers;
 using WizardGame.Services;
+using System.Text;
 
 namespace WizardGame
 {
@@ -73,6 +74,39 @@ namespace WizardGame
                     }
                 }
             }
+        }
+
+        public string ListGameLobbiesHtml()
+        {
+            StringBuilder html = new StringBuilder();
+
+
+            GameLobby[] gameLobbies = wizWS.ListAllGameLobbies(false);
+
+            if (gameLobbies != null && gameLobbies.Length > 0)
+            {
+                for (int i = 0; i < gameLobbies.Length - 1; i++)
+                {
+                    GameLobby gameLobby = gameLobbies[i];
+                    Player gameHost = wizWS.GetPlayerById(gameLobby.OwnerPlayerId);
+
+                    string hostName = (gameHost != null) ? gameHost.Name : "Error";
+
+                    html.AppendLine("<tr>");
+                    html.AppendLine("<td>" + gameLobby.Name.Trim() + "</td>");
+                    html.AppendLine("<td>" + hostName + "</td>");
+                    html.AppendLine("<td>-</td>");
+                    html.AppendLine("</tr>");
+                }
+            }
+            else
+            {
+                html.AppendLine("<tr>");
+                html.AppendLine("<td colspan='3'>No game lobbies available</td>");
+                html.AppendLine("</tr>");
+            }
+
+            return html.ToString();
         }
 
         protected void btnNewPlayer_Click(object sender, EventArgs e)
