@@ -249,6 +249,7 @@
     <Compile Include="GameSessionHub.cs" />
     <Compile Include="Helpers\ConnectionManager.cs" />
     <Compile Include="Helpers\GameLobby.cs" />
+    <Compile Include="Helpers\GameLobbyPlayers.cs" />
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

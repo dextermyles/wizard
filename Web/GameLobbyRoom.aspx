@@ -11,6 +11,9 @@
             this.connectionId = ""
         };
 
+        // playerList array
+        var playerList = Array();
+
         // server group id
         var groupNameId = '<%=GameLobby.GroupNameId%>';
 
@@ -44,22 +47,40 @@
 
         // playerJoinedLobby
         hub.client.playerJoinedLobby = function (playerId, playerName, playerConnectionId) {
+            // log message
             logMessage("-- " + playerName + " has joined the game lobby --");
+
+            // chat message player joined
+            appendChatMessage(playerName, "Joined the game lobby.")
+
+            // add player to list
+            $(".player-list").append("<li class=list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
         };
 
         // playerLeftLobby
         hub.client.playerLeftLobby = function playerLeftLobby(playerName, connectionId) {
+            // log message
             logMessage("-- " + playerName + " has left the game lobby --");
+            
+            // chat message player left lobby
+            appendChatMessage(playerName, "Left the game lobby.");
+
+            // remove name from player list
+            $("#player-" + playerName).remove();
         };
 
         // receiveChatMessage
         hub.client.receiveChatMessage = function receiveChatMessage(playerName, message) {
+            // log message
             logMessage("-- message received from: " + playerName + " --");
+
+            // append to chat window
             appendChatMessage(playerName, message);
         }
 
         // logMessage
         hub.client.logMessage = function logMessage(message) {
+            // append to log window
             logMessage(message);
         };
 

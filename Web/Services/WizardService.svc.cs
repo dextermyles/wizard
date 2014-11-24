@@ -1142,5 +1142,80 @@ namespace WizardGame.Services
 
             return gameLobbies.ToArray();
         }
+
+
+        public void DeletePlayerFromGameLobby(int playerId, int gameLobbyId, string connectionId)
+        {
+            try
+            {
+                Data.GameTableAdapters.GameLobbyPlayersTableAdapter adapter = new Data.GameTableAdapters.GameLobbyPlayersTableAdapter();
+                adapter.DeletePlayerFromGameLobby(playerId, gameLobbyId, connectionId);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+
+        public GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId)
+        {
+            GameLobbyPlayers lobbyPlayers = new GameLobbyPlayers();
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyPlayersTableAdapter adapter = new Data.GameTableAdapters.GameLobbyPlayersTableAdapter();
+                Data.Game.GameLobbyPlayersDataTable lobbyPlayersDt = adapter.UpdateGameLobbyPlayers(playerId, gameLobbyId, connectionId);
+
+                if (lobbyPlayersDt != null && lobbyPlayersDt.Rows.Count > 0)
+                {
+                    Data.Game.GameLobbyPlayersRow row = (Data.Game.GameLobbyPlayersRow)lobbyPlayersDt.Rows[0];
+
+                    lobbyPlayers.ConnectionId = row.ConnectionId;
+                    lobbyPlayers.DateCreated = row.DateCreated;
+                    lobbyPlayers.GameLobbyId = row.GameLobbyId;
+                    lobbyPlayers.GameLobbyPlayersId = row.GameLobbyPlayersId;
+                    lobbyPlayers.PlayerId = row.PlayerId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return lobbyPlayers;
+        }
+
+
+        public GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId)
+        {
+            List<GameLobbyPlayers> lobbyPlayersList = new List<GameLobbyPlayers>();
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyPlayersTableAdapter adapter = new Data.GameTableAdapters.GameLobbyPlayersTableAdapter();
+                Data.Game.GameLobbyPlayersDataTable lobbyPlayersDt = adapter.ListGameLobbyPlayers(gameLobbyId);
+
+                if (lobbyPlayersDt != null && lobbyPlayersDt.Rows.Count > 0)
+                {
+                    Data.Game.GameLobbyPlayersRow row = (Data.Game.GameLobbyPlayersRow)lobbyPlayersDt.Rows[0];
+
+                    GameLobbyPlayers lobbyPlayers = new GameLobbyPlayers();
+
+                    lobbyPlayers.ConnectionId = row.ConnectionId;
+                    lobbyPlayers.DateCreated = row.DateCreated;
+                    lobbyPlayers.GameLobbyId = row.GameLobbyId;
+                    lobbyPlayers.GameLobbyPlayersId = row.GameLobbyPlayersId;
+                    lobbyPlayers.PlayerId = row.PlayerId;
+
+                    lobbyPlayersList.Add(lobbyPlayers);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return lobbyPlayersList.ToArray();
+        }
     }
 }
