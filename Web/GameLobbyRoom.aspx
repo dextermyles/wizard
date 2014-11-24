@@ -23,6 +23,8 @@
         // is connected to server
         var isConnected = false;
 
+        var keepAliveInterval = 0;
+
         currentPlayer.PlayerId = '<%= PlayerData.PlayerId %>';
         currentPlayer.Name = '<%= PlayerData.Name %>';
         currentPlayer.PictureURL = '<%= PlayerData.PictureURL %>';
@@ -37,7 +39,13 @@
             // tell server we are joining the lobby
             joinGameLobby(currentPlayer.PlayerId, groupNameId);
 
+            // append chat message
             appendChatMessage("Server", "Connected to game lobby!");
+
+            // setup keep-alive
+            keepAliveInterval = setInterval(function () {
+                keepAlive();
+            }, 30000);
         };
 
         // Start the connection
@@ -49,6 +57,24 @@
         /*******************************************
          * functions that are called by the server *
          *******************************************/
+
+        $.connection.hub.reconnecting(function () {
+            appendChatMessage("Server", "Attempting to reconnect to game lobby.");
+
+            isConnected = false;
+        });
+
+        $.connection.hub.reconnected(function () {
+            appendChatMessage("Server", "Reconnected to game lobby.");
+
+            isConnected = true;
+        });
+
+        $.connection.hub.disconnected(function () {
+            appendChatMessage("Server", "You have been disconnected from game lobby.");
+
+            isConnected = false;
+        });
 
         // playerJoinedLobby
         hub.client.playerJoinedLobby = function (playerId, playerName, playerConnectionId) {
@@ -96,9 +122,16 @@
             logMessage(message);
         };
 
+        // logMessage
+        hub.client.ping = function ping() {
+            // append to log window
+            logMessage("-- keep-alive received from server --");
+        };
+
         /*******************************************
          * functions that are called by the client *
          *******************************************/
+
         function joinGameLobby(playerId, groupNameId) {
             logMessage("-- calling joinGameLobby(" + playerId + "," + groupNameId + ") on server --");
 
@@ -191,9 +224,22 @@
             return false; 
         };
 
+        function keepAlive() {
+            if (isConnected) {
+                hub.server.ping()
+                    .done(function () {
+                        logMessage("-- keep-alive request sent to server --");
+                    })
+                    .error(function (error) {
+                        logMessage("-- " + error + " --");
+                    });
+            }
+        }
+
         /******************************************
          * functions that are called on page load *
          ******************************************/
+
         $(document).ready(function () {
             // display connecting message
             appendChatMessage("Server", "Connecting to game lobby... Please wait");

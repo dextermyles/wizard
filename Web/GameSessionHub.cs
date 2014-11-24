@@ -96,5 +96,10 @@ namespace WizardGame
             // remove player from lobby table
             wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
         }
+
+        public void Ping()
+        {
+            Clients.Caller.ping();
+        }
     }
 }
