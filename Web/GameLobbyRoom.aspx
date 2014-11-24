@@ -204,9 +204,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly>Connecting to game lobby... Please wait
-
-                        </textarea>
+                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly>Connecting to game lobby... Please wait\n</textarea>
                         <style type="text/css">
                             #txtChatWindow {
                                 width: 100%;
