@@ -55,6 +55,7 @@
                             <th style="width:40%;">Lobby</th>
                             <th class="text-center" style="width:40%;">Host</th>
                             <th class="text-center" style="width: 20%;">Players</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>

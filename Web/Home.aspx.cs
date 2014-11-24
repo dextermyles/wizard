@@ -49,28 +49,38 @@ namespace WizardGame
 
             // update page details
             UpdatePageDetails();
+
+            // update session with default player
+            SetDefaultPlayer();
+        }
+
+        private void SetDefaultPlayer()
+        {
+            // check player list for a player name
+            if (UserPlayers != null && UserPlayers.Length > 0)
+            {
+                // by default assign first player to session (will later be done via character select screen)
+                wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, UserPlayers[0].PlayerId, UserSession.ConnectionId);
+            }
         }
 
         private void UpdatePageDetails()
         {
-            // update welcome text with player name
-            if (UserData != null)
+            // check player list for a player name
+            if (UserPlayers != null && UserPlayers.Length > 0)
             {
-                // show username
-                if (!string.IsNullOrEmpty(UserData.Username))
+                // update welcome title with player name
+                WelcomeTitle.InnerText = "Welcome, " + UserPlayers[0].Name + "!";
+            }
+            else
+            {
+                // update welcome title with username
+                if (UserData != null)
                 {
-                    WelcomeTitle.InnerText = "Welcome, " + UserData.Username + "!";
-                }
-                else
-                {
-                    // check player list for a player name
-                    if (UserPlayers != null && UserPlayers.Length > 0)
+                    // show username
+                    if (!string.IsNullOrEmpty(UserData.Username))
                     {
-                        // update welcome title
-                        WelcomeTitle.InnerText = "Welcome, " + UserPlayers[0].Name + "!";
-
-                        // by default assign first player to session (will later be done via character select screen)
-                        wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, UserPlayers[0].PlayerId, UserSession.ConnectionId);
+                        WelcomeTitle.InnerText = "Welcome, " + UserData.Username + "!";
                     }
                 }
             }
@@ -83,7 +93,7 @@ namespace WizardGame
 
             if (gameLobbies != null && gameLobbies.Length > 0)
             {
-                for (int i = 0; i < gameLobbies.Length - 1; i++)
+                for (int i = 0; i < gameLobbies.Length; i++)
                 {
                     GameLobby gameLobby = gameLobbies[i];
                     Player gameHost = wizWS.GetPlayerById(gameLobby.OwnerPlayerId);
@@ -92,15 +102,16 @@ namespace WizardGame
 
                     html.AppendLine("<tr>");
                     html.AppendLine("<td>" + gameLobby.Name.Trim() + "</td>");
-                    html.AppendLine("<td>" + hostName + "</td>");
-                    html.AppendLine("<td>-</td>");
+                    html.AppendLine("<td style='text-align:center;'>" + hostName + "</td>");
+                    html.AppendLine("<td style='text-align:center;'>-</td>");
+                    html.AppendLine("<td style='text-align:center;'><a href='GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "'>Join</a></td>");
                     html.AppendLine("</tr>");
                 }
             }
             else
             {
                 html.AppendLine("<tr>");
-                html.AppendLine("<td colspan='3'>No game lobbies available</td>");
+                html.AppendLine("<td colspan='4'>No game lobbies available</td>");
                 html.AppendLine("</tr>");
             }
 

@@ -61,7 +61,7 @@ namespace WizardGame
                 PlayerData = wizWS.GetPlayerById(UserSession.PlayerId);
 
                 // validate
-                if (PlayerData != null)
+                if (PlayerData != null && PlayerData.PlayerId > 0)
                 {
                     // player is the host
                     if (GameLobby.OwnerPlayerId == PlayerData.PlayerId)

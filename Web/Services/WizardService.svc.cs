@@ -1105,7 +1105,7 @@ namespace WizardGame.Services
 
                 if (dtGameLobbies != null && dtGameLobbies.Rows.Count > 0)
                 {
-                    for (int i = 0; i < dtGameLobbies.Rows.Count - 1; i++)
+                    for (int i = 0; i < dtGameLobbies.Rows.Count; i++)
                     {
                         GameLobby gameLobby = new GameLobby();
                         Data.Game.GameLobbyRow row = (Data.Game.GameLobbyRow)dtGameLobbies.Rows[i];
