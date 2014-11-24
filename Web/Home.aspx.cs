@@ -79,8 +79,6 @@ namespace WizardGame
         public string ListGameLobbiesHtml()
         {
             StringBuilder html = new StringBuilder();
-
-
             GameLobby[] gameLobbies = wizWS.ListAllGameLobbies(false);
 
             if (gameLobbies != null && gameLobbies.Length > 0)

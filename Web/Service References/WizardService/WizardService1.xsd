@@ -27,6 +27,7 @@
   <xs:element name="Suit" nillable="true" type="tns:Suit" />
   <xs:complexType name="Session">
     <xs:sequence>
+      <xs:element minOccurs="0" name="ConnectionId" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
       <xs:element minOccurs="0" name="DateLastActive" nillable="true" type="xs:dateTime" />
       <xs:element minOccurs="0" name="IpAddress" nillable="true" type="xs:string" />
@@ -50,6 +51,8 @@
       <xs:element minOccurs="0" name="DateCompleted" nillable="true" type="xs:dateTime" />
       <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
       <xs:element minOccurs="0" name="GameId" type="xs:int" />
+      <xs:element minOccurs="0" name="GameLobbyId" type="xs:int" />
+      <xs:element minOccurs="0" name="GroupNameId" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="InitialDealerPosition" type="xs:int" />
       <xs:element minOccurs="0" name="MaxHands" type="xs:int" />
       <xs:element minOccurs="0" name="NumPlayers" type="xs:int" />
@@ -58,6 +61,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Game" nillable="true" type="tns:Game" />
+  <xs:complexType name="GameLobby">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="GameLobbyId" type="xs:int" />
+      <xs:element minOccurs="0" name="GroupNameId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="InProgress" type="xs:boolean" />
+      <xs:element minOccurs="0" name="MaxPlayers" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OwnerPlayerId" type="xs:int" />
+      <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GameLobby" nillable="true" type="tns:GameLobby" />
   <xs:complexType name="GameHistory">
     <xs:sequence>
       <xs:element minOccurs="0" name="DateCreated" nillable="true" type="xs:dateTime" />

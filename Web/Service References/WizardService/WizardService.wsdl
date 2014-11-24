@@ -61,11 +61,23 @@
   <wsdl:message name="IWizardService_DeleteOldSessions_OutputMessage">
     <wsdl:part name="parameters" element="tns:DeleteOldSessionsResponse" />
   </wsdl:message>
+  <wsdl:message name="IWizardService_DeleteGameLobbyById_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteGameLobbyById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_DeleteGameLobbyById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteGameLobbyByIdResponse" />
+  </wsdl:message>
   <wsdl:message name="IWizardService_GetGameById_InputMessage">
     <wsdl:part name="parameters" element="tns:GetGameById" />
   </wsdl:message>
   <wsdl:message name="IWizardService_GetGameById_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetGameByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameLobbyById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameLobbyById" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameLobbyById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameLobbyByIdResponse" />
   </wsdl:message>
   <wsdl:message name="IWizardService_GetGameHistoryByGameId_InputMessage">
     <wsdl:part name="parameters" element="tns:GetGameHistoryByGameId" />
@@ -126,6 +138,12 @@
   </wsdl:message>
   <wsdl:message name="IWizardService_UpdateGame_OutputMessage">
     <wsdl:part name="parameters" element="tns:UpdateGameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdateGameLobby_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGameLobby" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_UpdateGameLobby_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGameLobbyResponse" />
   </wsdl:message>
   <wsdl:message name="IWizardService_UpdateGameHistory_InputMessage">
     <wsdl:part name="parameters" element="tns:UpdateGameHistory" />
@@ -194,9 +212,17 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/DeleteOldSessions" message="tns:IWizardService_DeleteOldSessions_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/DeleteOldSessionsResponse" message="tns:IWizardService_DeleteOldSessions_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="DeleteGameLobbyById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/DeleteGameLobbyById" message="tns:IWizardService_DeleteGameLobbyById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/DeleteGameLobbyByIdResponse" message="tns:IWizardService_DeleteGameLobbyById_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetGameById">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameById" message="tns:IWizardService_GetGameById_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameByIdResponse" message="tns:IWizardService_GetGameById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGameLobbyById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameLobbyById" message="tns:IWizardService_GetGameLobbyById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameLobbyByIdResponse" message="tns:IWizardService_GetGameLobbyById_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetGameHistoryByGameId">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameHistoryByGameId" message="tns:IWizardService_GetGameHistoryByGameId_InputMessage" />
@@ -237,6 +263,10 @@
     <wsdl:operation name="UpdateGame">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdateGame" message="tns:IWizardService_UpdateGame_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdateGameResponse" message="tns:IWizardService_UpdateGame_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGameLobby">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdateGameLobby" message="tns:IWizardService_UpdateGameLobby_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/UpdateGameLobbyResponse" message="tns:IWizardService_UpdateGameLobby_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="UpdateGameHistory">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/UpdateGameHistory" message="tns:IWizardService_UpdateGameHistory_InputMessage" />
@@ -342,8 +372,26 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="DeleteGameLobbyById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/DeleteGameLobbyById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetGameById">
       <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGameLobbyById">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameLobbyById" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -434,6 +482,15 @@
     </wsdl:operation>
     <wsdl:operation name="UpdateGame">
       <soap:operation soapAction="http://tempuri.org/IWizardService/UpdateGame" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGameLobby">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/UpdateGameLobby" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
