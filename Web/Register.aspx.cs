@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.Services;
+using WizardGame.WizardService;
 
 namespace WizardGame
 {
@@ -18,7 +18,7 @@ namespace WizardGame
         protected void btnRegister_Click(object sender, EventArgs e)
         {
             // service
-            WizardService wizWS = new WizardService();
+            WizardServiceClient wizWS = new WizardServiceClient();
 
             // get post vars
             string strUsername = txtUsername.Value;
@@ -26,7 +26,7 @@ namespace WizardGame
             string strPassword = txtPassword.Value;
 
             // create new user
-            var createResult = wizWS.NewUser(strUsername, strPassword, strEmailAddress);
+            var createResult = wizWS.NewUser(strUsername, strPassword, strEmailAddress, true);
 
             // validate
             if (createResult != null && createResult.Result)

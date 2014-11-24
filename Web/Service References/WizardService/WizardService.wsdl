@@ -2,9 +2,9 @@
 <wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="WizardService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://wizard.apphb.com/Services/WizardService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" />
+      <xsd:import schemaLocation="http://localhost:8080/Services/WizardService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8080/Services/WizardService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8080/Services/WizardService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IWizardService_GenerateDeck_InputMessage">
@@ -79,6 +79,12 @@
   <wsdl:message name="IWizardService_GetGameById_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetGameByIdResponse" />
   </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameLobbyByConnectionId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameLobbyByConnectionId" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetGameLobbyByConnectionId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGameLobbyByConnectionIdResponse" />
+  </wsdl:message>
   <wsdl:message name="IWizardService_GetGameLobbyById_InputMessage">
     <wsdl:part name="parameters" element="tns:GetGameLobbyById" />
   </wsdl:message>
@@ -108,6 +114,12 @@
   </wsdl:message>
   <wsdl:message name="IWizardService_GetLastHandHistoryByGameId_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetLastHandHistoryByGameIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetPlayerByConnectionId_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPlayerByConnectionId" />
+  </wsdl:message>
+  <wsdl:message name="IWizardService_GetPlayerByConnectionId_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPlayerByConnectionIdResponse" />
   </wsdl:message>
   <wsdl:message name="IWizardService_GetPlayerById_InputMessage">
     <wsdl:part name="parameters" element="tns:GetPlayerById" />
@@ -254,6 +266,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameById" message="tns:IWizardService_GetGameById_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameByIdResponse" message="tns:IWizardService_GetGameById_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="GetGameLobbyByConnectionId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameLobbyByConnectionId" message="tns:IWizardService_GetGameLobbyByConnectionId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameLobbyByConnectionIdResponse" message="tns:IWizardService_GetGameLobbyByConnectionId_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="GetGameLobbyById">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetGameLobbyById" message="tns:IWizardService_GetGameLobbyById_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetGameLobbyByIdResponse" message="tns:IWizardService_GetGameLobbyById_OutputMessage" />
@@ -273,6 +289,10 @@
     <wsdl:operation name="GetLastHandHistoryByGameId">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId" message="tns:IWizardService_GetLastHandHistoryByGameId_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameIdResponse" message="tns:IWizardService_GetLastHandHistoryByGameId_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlayerByConnectionId">
+      <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByConnectionId" message="tns:IWizardService_GetPlayerByConnectionId_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IWizardService/GetPlayerByConnectionIdResponse" message="tns:IWizardService_GetPlayerByConnectionId_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetPlayerById">
       <wsdl:input wsaw:Action="http://tempuri.org/IWizardService/GetPlayerById" message="tns:IWizardService_GetPlayerById_InputMessage" />
@@ -449,6 +469,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetGameLobbyByConnectionId">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameLobbyByConnectionId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetGameLobbyById">
       <soap:operation soapAction="http://tempuri.org/IWizardService/GetGameLobbyById" style="document" />
       <wsdl:input>
@@ -487,6 +516,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetLastHandHistoryByGameId">
       <soap:operation soapAction="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPlayerByConnectionId">
+      <soap:operation soapAction="http://tempuri.org/IWizardService/GetPlayerByConnectionId" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -641,7 +679,7 @@
   </wsdl:binding>
   <wsdl:service name="WizardService">
     <wsdl:port name="BasicHttpBinding_IWizardService" binding="tns:BasicHttpBinding_IWizardService">
-      <soap:address location="http://wizard.apphb.com/Services/WizardService.svc" />
+      <soap:address location="http://localhost:8080/Services/WizardService.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

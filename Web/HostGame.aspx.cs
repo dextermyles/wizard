@@ -4,8 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.Services;
-using WizardGame.Helpers;
+using WizardGame.WizardService;
 
 namespace WizardGame
 {
@@ -17,7 +16,7 @@ namespace WizardGame
         protected override void OnLoad(EventArgs e)
         {
             // validate function
-            if (!Functions.IsValidSession())
+            if (!Helpers.Functions.IsValidSession())
             {
                 // redirect to login page
                 Response.Redirect("~/Default.aspx");
@@ -29,13 +28,13 @@ namespace WizardGame
         protected void Page_Load(object sender, EventArgs e)
         {
             // get user session
-            UserSession = Functions.GetSessionFromCookie();
+            UserSession = Helpers.Functions.GetSessionFromCookie();
         }
 
         protected void btnHostGame_Click(object sender, EventArgs e)
         {
             // service
-            WizardService wizWS = new WizardService();
+            WizardService.WizardServiceClient wizWS = new WizardService.WizardServiceClient();
 
             // player list
             Player[] playerList = wizWS.ListPlayersByUserId(UserSession.UserId);

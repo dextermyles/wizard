@@ -8,3 +8,1836 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+namespace WizardGame.WizardService {
+    using System.Runtime.Serialization;
+    using System;
+    
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Card", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class Card : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int OwnerPlayerIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private WizardGame.WizardService.Suit SuitField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ValueField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int OwnerPlayerId {
+            get {
+                return this.OwnerPlayerIdField;
+            }
+            set {
+                if ((this.OwnerPlayerIdField.Equals(value) != true)) {
+                    this.OwnerPlayerIdField = value;
+                    this.RaisePropertyChanged("OwnerPlayerId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public WizardGame.WizardService.Suit Suit {
+            get {
+                return this.SuitField;
+            }
+            set {
+                if ((this.SuitField.Equals(value) != true)) {
+                    this.SuitField = value;
+                    this.RaisePropertyChanged("Suit");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Value {
+            get {
+                return this.ValueField;
+            }
+            set {
+                if ((this.ValueField.Equals(value) != true)) {
+                    this.ValueField = value;
+                    this.RaisePropertyChanged("Value");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Suit", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    public enum Suit : int {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Spades = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Hearts = 1,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Clubs = 2,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Diamonds = 3,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Fluff = 4,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Wizard = 5,
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Session", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class Session : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ConnectionIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateLastActiveField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IpAddressField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int PlayerIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SecretField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int SessionIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int UserIdField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ConnectionId {
+            get {
+                return this.ConnectionIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ConnectionIdField, value) != true)) {
+                    this.ConnectionIdField = value;
+                    this.RaisePropertyChanged("ConnectionId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateLastActive {
+            get {
+                return this.DateLastActiveField;
+            }
+            set {
+                if ((this.DateLastActiveField.Equals(value) != true)) {
+                    this.DateLastActiveField = value;
+                    this.RaisePropertyChanged("DateLastActive");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IpAddress {
+            get {
+                return this.IpAddressField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IpAddressField, value) != true)) {
+                    this.IpAddressField = value;
+                    this.RaisePropertyChanged("IpAddress");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int PlayerId {
+            get {
+                return this.PlayerIdField;
+            }
+            set {
+                if ((this.PlayerIdField.Equals(value) != true)) {
+                    this.PlayerIdField = value;
+                    this.RaisePropertyChanged("PlayerId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Secret {
+            get {
+                return this.SecretField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SecretField, value) != true)) {
+                    this.SecretField = value;
+                    this.RaisePropertyChanged("Secret");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int SessionId {
+            get {
+                return this.SessionIdField;
+            }
+            set {
+                if ((this.SessionIdField.Equals(value) != true)) {
+                    this.SessionIdField = value;
+                    this.RaisePropertyChanged("SessionId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int UserId {
+            get {
+                return this.UserIdField;
+            }
+            set {
+                if ((this.UserIdField.Equals(value) != true)) {
+                    this.UserIdField = value;
+                    this.RaisePropertyChanged("UserId");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="NewUserResult", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class NewUserResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool ResultField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string SecretField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Result {
+            get {
+                return this.ResultField;
+            }
+            set {
+                if ((this.ResultField.Equals(value) != true)) {
+                    this.ResultField = value;
+                    this.RaisePropertyChanged("Result");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Secret {
+            get {
+                return this.SecretField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SecretField, value) != true)) {
+                    this.SecretField = value;
+                    this.RaisePropertyChanged("Secret");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Game", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class Game : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCompletedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameLobbyIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string GroupNameIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int InitialDealerPositionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int MaxHandsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int NumPlayersField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int OwnerPlayerIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ScoreDataField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCompleted {
+            get {
+                return this.DateCompletedField;
+            }
+            set {
+                if ((this.DateCompletedField.Equals(value) != true)) {
+                    this.DateCompletedField = value;
+                    this.RaisePropertyChanged("DateCompleted");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameId {
+            get {
+                return this.GameIdField;
+            }
+            set {
+                if ((this.GameIdField.Equals(value) != true)) {
+                    this.GameIdField = value;
+                    this.RaisePropertyChanged("GameId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameLobbyId {
+            get {
+                return this.GameLobbyIdField;
+            }
+            set {
+                if ((this.GameLobbyIdField.Equals(value) != true)) {
+                    this.GameLobbyIdField = value;
+                    this.RaisePropertyChanged("GameLobbyId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string GroupNameId {
+            get {
+                return this.GroupNameIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.GroupNameIdField, value) != true)) {
+                    this.GroupNameIdField = value;
+                    this.RaisePropertyChanged("GroupNameId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int InitialDealerPosition {
+            get {
+                return this.InitialDealerPositionField;
+            }
+            set {
+                if ((this.InitialDealerPositionField.Equals(value) != true)) {
+                    this.InitialDealerPositionField = value;
+                    this.RaisePropertyChanged("InitialDealerPosition");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int MaxHands {
+            get {
+                return this.MaxHandsField;
+            }
+            set {
+                if ((this.MaxHandsField.Equals(value) != true)) {
+                    this.MaxHandsField = value;
+                    this.RaisePropertyChanged("MaxHands");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int NumPlayers {
+            get {
+                return this.NumPlayersField;
+            }
+            set {
+                if ((this.NumPlayersField.Equals(value) != true)) {
+                    this.NumPlayersField = value;
+                    this.RaisePropertyChanged("NumPlayers");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int OwnerPlayerId {
+            get {
+                return this.OwnerPlayerIdField;
+            }
+            set {
+                if ((this.OwnerPlayerIdField.Equals(value) != true)) {
+                    this.OwnerPlayerIdField = value;
+                    this.RaisePropertyChanged("OwnerPlayerId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ScoreData {
+            get {
+                return this.ScoreDataField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ScoreDataField, value) != true)) {
+                    this.ScoreDataField = value;
+                    this.RaisePropertyChanged("ScoreData");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="GameLobby", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class GameLobby : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameLobbyIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string GroupNameIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool InProgressField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int MaxPlayersField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int OwnerPlayerIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PasswordField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameLobbyId {
+            get {
+                return this.GameLobbyIdField;
+            }
+            set {
+                if ((this.GameLobbyIdField.Equals(value) != true)) {
+                    this.GameLobbyIdField = value;
+                    this.RaisePropertyChanged("GameLobbyId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string GroupNameId {
+            get {
+                return this.GroupNameIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.GroupNameIdField, value) != true)) {
+                    this.GroupNameIdField = value;
+                    this.RaisePropertyChanged("GroupNameId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool InProgress {
+            get {
+                return this.InProgressField;
+            }
+            set {
+                if ((this.InProgressField.Equals(value) != true)) {
+                    this.InProgressField = value;
+                    this.RaisePropertyChanged("InProgress");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int MaxPlayers {
+            get {
+                return this.MaxPlayersField;
+            }
+            set {
+                if ((this.MaxPlayersField.Equals(value) != true)) {
+                    this.MaxPlayersField = value;
+                    this.RaisePropertyChanged("MaxPlayers");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int OwnerPlayerId {
+            get {
+                return this.OwnerPlayerIdField;
+            }
+            set {
+                if ((this.OwnerPlayerIdField.Equals(value) != true)) {
+                    this.OwnerPlayerIdField = value;
+                    this.RaisePropertyChanged("OwnerPlayerId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Password {
+            get {
+                return this.PasswordField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PasswordField, value) != true)) {
+                    this.PasswordField = value;
+                    this.RaisePropertyChanged("Password");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="GameHistory", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class GameHistory : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameHistoryIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int PlayerIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ScoreField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int WonField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameHistoryId {
+            get {
+                return this.GameHistoryIdField;
+            }
+            set {
+                if ((this.GameHistoryIdField.Equals(value) != true)) {
+                    this.GameHistoryIdField = value;
+                    this.RaisePropertyChanged("GameHistoryId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameId {
+            get {
+                return this.GameIdField;
+            }
+            set {
+                if ((this.GameIdField.Equals(value) != true)) {
+                    this.GameIdField = value;
+                    this.RaisePropertyChanged("GameId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int PlayerId {
+            get {
+                return this.PlayerIdField;
+            }
+            set {
+                if ((this.PlayerIdField.Equals(value) != true)) {
+                    this.PlayerIdField = value;
+                    this.RaisePropertyChanged("PlayerId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Score {
+            get {
+                return this.ScoreField;
+            }
+            set {
+                if ((this.ScoreField.Equals(value) != true)) {
+                    this.ScoreField = value;
+                    this.RaisePropertyChanged("Score");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Won {
+            get {
+                return this.WonField;
+            }
+            set {
+                if ((this.WonField.Equals(value) != true)) {
+                    this.WonField = value;
+                    this.RaisePropertyChanged("Won");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="HandHistory", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class HandHistory : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateLastModifiedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeckDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int HandHistoryIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PlayerDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TrumpField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateLastModified {
+            get {
+                return this.DateLastModifiedField;
+            }
+            set {
+                if ((this.DateLastModifiedField.Equals(value) != true)) {
+                    this.DateLastModifiedField = value;
+                    this.RaisePropertyChanged("DateLastModified");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DeckData {
+            get {
+                return this.DeckDataField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeckDataField, value) != true)) {
+                    this.DeckDataField = value;
+                    this.RaisePropertyChanged("DeckData");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameId {
+            get {
+                return this.GameIdField;
+            }
+            set {
+                if ((this.GameIdField.Equals(value) != true)) {
+                    this.GameIdField = value;
+                    this.RaisePropertyChanged("GameId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int HandHistoryId {
+            get {
+                return this.HandHistoryIdField;
+            }
+            set {
+                if ((this.HandHistoryIdField.Equals(value) != true)) {
+                    this.HandHistoryIdField = value;
+                    this.RaisePropertyChanged("HandHistoryId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PlayerData {
+            get {
+                return this.PlayerDataField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PlayerDataField, value) != true)) {
+                    this.PlayerDataField = value;
+                    this.RaisePropertyChanged("PlayerData");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Trump {
+            get {
+                return this.TrumpField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TrumpField, value) != true)) {
+                    this.TrumpField = value;
+                    this.RaisePropertyChanged("Trump");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Player", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class Player : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PictureURLField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int PlayerIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int UserIdField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name {
+            get {
+                return this.NameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NameField, value) != true)) {
+                    this.NameField = value;
+                    this.RaisePropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string PictureURL {
+            get {
+                return this.PictureURLField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PictureURLField, value) != true)) {
+                    this.PictureURLField = value;
+                    this.RaisePropertyChanged("PictureURL");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int PlayerId {
+            get {
+                return this.PlayerIdField;
+            }
+            set {
+                if ((this.PlayerIdField.Equals(value) != true)) {
+                    this.PlayerIdField = value;
+                    this.RaisePropertyChanged("PlayerId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int UserId {
+            get {
+                return this.UserIdField;
+            }
+            set {
+                if ((this.UserIdField.Equals(value) != true)) {
+                    this.UserIdField = value;
+                    this.RaisePropertyChanged("UserId");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="User", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class User : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool ActiveField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string EmailAddressField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> FB_SyncDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FB_UserIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PasswordField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int UserIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UsernameField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Active {
+            get {
+                return this.ActiveField;
+            }
+            set {
+                if ((this.ActiveField.Equals(value) != true)) {
+                    this.ActiveField = value;
+                    this.RaisePropertyChanged("Active");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string EmailAddress {
+            get {
+                return this.EmailAddressField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.EmailAddressField, value) != true)) {
+                    this.EmailAddressField = value;
+                    this.RaisePropertyChanged("EmailAddress");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> FB_SyncDate {
+            get {
+                return this.FB_SyncDateField;
+            }
+            set {
+                if ((this.FB_SyncDateField.Equals(value) != true)) {
+                    this.FB_SyncDateField = value;
+                    this.RaisePropertyChanged("FB_SyncDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FB_UserId {
+            get {
+                return this.FB_UserIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FB_UserIdField, value) != true)) {
+                    this.FB_UserIdField = value;
+                    this.RaisePropertyChanged("FB_UserId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Password {
+            get {
+                return this.PasswordField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PasswordField, value) != true)) {
+                    this.PasswordField = value;
+                    this.RaisePropertyChanged("Password");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int UserId {
+            get {
+                return this.UserIdField;
+            }
+            set {
+                if ((this.UserIdField.Equals(value) != true)) {
+                    this.UserIdField = value;
+                    this.RaisePropertyChanged("UserId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Username {
+            get {
+                return this.UsernameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UsernameField, value) != true)) {
+                    this.UsernameField = value;
+                    this.RaisePropertyChanged("Username");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="GameLobbyPlayers", Namespace="http://schemas.datacontract.org/2004/07/WizardGame.Helpers")]
+    [System.SerializableAttribute()]
+    public partial class GameLobbyPlayers : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ConnectionIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime DateCreatedField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameLobbyIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int GameLobbyPlayersIdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int PlayerIdField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ConnectionId {
+            get {
+                return this.ConnectionIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ConnectionIdField, value) != true)) {
+                    this.ConnectionIdField = value;
+                    this.RaisePropertyChanged("ConnectionId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime DateCreated {
+            get {
+                return this.DateCreatedField;
+            }
+            set {
+                if ((this.DateCreatedField.Equals(value) != true)) {
+                    this.DateCreatedField = value;
+                    this.RaisePropertyChanged("DateCreated");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameLobbyId {
+            get {
+                return this.GameLobbyIdField;
+            }
+            set {
+                if ((this.GameLobbyIdField.Equals(value) != true)) {
+                    this.GameLobbyIdField = value;
+                    this.RaisePropertyChanged("GameLobbyId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int GameLobbyPlayersId {
+            get {
+                return this.GameLobbyPlayersIdField;
+            }
+            set {
+                if ((this.GameLobbyPlayersIdField.Equals(value) != true)) {
+                    this.GameLobbyPlayersIdField = value;
+                    this.RaisePropertyChanged("GameLobbyPlayersId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int PlayerId {
+            get {
+                return this.PlayerIdField;
+            }
+            set {
+                if ((this.PlayerIdField.Equals(value) != true)) {
+                    this.PlayerIdField = value;
+                    this.RaisePropertyChanged("PlayerId");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WizardService.IWizardService")]
+    public interface IWizardService {
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GenerateDeck", ReplyAction="http://tempuri.org/IWizardService/GenerateDeckResponse")]
+        WizardGame.WizardService.Card[] GenerateDeck();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GenerateDeck", ReplyAction="http://tempuri.org/IWizardService/GenerateDeckResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Card[]> GenerateDeckAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/EmailExists", ReplyAction="http://tempuri.org/IWizardService/EmailExistsResponse")]
+        bool EmailExists(string emailAddress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/EmailExists", ReplyAction="http://tempuri.org/IWizardService/EmailExistsResponse")]
+        System.Threading.Tasks.Task<bool> EmailExistsAsync(string emailAddress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UsernameExists", ReplyAction="http://tempuri.org/IWizardService/UsernameExistsResponse")]
+        bool UsernameExists(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UsernameExists", ReplyAction="http://tempuri.org/IWizardService/UsernameExistsResponse")]
+        System.Threading.Tasks.Task<bool> UsernameExistsAsync(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/Login", ReplyAction="http://tempuri.org/IWizardService/LoginResponse")]
+        WizardGame.WizardService.Session Login(string username, string password, string ipAddress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/Login", ReplyAction="http://tempuri.org/IWizardService/LoginResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Session> LoginAsync(string username, string password, string ipAddress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/FacebookLogin", ReplyAction="http://tempuri.org/IWizardService/FacebookLoginResponse")]
+        WizardGame.WizardService.Session FacebookLogin(string fb_email, string fb_userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/FacebookLogin", ReplyAction="http://tempuri.org/IWizardService/FacebookLoginResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Session> FacebookLoginAsync(string fb_email, string fb_userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/NewUser", ReplyAction="http://tempuri.org/IWizardService/NewUserResponse")]
+        WizardGame.WizardService.NewUserResult NewUser(string username, string password, string emailAddress, bool active);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/NewUser", ReplyAction="http://tempuri.org/IWizardService/NewUserResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.NewUserResult> NewUserAsync(string username, string password, string emailAddress, bool active);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ValidateSession", ReplyAction="http://tempuri.org/IWizardService/ValidateSessionResponse")]
+        WizardGame.WizardService.Session ValidateSession(string secret);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ValidateSession", ReplyAction="http://tempuri.org/IWizardService/ValidateSessionResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Session> ValidateSessionAsync(string secret);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteSession", ReplyAction="http://tempuri.org/IWizardService/DeleteSessionResponse")]
+        void DeleteSession(string secret);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteSession", ReplyAction="http://tempuri.org/IWizardService/DeleteSessionResponse")]
+        System.Threading.Tasks.Task DeleteSessionAsync(string secret);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteOldSessions", ReplyAction="http://tempuri.org/IWizardService/DeleteOldSessionsResponse")]
+        void DeleteOldSessions(int maxDays);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteOldSessions", ReplyAction="http://tempuri.org/IWizardService/DeleteOldSessionsResponse")]
+        System.Threading.Tasks.Task DeleteOldSessionsAsync(int maxDays);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/DeleteGameLobbyByIdResponse")]
+        void DeleteGameLobbyById(int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeleteGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/DeleteGameLobbyByIdResponse")]
+        System.Threading.Tasks.Task DeleteGameLobbyByIdAsync(int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeletePlayerFromGameLobby", ReplyAction="http://tempuri.org/IWizardService/DeletePlayerFromGameLobbyResponse")]
+        void DeletePlayerFromGameLobby(int playerId, int gameLobbyId, string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/DeletePlayerFromGameLobby", ReplyAction="http://tempuri.org/IWizardService/DeletePlayerFromGameLobbyResponse")]
+        System.Threading.Tasks.Task DeletePlayerFromGameLobbyAsync(int playerId, int gameLobbyId, string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameById", ReplyAction="http://tempuri.org/IWizardService/GetGameByIdResponse")]
+        WizardGame.WizardService.Game GetGameById(int gameId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameById", ReplyAction="http://tempuri.org/IWizardService/GetGameByIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Game> GetGameByIdAsync(int gameId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByConnectionIdResponse")]
+        WizardGame.WizardService.GameLobby GetGameLobbyByConnectionId(string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByConnectionIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByConnectionIdAsync(string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByIdResponse")]
+        WizardGame.WizardService.GameLobby GetGameLobbyById(int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameLobbyById", ReplyAction="http://tempuri.org/IWizardService/GetGameLobbyByIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByIdAsync(int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByGameIdResponse")]
+        WizardGame.WizardService.GameHistory GetGameHistoryByGameId(int gameId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByGameIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByGameIdAsync(int gameId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByIdResponse")]
+        WizardGame.WizardService.GameHistory GetGameHistoryById(int gameHistoryId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetGameHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetGameHistoryByIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByIdAsync(int gameHistoryId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetHandHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetHandHistoryByIdResponse")]
+        WizardGame.WizardService.HandHistory GetHandHistoryById(int handHistoryId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetHandHistoryById", ReplyAction="http://tempuri.org/IWizardService/GetHandHistoryByIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetHandHistoryByIdAsync(int handHistoryId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetLastHandHistoryByGameIdResponse")]
+        WizardGame.WizardService.HandHistory GetLastHandHistoryByGameId(int gameId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetLastHandHistoryByGameId", ReplyAction="http://tempuri.org/IWizardService/GetLastHandHistoryByGameIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetLastHandHistoryByGameIdAsync(int gameId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByConnectionIdResponse")]
+        WizardGame.WizardService.Player GetPlayerByConnectionId(string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByConnectionId", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByConnectionIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByConnectionIdAsync(string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerById", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByIdResponse")]
+        WizardGame.WizardService.Player GetPlayerById(int playerId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerById", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByIdAsync(int playerId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByName", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByNameResponse")]
+        WizardGame.WizardService.Player GetPlayerByName(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetPlayerByName", ReplyAction="http://tempuri.org/IWizardService/GetPlayerByNameResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByNameAsync(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetSessionBySecret", ReplyAction="http://tempuri.org/IWizardService/GetSessionBySecretResponse")]
+        WizardGame.WizardService.Session GetSessionBySecret(string secret);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetSessionBySecret", ReplyAction="http://tempuri.org/IWizardService/GetSessionBySecretResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Session> GetSessionBySecretAsync(string secret);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserById", ReplyAction="http://tempuri.org/IWizardService/GetUserByIdResponse")]
+        WizardGame.WizardService.User GetUserById(int userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserById", ReplyAction="http://tempuri.org/IWizardService/GetUserByIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByIdAsync(int userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserByUsername", ReplyAction="http://tempuri.org/IWizardService/GetUserByUsernameResponse")]
+        WizardGame.WizardService.User GetUserByUsername(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/GetUserByUsername", ReplyAction="http://tempuri.org/IWizardService/GetUserByUsernameResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByUsernameAsync(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListPlayersByUserId", ReplyAction="http://tempuri.org/IWizardService/ListPlayersByUserIdResponse")]
+        WizardGame.WizardService.Player[] ListPlayersByUserId(int userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListPlayersByUserId", ReplyAction="http://tempuri.org/IWizardService/ListPlayersByUserIdResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Player[]> ListPlayersByUserIdAsync(int userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListAllGameLobbies", ReplyAction="http://tempuri.org/IWizardService/ListAllGameLobbiesResponse")]
+        WizardGame.WizardService.GameLobby[] ListAllGameLobbies(bool showInProgress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListAllGameLobbies", ReplyAction="http://tempuri.org/IWizardService/ListAllGameLobbiesResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby[]> ListAllGameLobbiesAsync(bool showInProgress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/ListGameLobbyPlayersResponse")]
+        WizardGame.WizardService.GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/ListGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/ListGameLobbyPlayersResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers[]> ListGameLobbyPlayersAsync(int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGame", ReplyAction="http://tempuri.org/IWizardService/UpdateGameResponse")]
+        WizardGame.WizardService.Game UpdateGame(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGame", ReplyAction="http://tempuri.org/IWizardService/UpdateGameResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Game> UpdateGameAsync(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobby", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyResponse")]
+        WizardGame.WizardService.GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobby", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> UpdateGameLobbyAsync(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyPlayersResponse")]
+        WizardGame.WizardService.GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameLobbyPlayers", ReplyAction="http://tempuri.org/IWizardService/UpdateGameLobbyPlayersResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers> UpdateGameLobbyPlayersAsync(int gameLobbyId, int playerId, string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateGameHistoryResponse")]
+        WizardGame.WizardService.GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateGameHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateGameHistoryResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> UpdateGameHistoryAsync(int gameHistoryId, int gameId, int playerId, int score, int won);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateHandHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateHandHistoryResponse")]
+        WizardGame.WizardService.HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateHandHistory", ReplyAction="http://tempuri.org/IWizardService/UpdateHandHistoryResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> UpdateHandHistoryAsync(int handHistoryId, int gameId, string deckData, string playerData, string trump);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdatePlayer", ReplyAction="http://tempuri.org/IWizardService/UpdatePlayerResponse")]
+        WizardGame.WizardService.Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdatePlayer", ReplyAction="http://tempuri.org/IWizardService/UpdatePlayerResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Player> UpdatePlayerAsync(int playerId, string name, string pictureUrl, int userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateSession", ReplyAction="http://tempuri.org/IWizardService/UpdateSessionResponse")]
+        WizardGame.WizardService.Session UpdateSession(string secret, int userId, int playerId, string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateSession", ReplyAction="http://tempuri.org/IWizardService/UpdateSessionResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.Session> UpdateSessionAsync(string secret, int userId, int playerId, string connectionId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateUser", ReplyAction="http://tempuri.org/IWizardService/UpdateUserResponse")]
+        WizardGame.WizardService.User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IWizardService/UpdateUser", ReplyAction="http://tempuri.org/IWizardService/UpdateUserResponse")]
+        System.Threading.Tasks.Task<WizardGame.WizardService.User> UpdateUserAsync(int userId, string username, string password, string emailAddress, bool active, string fb_userId);
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IWizardServiceChannel : WizardGame.WizardService.IWizardService, System.ServiceModel.IClientChannel {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class WizardServiceClient : System.ServiceModel.ClientBase<WizardGame.WizardService.IWizardService>, WizardGame.WizardService.IWizardService {
+        
+        public WizardServiceClient() {
+        }
+        
+        public WizardServiceClient(string endpointConfigurationName) : 
+                base(endpointConfigurationName) {
+        }
+        
+        public WizardServiceClient(string endpointConfigurationName, string remoteAddress) : 
+                base(endpointConfigurationName, remoteAddress) {
+        }
+        
+        public WizardServiceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(endpointConfigurationName, remoteAddress) {
+        }
+        
+        public WizardServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(binding, remoteAddress) {
+        }
+        
+        public WizardGame.WizardService.Card[] GenerateDeck() {
+            return base.Channel.GenerateDeck();
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Card[]> GenerateDeckAsync() {
+            return base.Channel.GenerateDeckAsync();
+        }
+        
+        public bool EmailExists(string emailAddress) {
+            return base.Channel.EmailExists(emailAddress);
+        }
+        
+        public System.Threading.Tasks.Task<bool> EmailExistsAsync(string emailAddress) {
+            return base.Channel.EmailExistsAsync(emailAddress);
+        }
+        
+        public bool UsernameExists(string username) {
+            return base.Channel.UsernameExists(username);
+        }
+        
+        public System.Threading.Tasks.Task<bool> UsernameExistsAsync(string username) {
+            return base.Channel.UsernameExistsAsync(username);
+        }
+        
+        public WizardGame.WizardService.Session Login(string username, string password, string ipAddress) {
+            return base.Channel.Login(username, password, ipAddress);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> LoginAsync(string username, string password, string ipAddress) {
+            return base.Channel.LoginAsync(username, password, ipAddress);
+        }
+        
+        public WizardGame.WizardService.Session FacebookLogin(string fb_email, string fb_userId) {
+            return base.Channel.FacebookLogin(fb_email, fb_userId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> FacebookLoginAsync(string fb_email, string fb_userId) {
+            return base.Channel.FacebookLoginAsync(fb_email, fb_userId);
+        }
+        
+        public WizardGame.WizardService.NewUserResult NewUser(string username, string password, string emailAddress, bool active) {
+            return base.Channel.NewUser(username, password, emailAddress, active);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.NewUserResult> NewUserAsync(string username, string password, string emailAddress, bool active) {
+            return base.Channel.NewUserAsync(username, password, emailAddress, active);
+        }
+        
+        public WizardGame.WizardService.Session ValidateSession(string secret) {
+            return base.Channel.ValidateSession(secret);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> ValidateSessionAsync(string secret) {
+            return base.Channel.ValidateSessionAsync(secret);
+        }
+        
+        public void DeleteSession(string secret) {
+            base.Channel.DeleteSession(secret);
+        }
+        
+        public System.Threading.Tasks.Task DeleteSessionAsync(string secret) {
+            return base.Channel.DeleteSessionAsync(secret);
+        }
+        
+        public void DeleteOldSessions(int maxDays) {
+            base.Channel.DeleteOldSessions(maxDays);
+        }
+        
+        public System.Threading.Tasks.Task DeleteOldSessionsAsync(int maxDays) {
+            return base.Channel.DeleteOldSessionsAsync(maxDays);
+        }
+        
+        public void DeleteGameLobbyById(int gameLobbyId) {
+            base.Channel.DeleteGameLobbyById(gameLobbyId);
+        }
+        
+        public System.Threading.Tasks.Task DeleteGameLobbyByIdAsync(int gameLobbyId) {
+            return base.Channel.DeleteGameLobbyByIdAsync(gameLobbyId);
+        }
+        
+        public void DeletePlayerFromGameLobby(int playerId, int gameLobbyId, string connectionId) {
+            base.Channel.DeletePlayerFromGameLobby(playerId, gameLobbyId, connectionId);
+        }
+        
+        public System.Threading.Tasks.Task DeletePlayerFromGameLobbyAsync(int playerId, int gameLobbyId, string connectionId) {
+            return base.Channel.DeletePlayerFromGameLobbyAsync(playerId, gameLobbyId, connectionId);
+        }
+        
+        public WizardGame.WizardService.Game GetGameById(int gameId) {
+            return base.Channel.GetGameById(gameId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Game> GetGameByIdAsync(int gameId) {
+            return base.Channel.GetGameByIdAsync(gameId);
+        }
+        
+        public WizardGame.WizardService.GameLobby GetGameLobbyByConnectionId(string connectionId) {
+            return base.Channel.GetGameLobbyByConnectionId(connectionId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByConnectionIdAsync(string connectionId) {
+            return base.Channel.GetGameLobbyByConnectionIdAsync(connectionId);
+        }
+        
+        public WizardGame.WizardService.GameLobby GetGameLobbyById(int gameLobbyId) {
+            return base.Channel.GetGameLobbyById(gameLobbyId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> GetGameLobbyByIdAsync(int gameLobbyId) {
+            return base.Channel.GetGameLobbyByIdAsync(gameLobbyId);
+        }
+        
+        public WizardGame.WizardService.GameHistory GetGameHistoryByGameId(int gameId) {
+            return base.Channel.GetGameHistoryByGameId(gameId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByGameIdAsync(int gameId) {
+            return base.Channel.GetGameHistoryByGameIdAsync(gameId);
+        }
+        
+        public WizardGame.WizardService.GameHistory GetGameHistoryById(int gameHistoryId) {
+            return base.Channel.GetGameHistoryById(gameHistoryId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> GetGameHistoryByIdAsync(int gameHistoryId) {
+            return base.Channel.GetGameHistoryByIdAsync(gameHistoryId);
+        }
+        
+        public WizardGame.WizardService.HandHistory GetHandHistoryById(int handHistoryId) {
+            return base.Channel.GetHandHistoryById(handHistoryId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetHandHistoryByIdAsync(int handHistoryId) {
+            return base.Channel.GetHandHistoryByIdAsync(handHistoryId);
+        }
+        
+        public WizardGame.WizardService.HandHistory GetLastHandHistoryByGameId(int gameId) {
+            return base.Channel.GetLastHandHistoryByGameId(gameId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> GetLastHandHistoryByGameIdAsync(int gameId) {
+            return base.Channel.GetLastHandHistoryByGameIdAsync(gameId);
+        }
+        
+        public WizardGame.WizardService.Player GetPlayerByConnectionId(string connectionId) {
+            return base.Channel.GetPlayerByConnectionId(connectionId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByConnectionIdAsync(string connectionId) {
+            return base.Channel.GetPlayerByConnectionIdAsync(connectionId);
+        }
+        
+        public WizardGame.WizardService.Player GetPlayerById(int playerId) {
+            return base.Channel.GetPlayerById(playerId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByIdAsync(int playerId) {
+            return base.Channel.GetPlayerByIdAsync(playerId);
+        }
+        
+        public WizardGame.WizardService.Player GetPlayerByName(string name) {
+            return base.Channel.GetPlayerByName(name);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> GetPlayerByNameAsync(string name) {
+            return base.Channel.GetPlayerByNameAsync(name);
+        }
+        
+        public WizardGame.WizardService.Session GetSessionBySecret(string secret) {
+            return base.Channel.GetSessionBySecret(secret);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> GetSessionBySecretAsync(string secret) {
+            return base.Channel.GetSessionBySecretAsync(secret);
+        }
+        
+        public WizardGame.WizardService.User GetUserById(int userId) {
+            return base.Channel.GetUserById(userId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByIdAsync(int userId) {
+            return base.Channel.GetUserByIdAsync(userId);
+        }
+        
+        public WizardGame.WizardService.User GetUserByUsername(string username) {
+            return base.Channel.GetUserByUsername(username);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.User> GetUserByUsernameAsync(string username) {
+            return base.Channel.GetUserByUsernameAsync(username);
+        }
+        
+        public WizardGame.WizardService.Player[] ListPlayersByUserId(int userId) {
+            return base.Channel.ListPlayersByUserId(userId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Player[]> ListPlayersByUserIdAsync(int userId) {
+            return base.Channel.ListPlayersByUserIdAsync(userId);
+        }
+        
+        public WizardGame.WizardService.GameLobby[] ListAllGameLobbies(bool showInProgress) {
+            return base.Channel.ListAllGameLobbies(showInProgress);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby[]> ListAllGameLobbiesAsync(bool showInProgress) {
+            return base.Channel.ListAllGameLobbiesAsync(showInProgress);
+        }
+        
+        public WizardGame.WizardService.GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId) {
+            return base.Channel.ListGameLobbyPlayers(gameLobbyId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers[]> ListGameLobbyPlayersAsync(int gameLobbyId) {
+            return base.Channel.ListGameLobbyPlayersAsync(gameLobbyId);
+        }
+        
+        public WizardGame.WizardService.Game UpdateGame(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId) {
+            return base.Channel.UpdateGame(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData, groupNameId, gameLobbyId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Game> UpdateGameAsync(int gameId, int ownerPlayerId, System.Nullable<System.DateTime> dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId) {
+            return base.Channel.UpdateGameAsync(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData, groupNameId, gameLobbyId);
+        }
+        
+        public WizardGame.WizardService.GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress) {
+            return base.Channel.UpdateGameLobby(gameLobbyId, ownerPlayerId, name, maxPlayers, groupNameId, password, inProgress);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobby> UpdateGameLobbyAsync(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress) {
+            return base.Channel.UpdateGameLobbyAsync(gameLobbyId, ownerPlayerId, name, maxPlayers, groupNameId, password, inProgress);
+        }
+        
+        public WizardGame.WizardService.GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId) {
+            return base.Channel.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameLobbyPlayers> UpdateGameLobbyPlayersAsync(int gameLobbyId, int playerId, string connectionId) {
+            return base.Channel.UpdateGameLobbyPlayersAsync(gameLobbyId, playerId, connectionId);
+        }
+        
+        public WizardGame.WizardService.GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won) {
+            return base.Channel.UpdateGameHistory(gameHistoryId, gameId, playerId, score, won);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.GameHistory> UpdateGameHistoryAsync(int gameHistoryId, int gameId, int playerId, int score, int won) {
+            return base.Channel.UpdateGameHistoryAsync(gameHistoryId, gameId, playerId, score, won);
+        }
+        
+        public WizardGame.WizardService.HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump) {
+            return base.Channel.UpdateHandHistory(handHistoryId, gameId, deckData, playerData, trump);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.HandHistory> UpdateHandHistoryAsync(int handHistoryId, int gameId, string deckData, string playerData, string trump) {
+            return base.Channel.UpdateHandHistoryAsync(handHistoryId, gameId, deckData, playerData, trump);
+        }
+        
+        public WizardGame.WizardService.Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId) {
+            return base.Channel.UpdatePlayer(playerId, name, pictureUrl, userId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Player> UpdatePlayerAsync(int playerId, string name, string pictureUrl, int userId) {
+            return base.Channel.UpdatePlayerAsync(playerId, name, pictureUrl, userId);
+        }
+        
+        public WizardGame.WizardService.Session UpdateSession(string secret, int userId, int playerId, string connectionId) {
+            return base.Channel.UpdateSession(secret, userId, playerId, connectionId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.Session> UpdateSessionAsync(string secret, int userId, int playerId, string connectionId) {
+            return base.Channel.UpdateSessionAsync(secret, userId, playerId, connectionId);
+        }
+        
+        public WizardGame.WizardService.User UpdateUser(int userId, string username, string password, string emailAddress, bool active, string fb_userId) {
+            return base.Channel.UpdateUser(userId, username, password, emailAddress, active, fb_userId);
+        }
+        
+        public System.Threading.Tasks.Task<WizardGame.WizardService.User> UpdateUserAsync(int userId, string username, string password, string emailAddress, bool active, string fb_userId) {
+            return base.Channel.UpdateUserAsync(userId, username, password, emailAddress, active, fb_userId);
+        }
+    }
+}

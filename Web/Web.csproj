@@ -219,14 +219,44 @@
     <Content Include="Scripts\jquery-ui-1.11.2.min.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
+    <Content Include="Scripts\modernizr-latest.js" />
+    <Content Include="Service References\WizardService\WizardGame.WizardService.Card.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.Game.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.GameHistory.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.GameLobby.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.GameLobbyPlayers.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.HandHistory.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.NewUserResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.Player.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.Session.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\WizardService\WizardGame.WizardService.User.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\WizardService\WizardService.disco" />
     <None Include="Service References\WizardService\configuration91.svcinfo" />
     <None Include="Service References\WizardService\configuration.svcinfo" />
     <None Include="Service References\WizardService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="Scripts\modernizr-latest.js" />
-    <None Include="Service References\WizardService\WizardService.disco" />
     <Content Include="Services\WizardService.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

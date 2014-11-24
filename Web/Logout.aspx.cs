@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.Services;
+using WizardGame.WizardService;
 
 namespace WizardGame
 {
@@ -24,7 +24,7 @@ namespace WizardGame
                 if (!string.IsNullOrEmpty(secret))
                 {
                     // service
-                    WizardService wizWS = new WizardService();
+                    WizardServiceClient wizWS = new WizardServiceClient();
 
                     // delete db session
                     wizWS.DeleteSession(secret);

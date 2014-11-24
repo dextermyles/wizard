@@ -4,9 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.Helpers;
-using WizardGame.Services;
 using System.Text;
+using WizardGame.WizardService;
 
 namespace WizardGame
 {
@@ -16,12 +15,12 @@ namespace WizardGame
         public Player[] UserPlayers = null;
         public User UserData = null;
 
-        private WizardService wizWS = new WizardService();
+        private WizardServiceClient wizWS = new WizardService.WizardServiceClient();
 
         protected override void OnLoad(EventArgs e)
         {
             // validate function
-            if (!Functions.IsValidSession())
+            if (!Helpers.Functions.IsValidSession())
             {
                 // redirect to login page
                 Response.Redirect("~/Default.aspx");
@@ -33,7 +32,7 @@ namespace WizardGame
         protected void Page_Load(object sender, EventArgs e)
         {
             // get user session info
-            UserSession = Functions.GetSessionFromCookie();
+            UserSession = Helpers.Functions.GetSessionFromCookie();
 
             // get list of players for current user
             UserPlayers = wizWS.ListPlayersByUserId(UserSession.UserId);
@@ -52,6 +51,9 @@ namespace WizardGame
 
             // update session with default player
             SetDefaultPlayer();
+
+            // close service
+            wizWS.Close();
         }
 
         private void SetDefaultPlayer()

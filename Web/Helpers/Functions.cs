@@ -8,10 +8,10 @@ namespace WizardGame.Helpers
 {
     public static class Functions
     {
-        public static Session GetSessionFromCookie()
+        public static WizardService.Session GetSessionFromCookie()
         {
             // session
-            Session session = null;
+            WizardService.Session session = null;
 
             // check for existing cookie
             HttpCookie cookie = HttpContext.Current.Request.Cookies["OfficeWizard"];
@@ -26,10 +26,13 @@ namespace WizardGame.Helpers
                 if (!string.IsNullOrEmpty(secret))
                 {
                     // service
-                    WizardService wizWS = new WizardService();
+                    WizardService.WizardServiceClient wizWS = new WizardService.WizardServiceClient();
 
                     // get session data
                     session = wizWS.GetSessionBySecret(secret);
+
+                    // close service
+                    wizWS.Close();
                 }
             }
 
@@ -67,10 +70,13 @@ namespace WizardGame.Helpers
                 if (!string.IsNullOrEmpty(secret))
                 {
                     // service
-                    WizardService wizWS = new WizardService();
+                    WizardService.WizardServiceClient wizWS = new WizardService.WizardServiceClient();
 
                     // make sure secret is valid
                     var session = wizWS.ValidateSession(secret);
+
+                    // close service
+                    wizWS.Close();
 
                     // validate session result
                     if (session != null && !string.IsNullOrEmpty(session.Secret))
