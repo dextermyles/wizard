@@ -1068,6 +1068,9 @@ namespace WizardGame.Services
 
                     if (!row.IsPasswordNull())
                         gameLobby.Password = row.Password;
+
+                    if (!row.IsNumPlayersInLobbyNull())
+                        gameLobby.NumPlayersInLobby = row.NumPlayersInLobby;
                 }
             }
             catch (Exception ex)
@@ -1110,6 +1113,9 @@ namespace WizardGame.Services
 
                     if (!row.IsPasswordNull())
                         gameLobby.Password = row.Password;
+
+                    if (!row.IsNumPlayersInLobbyNull())
+                        gameLobby.NumPlayersInLobby = row.NumPlayersInLobby;
                 }
             }
             catch (Exception ex)

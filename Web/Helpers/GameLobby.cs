@@ -15,5 +15,6 @@ namespace WizardGame.Helpers
         public string GroupNameId = string.Empty;
         public string Password = string.Empty;
         public bool InProgress = false;
+        public int NumPlayersInLobby = 0;
     }
 }

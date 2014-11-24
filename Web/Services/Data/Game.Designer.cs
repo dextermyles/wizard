@@ -1516,6 +1516,8 @@ namespace WizardGame.Services.Data {
             
             private global::System.Data.DataColumn columnInProgress;
             
+            private global::System.Data.DataColumn columnNumPlayersInLobby;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GameLobbyDataTable() {
@@ -1615,6 +1617,14 @@ namespace WizardGame.Services.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NumPlayersInLobbyColumn {
+                get {
+                    return this.columnNumPlayersInLobby;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1650,7 +1660,7 @@ namespace WizardGame.Services.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GameLobbyRow AddGameLobbyRow(int OwnerPlayerId, string Name, int MaxPlayers, System.DateTime DateCreated, string GroupNameId, string Password, bool InProgress) {
+            public GameLobbyRow AddGameLobbyRow(int OwnerPlayerId, string Name, int MaxPlayers, System.DateTime DateCreated, string GroupNameId, string Password, bool InProgress, int NumPlayersInLobby) {
                 GameLobbyRow rowGameLobbyRow = ((GameLobbyRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -1660,7 +1670,8 @@ namespace WizardGame.Services.Data {
                         DateCreated,
                         GroupNameId,
                         Password,
-                        InProgress};
+                        InProgress,
+                        NumPlayersInLobby};
                 rowGameLobbyRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGameLobbyRow);
                 return rowGameLobbyRow;
@@ -1698,6 +1709,7 @@ namespace WizardGame.Services.Data {
                 this.columnGroupNameId = base.Columns["GroupNameId"];
                 this.columnPassword = base.Columns["Password"];
                 this.columnInProgress = base.Columns["InProgress"];
+                this.columnNumPlayersInLobby = base.Columns["NumPlayersInLobby"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1719,6 +1731,8 @@ namespace WizardGame.Services.Data {
                 base.Columns.Add(this.columnPassword);
                 this.columnInProgress = new global::System.Data.DataColumn("InProgress", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnInProgress);
+                this.columnNumPlayersInLobby = new global::System.Data.DataColumn("NumPlayersInLobby", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumPlayersInLobby);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnGameLobbyId}, true));
                 this.columnGameLobbyId.AutoIncrement = true;
@@ -2795,6 +2809,22 @@ namespace WizardGame.Services.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int NumPlayersInLobby {
+                get {
+                    try {
+                        return ((int)(this[this.tableGameLobby.NumPlayersInLobbyColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumPlayersInLobby\' in table \'GameLobby\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGameLobby.NumPlayersInLobbyColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsOwnerPlayerIdNull() {
                 return this.IsNull(this.tableGameLobby.OwnerPlayerIdColumn);
             }
@@ -2851,6 +2881,18 @@ namespace WizardGame.Services.Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetInProgressNull() {
                 this[this.tableGameLobby.InProgressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNumPlayersInLobbyNull() {
+                return this.IsNull(this.tableGameLobby.NumPlayersInLobbyColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNumPlayersInLobbyNull() {
+                this[this.tableGameLobby.NumPlayersInLobbyColumn] = global::System.Convert.DBNull;
             }
         }
         
