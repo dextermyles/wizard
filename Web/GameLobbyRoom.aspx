@@ -174,16 +174,17 @@
         }
 
         function isPlayerInList(playerName) {
-            if ($(".player-list li:contains('" + playerName + "')").length > 0) {
-                logMessage("-- player is already in list --");
+            var player = $(".player-list li:contains('" + playerName + "')");
+
+            if (player != null && player.length > 0) {
+                logMessage("-- " + playerName + " is already in list --");
 
                 return true;
-            }​
+            }
 
-            logMessage("-- player is not in list --");
-
-            return false;
-        }
+            logMessage("-- " + playerName + " is not in list --");
+            return false; 
+        };
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
