@@ -317,7 +317,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Session.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Services\ITest.cs" />
     <Compile Include="Services\IWizardService.cs" />
     <Compile Include="Services\WizardService.svc.cs">
       <DependentUpon>WizardService.svc</DependentUpon>
