@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
@@ -26,7 +27,7 @@ namespace WizardGame
         public override Task OnDisconnected(bool stopCalled)
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // connection id
             string connectionId = Context.ConnectionId;
@@ -42,9 +43,6 @@ namespace WizardGame
 
             // remove player from game lobby
             wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
-
-            // close service
-            wizWS.Close();
 
             return base.OnDisconnected(stopCalled);
         }
@@ -70,7 +68,7 @@ namespace WizardGame
         public void StartGame(int gameLobbyId, string groupNameId)
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // create game
             GameLobby gameLobby = wizWS.GetGameLobbyById(gameLobbyId);
@@ -94,15 +92,12 @@ namespace WizardGame
                 // redirect players to game
                 Clients.Group(groupNameId).gameStarted(game);
             }
-
-            // close service
-            wizWS.Close();
         }
 
         public async Task JoinGameLobby(int playerId, int gameLobbyId, string groupNameId)
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // add user to group
             await Groups.Add(Context.ConnectionId, groupNameId);
@@ -118,15 +113,12 @@ namespace WizardGame
 
             // add player to game lobby
             wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId);
-
-            // close service
-            wizWS.Close();
         }
 
         public async Task LeaveGameLobby(string playerName, string groupNameId)
         {
             // service
-            WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+            WizardService wizWS = new WizardService();
 
             // connection id
             string connectionId = Context.ConnectionId;
@@ -139,9 +131,6 @@ namespace WizardGame
 
             // remove player from lobby table
             wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
-
-            // close service
-            wizWS.Close();
         }
 
         public void Ping()

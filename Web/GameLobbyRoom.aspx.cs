@@ -5,7 +5,8 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
@@ -18,16 +19,18 @@ namespace WizardGame
         public bool IsGameHost = false;
         public GameLobbyPlayers[] LobbyPlayers = null;
 
-        private WizardServiceClient wizWS = new WizardServiceClient();
+        private WizardService wizWS = new WizardService();
         private int gameLobbyId = 0;
 
         protected override void OnLoad(EventArgs e)
         {
-            // validate function
-            if (!Helpers.Functions.IsValidSession())
+            // is valid session
+            bool isValidSession = Functions.IsValidSession();
+
+            if (!isValidSession)
             {
                 // redirect to login page
-                Response.Redirect("~/Default.aspx");
+                Response.Redirect("~/Default.aspx?Error=Session is not valid");
             }
 
             base.OnLoad(e);
@@ -36,7 +39,7 @@ namespace WizardGame
         protected void Page_Load(object sender, EventArgs e)
         {
             // get session data
-            UserSession = Helpers.Functions.GetSessionFromCookie();
+            UserSession = Functions.GetSessionFromCookie();
 
             // get user data
             UserData = wizWS.GetUserById(UserSession.UserId);

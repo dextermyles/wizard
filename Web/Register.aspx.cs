@@ -4,12 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame
 {
     public partial class Register : System.Web.UI.Page
     {
+        // service
+        WizardService wizWS = new WizardService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             
@@ -17,9 +21,6 @@ namespace WizardGame
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            // service
-            WizardServiceClient wizWS = new WizardServiceClient();
-
             // get post vars
             string strUsername = txtUsername.Value;
             string strEmailAddress = txtEmailAddress.Value;

@@ -9,11 +9,15 @@ namespace WizardGame
 {
     public partial class Main : System.Web.UI.MasterPage
     {
-        public bool IsValidSession = false;
+        private bool isValidSession = false;
 
-        protected void Page_Load(object sender, EventArgs e)
+        public bool IsSessionValid()
         {
-            IsValidSession = Functions.IsValidSession();
+            // is valid session
+            if (!isValidSession)
+                isValidSession = Functions.IsValidSession();
+
+            return isValidSession;
         }
     }
 }

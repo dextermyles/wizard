@@ -52,13 +52,15 @@
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="Default.aspx">Welcome</a></li>
-                    <% if (IsValidSession) { %>
+                    <% if (IsSessionValid())
+                       { %>
                     <li class=""><a href="#">Match history</a></li>
                     <li class=""><a href="#">Leaderboard</a></li>
                     <li class=""><a href="#">My Account</a></li>
                     <% } // end if %>
                 </ul>
-                <% if (IsValidSession) { %>
+                <% if (IsSessionValid())
+                   { %>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="Logout.aspx">Log out</a></li>
                 </ul>

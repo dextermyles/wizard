@@ -4,16 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
 
 namespace WizardGame
 {
     public partial class Logout : System.Web.UI.Page
     {
+        // service
+        WizardService wizWS = new WizardService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             // check for existing cookie
-            HttpCookie cookie = HttpContext.Current.Request.Cookies["OfficeWizard"];
+            HttpCookie cookie = Request.Cookies["OfficeWizard"];
             
             // cookie exists
             if (cookie != null)
@@ -23,9 +26,6 @@ namespace WizardGame
 
                 if (!string.IsNullOrEmpty(secret))
                 {
-                    // service
-                    WizardServiceClient wizWS = new WizardServiceClient();
-
                     // delete db session
                     wizWS.DeleteSession(secret);
                 }

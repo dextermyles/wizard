@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using WizardGame.WizardService;
+using WizardGame.Services;
+using WizardGame.Helpers;
 
 namespace WizardGame.Helpers
 {
     public static class Functions
     {
-        public static WizardService.Session GetSessionFromCookie()
+        public static Session GetSessionFromCookie()
         {
             // session
-            WizardService.Session session = null;
+            Session session = null;
 
             // check for existing cookie
             HttpCookie cookie = HttpContext.Current.Request.Cookies["OfficeWizard"];
@@ -26,13 +27,10 @@ namespace WizardGame.Helpers
                 if (!string.IsNullOrEmpty(secret))
                 {
                     // service
-                    WizardServiceClient wizWS = new WizardService.WizardServiceClient();
+                    WizardService wizWS = new WizardService();
 
                     // get session data
                     session = wizWS.GetSessionBySecret(secret);
-
-                    // close service
-                    wizWS.Close();
                 }
             }
 
@@ -60,6 +58,9 @@ namespace WizardGame.Helpers
             // check for existing cookie
             HttpCookie cookie = HttpContext.Current.Request.Cookies["OfficeWizard"];
 
+            // service
+            WizardService wizWS = new WizardService();
+
             // validate
             if (cookie != null)
             {
@@ -69,14 +70,8 @@ namespace WizardGame.Helpers
 
                 if (!string.IsNullOrEmpty(secret))
                 {
-                    // service
-                    WizardService.WizardServiceClient wizWS = new WizardService.WizardServiceClient();
-
                     // make sure secret is valid
                     var session = wizWS.ValidateSession(secret);
-
-                    // close service
-                    wizWS.Close();
 
                     // validate session result
                     if (session != null && !string.IsNullOrEmpty(session.Secret))

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WizardGame.WizardService;
+using WizardGame.Services;
 
 namespace WizardGame.Auto
 {
     public partial class Cron : System.Web.UI.Page
     {
         // service
-        WizardServiceClient wizWS = new WizardServiceClient();
+        WizardService wizWS = new WizardService();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -26,9 +26,6 @@ namespace WizardGame.Auto
 
             // remove old sessions
             wizWS.DeleteOldSessions(1);
-
-            // close session
-            wizWS.Close();
 
             // output
             Response.Write("done.\r\n");
