@@ -59,12 +59,6 @@ namespace WizardGame
                 // validation
                 if (Game != null)
                 {
-                    // get game lobby data
-                    GameLobby = wizWS.GetGameLobbyById(Game.GameLobbyId);
-
-                    // get player data
-                    Players = Game.GameStateData.Players;
-
                     // check that player is part of game
                     var playerTest = Players.Where(p=>p.PlayerId == UserSession.PlayerId).FirstOrDefault();
                     bool isPlayerValid = false;
@@ -77,6 +71,15 @@ namespace WizardGame
                     {
                         Response.Redirect("~/Home.aspx?Error=Player does not belong to game");
                     }
+
+                    // get game lobby data
+                    GameLobby = wizWS.GetGameLobbyById(Game.GameLobbyId);
+
+                    // get player data
+                    Players = Game.GameStateData.Players;
+
+                    // get player data
+                    PlayerData = wizWS.GetPlayerById(UserSession.PlayerId);
                 }
                 else
                 {
