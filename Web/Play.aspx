@@ -231,7 +231,7 @@
                             <span class="input-group-btn">
                                 <!--input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-default" value="Clear" onclick="clearChatWindow(); return false;" /-->
                                 <input type="button" id="btnSendChat" name="btnSendChat" class="btn btn-primary" value="Send" onclick="sendChatMessage(); return false;" />
-                                <script type="text/html">
+                                <script type="text/javascript">
                                     $(document).ready(function() {
                                         // bind enter event to chat text box
                                         $("#txtChatMessage").bind("keypress", function (event) {
