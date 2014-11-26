@@ -157,5 +157,23 @@ namespace WizardGame
         {
             Clients.Caller.ping();
         }
+
+        public async Task JoinGame(int playerId, int gameId, string groupNameId)
+        {
+            // service
+            WizardService wizWS = new WizardService();
+
+            // add user to group
+            await Groups.Add(Context.ConnectionId, groupNameId);
+
+            // get player data
+            Player player = wizWS.GetPlayerById(playerId);
+
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // call playerJoinedLobby on client
+            Clients.Group(groupNameId).playerJoinedGame(playerId, player.Name, connectionId);
+        }
     }
 }
