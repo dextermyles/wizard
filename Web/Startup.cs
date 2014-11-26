@@ -1,5 +1,8 @@
-﻿using Microsoft.Owin;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Owin;
 using Owin;
+using WizardGame.Services;
 
 [assembly: OwinStartup(typeof(WizardGame.Startup))]
 namespace WizardGame
