@@ -203,10 +203,10 @@
         </div>
         <div class="col-md-3">
             <div class="panel panel-default">
-                <div class="panel-heading">Chat</div>
+                <div class="panel-heading">Chat window</div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly></textarea>
+                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="8" readonly></textarea>
                         <style type="text/css">
                             #txtChatWindow {
                                 width: 100%;
