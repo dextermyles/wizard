@@ -93,6 +93,9 @@ namespace WizardGame.Services
         Player[] ListPlayersByUserId(int userId);
 
         [OperationContract]
+        Player[] ListPlayersByGameLobbyId(int gameLobbyId);
+
+        [OperationContract]
         GameLobby[] ListAllGameLobbies(bool showInProgress);
 
         [OperationContract]
@@ -100,7 +103,7 @@ namespace WizardGame.Services
 
         // Updates
         [OperationContract]
-        Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId);
+        Game UpdateGame(int gameId, int gameLobbyId, int ownerPlayerId, DateTime? dateCompleted, GameState gameState, string groupNameId);
 
         [OperationContract]
         GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);

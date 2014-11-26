@@ -8,6 +8,7 @@ using System.Text;
 using WizardGame.Helpers;
 using WizardGame.Services;
 using RestSharp;
+using Newtonsoft.Json;
 
 namespace WizardGame.Services
 {
@@ -65,13 +66,16 @@ namespace WizardGame.Services
             return null;
         }
 
-        public Game UpdateGame(int gameId, int ownerPlayerId, DateTime? dateCompleted, int numPlayers, int maxHands, int intialDealerPosition, string scoreData, string groupNameId, int gameLobbyId)
+        public Game UpdateGame(int gameId, int gameLobbyId, int ownerPlayerId, DateTime? dateCompleted, GameState gameState, string groupNameId)
         {
             try
             {
+                // serialize game state
+                string gameStateData = JsonConvert.SerializeObject(gameState);
+
                 // get db results
                 Data.GameTableAdapters.GameTableAdapter gameAdapter = new Data.GameTableAdapters.GameTableAdapter();
-                Data.Game.GameDataTable dtGame = gameAdapter.UpdateGame(gameId, ownerPlayerId, dateCompleted, numPlayers, maxHands, intialDealerPosition, scoreData, groupNameId, gameLobbyId);
+                Data.Game.GameDataTable dtGame = gameAdapter.UpdateGame(gameId, gameLobbyId, ownerPlayerId, dateCompleted, gameStateData, groupNameId);
                 Data.Game.GameRow row = (Data.Game.GameRow) dtGame.Rows[0];
 
                 if (row != null)
@@ -86,15 +90,11 @@ namespace WizardGame.Services
                     if (!row.IsDateCreatedNull())
                         game.DateCreated = row.DateCreated;
 
-                    game.InitialDealerPosition = row.InitialDealerPosition;
-                    game.MaxHands = row.MaxHands;
-                    game.NumPlayers = row.NumPlayers;
-
                     if (!row.IsOwnerPlayerIdNull())
                         game.OwnerPlayerId = row.OwnerPlayerId;
 
-                    if (!row.IsScoreDataNull())
-                        game.ScoreData = row.ScoreData;
+                    if (!row.IsGameStateDataNull())
+                        game.GameStateData = JsonConvert.DeserializeObject<GameState>(row.GameStateData);
 
                     if(!row.IsGroupNameIdNull())
                         game.GroupNameId = row.GroupNameId;
@@ -168,15 +168,11 @@ namespace WizardGame.Services
                     if (!row.IsDateCreatedNull())
                         game.DateCreated = row.DateCreated;
 
-                    game.InitialDealerPosition = row.InitialDealerPosition;
-                    game.MaxHands = row.MaxHands;
-                    game.NumPlayers = row.NumPlayers;
-
                     if (!row.IsOwnerPlayerIdNull())
                         game.OwnerPlayerId = row.OwnerPlayerId;
 
-                    if (!row.IsScoreDataNull())
-                        game.ScoreData = row.ScoreData;
+                    if (!row.IsGameStateDataNull())
+                        game.GameStateData = JsonConvert.DeserializeObject<GameState>(row.GameStateData);
 
                     if (!row.IsGroupNameIdNull())
                         game.GroupNameId = row.GroupNameId;
@@ -516,6 +512,47 @@ namespace WizardGame.Services
             }
 
             return user;
+        }
+
+        public Player[] ListPlayersByGameLobbyId(int gameLobbyId)
+        {
+            List<Player> players = new List<Player>();
+
+            try
+            {
+                Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.Session.PlayerDataTable dtPlayer = adapter.ListPlayersByGameLobbyId(gameLobbyId);
+
+                if (dtPlayer != null && dtPlayer.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dtPlayer.Rows.Count - 1; i++)
+                    {
+                        Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[i];
+
+                        Player player = new Player();
+
+                        if (!row.IsNameNull())
+                            player.Name = row.Name;
+
+                        if (!row.IsPictureURLNull())
+                            player.PictureURL = row.PictureURL;
+
+                        player.PlayerId = row.PlayerId;
+
+                        if (!row.IsUserIdNull())
+                            player.UserId = row.UserId;
+
+                        // add to list
+                        players.Add(player);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return players.ToArray();
         }
 
         public Player[] ListPlayersByUserId(int userId)
@@ -1302,5 +1339,8 @@ namespace WizardGame.Services
 
             return lobbyPlayersList.ToArray();
         }
+
+
+        
     }
 }

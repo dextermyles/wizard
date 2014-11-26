@@ -22,24 +22,6 @@ namespace WizardGame {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl GameLobbyTitle;
         
         /// <summary>
-        /// btnStartGame control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnStartGame;
-        
-        /// <summary>
-        /// btnCancelGame control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelGame;
-        
-        /// <summary>
         /// btnQuitGame control.
         /// </summary>
         /// <remarks>

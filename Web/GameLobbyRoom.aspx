@@ -131,6 +131,16 @@
             appendChatMessage("Server", "Game will start in 3 seconds");
         }
 
+        // gameCancelled
+        hub.client.gameCancelled = function gameCancelled() {
+            logMessage("-- game cancelled by host --");
+
+            appendChatMessage("Server", "Game cancelled by host");
+
+            // redirect to home page in 3 seconds
+            setTimeout(function() { window.location = 'Home.aspx'; }, "3000");
+        }
+
         // logMessage
         hub.client.logMessage = function logMessage(message) {
             // append to log window
@@ -265,6 +275,19 @@
                     alert("Not enough players to start the game");
                 }
             } 
+
+            return false;
+        }
+
+        function cancelGame() {
+            if(isConnected) {
+                hub.server.cancelGame(gameLobbyId, groupNameId).
+                    done(function() {
+                        logMessage("-- cancel game sent to server --");
+                    });
+            }
+
+            return false;
         }
 
         /******************************************
@@ -339,8 +362,12 @@
                     {
                         // player is the game host
                 %>
-                <asp:Button runat="server" ID="btnStartGame" CssClass="btn btn-lg btn-primary btn-block" Text="Start game" disabled OnClick="btnStartGame_Click" />
-                <asp:Button runat="server" ID="btnCancelGame" CssClass="btn btn-lg btn-default btn-block" Text="Cancel game" OnClick="btnCancelGame_Click" />
+                <button id="btnStartGame" class="btn btn-lg btn-primary btn-block" onclick="return startGame();" disabled>
+                    Start game
+                </button>
+                <button id="btnCancelGame" class="btn btn-lg btn-default btn-block" onclick="return cancelGame();">
+                    Cancel game
+                </button>
                 <% 
                     }
                     else

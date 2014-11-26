@@ -72,19 +72,18 @@ namespace WizardGame
 
             // create game
             GameLobby gameLobby = wizWS.GetGameLobbyById(gameLobbyId);
-            GameLobbyPlayers[] lobbyPlayers = wizWS.ListGameLobbyPlayers(gameLobbyId);
+            Player[] players = wizWS.ListPlayersByGameLobbyId(gameLobbyId);
 
-            if(gameLobby != null && lobbyPlayers != null)
+            if (gameLobby != null && players != null)
             {
-                // max hands
-                int maxHands = (60 / lobbyPlayers.Length);
-                
-                // random dealer position
-                Random r = new Random();
-                int dealerPosition = r.Next(0, lobbyPlayers.Length);
-                
                 // create game
-                Game game = wizWS.UpdateGame(0, gameLobby.OwnerPlayerId, null, lobbyPlayers.Length, maxHands, dealerPosition, "{}", string.Empty, gameLobbyId);
+                GameState gameState = new GameState();
+
+                // assign players to game
+                gameState.StartGame(players);
+
+                // update db
+                Game game = wizWS.UpdateGame(0, gameLobby.GameLobbyId, gameLobby.OwnerPlayerId, null, gameState, groupNameId);
 
                 // set in progress flag
                 wizWS.UpdateGameLobby(gameLobbyId, gameLobby.OwnerPlayerId, gameLobby.Name, gameLobby.MaxPlayers, gameLobby.GroupNameId, gameLobby.Password, true);
@@ -92,6 +91,18 @@ namespace WizardGame
                 // redirect players to game
                 Clients.Group(groupNameId).gameStarted(game);
             }
+        }
+
+        public void CancelGame(int gameLobbyId, string groupNameId)
+        {
+            // service
+            WizardService wizWS = new WizardService();
+
+            // delete game from database
+            wizWS.DeleteGameLobbyById(gameLobbyId);
+
+            // broadcast game cancelled
+            Clients.Group(groupNameId).gameCancelled();
         }
 
         public async Task JoinGameLobby(int playerId, int gameLobbyId, string groupNameId)
