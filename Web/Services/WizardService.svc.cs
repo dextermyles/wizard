@@ -1212,6 +1212,9 @@ namespace WizardGame.Services
                         if (!row.IsPasswordNull())
                             gameLobby.Password = row.Password;
 
+                        if(!row.IsNumPlayersInLobbyNull())
+                            gameLobby.NumPlayersInLobby = row.NumPlayersInLobby;
+
                         // add to list
                         gameLobbies.Add(gameLobby);
                     }
