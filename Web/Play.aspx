@@ -73,20 +73,21 @@
 
         // playerJoinedLobby
         hub.client.playerJoinedGame = function (playerId, playerName, playerConnectionId) {
-            // log message
-            logMessage("-- " + playerName + " has joined the game lobby --");
-
             // chat message player joined
             appendChatMessage(playerName, "Joined the game lobby.")
         };
+
+        // receiveChatMessage
+        hub.client.receiveChatMessage = function receiveChatMessage(playerName, message) {
+            // append to chat window
+            appendChatMessage(playerName, message);
+        }
 
         /*******************************************
          * functions that are called by the client *
          *******************************************/
 
         function joinGame(playerId, groupNameId) {
-            logMessage("-- calling joinGame(" + playerId + "," + groupNameId + ") on server --");
-
             // call joinGameLobby on server
             hub.server.joinGame(playerId, gameId, groupNameId)
                 .done(function () {
@@ -124,8 +125,6 @@
 
             // clear chat window
             $chatwindow.val('');
-
-            logMessage("-- cleared chat window --");
         };
 
         function appendChatMessage(playerName, message) {
