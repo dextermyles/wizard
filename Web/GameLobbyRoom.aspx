@@ -283,9 +283,8 @@
                         .done(function() {
                             logMessage("-- start game sent to server --");
                         })
-                        .error(function() {
-                            $("#btnStartGame").removeAttr("disabled");
-                            $("#btnCancelGame").removeAttr("disabled");
+                        .fail(function (msg) {
+                            logMessage("-- " + msg + " --");
                         });
                 }
                 else {
@@ -301,6 +300,9 @@
                 hub.server.cancelGame(gameLobbyId, groupNameId).
                     done(function() {
                         logMessage("-- cancel game sent to server --");
+                    })
+                    .fail(function (msg) {
+                        logMessage("-- " + msg + " --");
                     });
             }
 

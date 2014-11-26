@@ -10,14 +10,18 @@
             this.connectionId = ""
         };
 
+        var gameState = new function() {
+            this.GameId = 0
+        };
+
         // playerList array
         var playerList = Array();
 
         // server group id
-        var groupNameId = '<%=GameLobby.GroupNameId%>';
+        var groupNameId = '<%=Game.GroupNameId%>';
 
         // game lobby id
-        var gameLobbyId = '<%=GameLobby.GameLobbyId%>';
+        var gameLobbyId = '<%=Game.GameLobbyId%>';
 
         // is connected to server
         var isConnected = false;
@@ -42,7 +46,7 @@
             isConnected = true;
 
             // tell server we are joining the lobby
-            joinGameLobby(currentPlayer.PlayerId, groupNameId);
+            joinGame(currentPlayer.PlayerId, groupNameId);
 
             // append chat message
             appendChatMessage("Server", "Connected to game lobby!");
@@ -50,7 +54,7 @@
             // setup keep-alive
             keepAliveInterval = setInterval(function () {
                 keepAlive();
-            }, 30000);
+            }, 15000);
         };
 
         // Start the connection
@@ -62,7 +66,69 @@
         /*******************************************
          * functions that are called by the server *
          *******************************************/
+
+        // playerJoinedLobby
+        hub.client.playerJoinedGame = function (playerId, playerName, playerConnectionId) {
+            // log message
+            logMessage("-- " + playerName + " has joined the game lobby --");
+
+            // chat message player joined
+            appendChatMessage(playerName, "Joined the game lobby.")
+        };
+
+        /*******************************************
+         * functions that are called by the client *
+         *******************************************/
+
+        function joinGame(playerId, groupNameId) {
+            logMessage("-- calling joinGame(" + playerId + "," + groupNameId + ") on server --");
+
+            // call joinGameLobby on server
+            hub.server.joinGame(playerId, gameLobbyId, groupNameId)
+                .done(function () {
+                    logMessage("-- joinGame executed on server --");
+                })
+                .fail(function (msg) {
+                    logMessage("-- " + msg + " --");
+                });
+        };
     </script>
+    <style type="text/css">
+        .auto-style2 {
+            height: 20px;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container">
+        <div class="game-board">
+            <table class="table">
+                <tr>
+                    <td></td>
+                    <td>Player 1</td>
+                    <td>Player 2</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Player 6</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>Player 3</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>Player 5</td>
+                    <td>Player 4</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <style type="text/css">
+            .game-board {
+                background-image: url('/assets/table/table-default.png');
+                background-repeat:no-repeat;
+                background-size:100% 100%;
+            }
+        </style>
+    </div>
 </asp:Content>

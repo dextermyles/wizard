@@ -17,6 +17,82 @@ namespace WizardGame.Helpers
         public GameStateStatus Status = GameStateStatus.Setup;
         public Deck Deck = null;
 
+        public void ClearBids()
+        {
+            if (Players != null && Players.Length > 0)
+            {
+                for (int i = 0; i < Players.Length; i++)
+                {
+                    Players[i].Bid = 0;
+                    Players[i].IsBidRequired = true;
+                }
+            }
+        }
+
+        public void StartNextRound()
+        {
+            // validation
+            if (Players == null)
+                return;
+
+            // max rounds
+            int maxRounds = (60 / Players.Length);
+
+            // increment rounds
+            Round++;
+
+            if (Round > maxRounds)
+                Round = maxRounds;
+
+            // next dealer
+            DealerPositionIndex++;
+
+            if (DealerPositionIndex > Players.Length - 1)
+                DealerPositionIndex = 0;
+
+            // set flag
+            Players[DealerPositionIndex].IsDealer = true;
+
+            // next player turn
+            PlayerTurnIndex = DealerPositionIndex + 1;
+
+            if (PlayerTurnIndex > Players.Length - 1)
+                PlayerTurnIndex = 0;
+
+            // set flag
+            Players[PlayerTurnIndex].IsTurn = true;
+
+            // deal cards
+            // set game status
+            Status = GameStateStatus.DealInProgress;
+
+            // get number of cards to deal
+            int numCardsToDeal = (Round * Players.Length);
+
+            // current index
+            int currentIndex = PlayerTurnIndex;
+
+            // deal cards
+            for (int i = 0; i < numCardsToDeal; i++)
+            {
+                // take top card from deck
+                Card topCard = Deck.TakeTopCard();
+
+                // give to player
+                Players[currentIndex].GiveCard(topCard);
+
+                // increment index
+                currentIndex++;
+
+                // back to 0 when we reach last player
+                if (currentIndex > Players.Length - 1)
+                    currentIndex = 0;
+            }
+
+            // set game status
+            Status = GameStateStatus.BiddingInProgress;
+        }
+
         public void StartGame(Player[] _players)
         {
             // validate players
@@ -80,9 +156,17 @@ namespace WizardGame.Helpers
             Status = GameStateStatus.BiddingInProgress;
         }
 
-        public void StartTurn()
+        public void PlayCard(Card _card)
         {
+            // get list of cards played
+            List<Card> cardsPlayedList = (CardsPlayed == null) ? 
+                new List<Card>() : CardsPlayed.ToList();
 
+            // add card to played list
+            cardsPlayedList.Add(_card);
+
+            // replace cards played array
+            CardsPlayed = cardsPlayedList.ToArray();
         }
     }
 

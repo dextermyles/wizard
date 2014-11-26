@@ -150,6 +150,7 @@
     <Content Include="Assets\Cards\spades_8.png" />
     <Content Include="Assets\Cards\spades_9.png" />
     <Content Include="Assets\Cards\wizard.png" />
+    <Content Include="Assets\Table\table-default.png" />
     <Content Include="Auto\Cron.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />

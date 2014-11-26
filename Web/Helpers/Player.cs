@@ -17,14 +17,24 @@ namespace WizardGame.Helpers
         public int TricksTaken = 0;
         public bool IsDealer = false;
         public bool IsTurn = false;
+        public bool IsBidRequired = false;
         public Card[] Cards = null;
         public Card LastCardPlayed = null;
+
+        public void SetBid(int points)
+        {
+            IsBidRequired = false;
+            Bid = points;
+        }
 
         public void GiveCard(Card _card)
         {
             // get list
             List<Card> cardList = (Cards == null) ? 
                 new List<Card>() : Cards.ToList();
+
+            // assign player id
+            _card.OwnerPlayerId = PlayerId;
 
             // add card to list
             cardList.Add(_card);
