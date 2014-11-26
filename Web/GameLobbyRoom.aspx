@@ -73,6 +73,9 @@
         $.connection.hub.reconnected(function () {
             appendChatMessage("Server", "Reconnected to game lobby.");
 
+            // tell server we are joining the lobby
+            joinGameLobby(currentPlayer.PlayerId, groupNameId);
+
             isConnected = true;
         });
 
@@ -129,6 +132,11 @@
             logMessage("-- game started by host --");
 
             appendChatMessage("Server", "Game will start in 3 seconds");
+
+            // redirect to game room
+            setTimeout(function() {
+                window.location = 'Play.aspx?gameId=' + gameData.GameId;
+            }, "3000");
         }
 
         // gameCancelled
@@ -225,7 +233,8 @@
         };
 
         function updatePlayerCount() {
-            
+            // reset count
+            totalPlayers = 0;
 
             // count items in player list
             $(".player-list li").each(function (i, e) {
@@ -237,7 +246,7 @@
 
             // has min players connected
             if(totalPlayers > 2) {
-                $("#MainContent_btnStartGame").removeAttr("disabled");
+                $("#btnStartGame").removeAttr("disabled");
             }
         }
 
@@ -264,11 +273,19 @@
         }
 
         function startGame() {
+            // disable start button
+            $("#btnStartGame").attr("disabled", "disabled");
+            $("#btnCancelGame").attr("disabled", "disabled");
+
             if(isConnected) {
                 if(totalPlayers > 2) {
                     hub.server.startGame(gameLobbyId, groupNameId)
                         .done(function() {
                             logMessage("-- start game sent to server --");
+                        })
+                        .error(function() {
+                            $("#btnStartGame").removeAttr("disabled");
+                            $("#btnCancelGame").removeAttr("disabled");
                         });
                 }
                 else {

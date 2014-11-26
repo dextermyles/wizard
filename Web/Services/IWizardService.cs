@@ -13,9 +13,6 @@ namespace WizardGame.Services
     {
         // Business Logic
         [OperationContract]
-        Card[] GenerateDeck();
-
-        [OperationContract]
         bool EmailExists(string emailAddress);
 
         [OperationContract]

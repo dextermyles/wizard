@@ -14,20 +14,6 @@ namespace WizardGame.Services
 {
     public class WizardService : IWizardService
     {
-        public Card[] GenerateDeck()
-        {
-            // deck of cards
-            Deck cardDeck = new Deck();
-
-            // shuffle deck 
-            cardDeck.ShuffleDeck();
-
-            Card[] cards = cardDeck.Cards();
-
-            return cards;
-        }
-
-
         public Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId)
         {
             try
@@ -525,7 +511,7 @@ namespace WizardGame.Services
 
                 if (dtPlayer != null && dtPlayer.Rows.Count > 0)
                 {
-                    for (int i = 0; i < dtPlayer.Rows.Count - 1; i++)
+                    for (int i = 0; i < dtPlayer.Rows.Count; i++)
                     {
                         Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[i];
 

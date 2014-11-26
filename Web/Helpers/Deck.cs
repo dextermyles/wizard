@@ -7,12 +7,12 @@ namespace WizardGame.Helpers
 {
     public class Deck
     {
-        private Card[] _cards = null;
+        public Card[] Cards = null;
 
         public Deck()
         {
             // generate deck
-            _cards = GenerateCards();
+            Cards = GenerateCards();
 
             // shuffle 
             ShuffleDeck();
@@ -23,7 +23,7 @@ namespace WizardGame.Helpers
             // generate cards if none provided
             if (existingCards == null)
             {
-                _cards = GenerateCards();
+                Cards = GenerateCards();
 
                 // shuffle 
                 ShuffleDeck();
@@ -32,15 +32,11 @@ namespace WizardGame.Helpers
 
         public void ShuffleDeck()
         {
-            // generate deck if none
-            if (_cards == null)
-                _cards = GenerateCards();
-
             // shuffle cards
-            Card[] cards = _cards; // copy of cards
+            Card[] cards = Cards; // copy of cards
             Random r = new Random();
 
-            for (int n = 0; n < _cards.Length - 1; n++)
+            for (int n = 0; n < Cards.Length - 1; n++)
             {
                 int k = r.Next(n + 1);
                 Card temp = cards[n];
@@ -49,7 +45,7 @@ namespace WizardGame.Helpers
             }
 
             // update new copy of shuffled cards
-            _cards = cards;
+            Cards = cards;
         }
 
         public Card[] GenerateCards()
@@ -146,40 +142,30 @@ namespace WizardGame.Helpers
 
         public Card TakeTopCard()
         {
-            int index = _cards.Length - 1;
+            if (Cards == null)
+                return null;
+
+            int index = Cards.Length - 1;
 
             if (index < 0)
                 index = 0;
 
-            Card selectedCard = _cards[index];
+            Card selectedCard = Cards[index];
 
             // make sure card not null
             if (selectedCard != null)
             {
                 // new temp deck
-                Card[] newDeck = new Card[_cards.Length - 1];
+                Card[] newDeck = new Card[Cards.Length - 1];
 
                 // copy cards except last one to new deck
-                Array.Copy(_cards, 0, newDeck, 0, index);
+                Array.Copy(Cards, 0, newDeck, 0, index);
 
                 // update cards with new deck
-                _cards = newDeck;
+                Cards = newDeck;
             }
 
             return selectedCard;
-        }
-
-        public Card[] Cards()
-        {
-            return _cards;
-        }
-
-        public void SetDeck(Card[] cards)
-        {
-            if (cards != null && cards.Length > 0)
-            {
-                _cards = cards;
-            }
         }
     }
 }

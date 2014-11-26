@@ -23,7 +23,8 @@ namespace WizardGame.Helpers
         public void GiveCard(Card _card)
         {
             // get list
-            List<Card> cardList = Cards.ToList();
+            List<Card> cardList = (Cards == null) ? 
+                new List<Card>() : Cards.ToList();
 
             // add card to list
             cardList.Add(_card);
@@ -37,6 +38,10 @@ namespace WizardGame.Helpers
 
         public void UseCard(Card _card)
         {
+            // validation
+            if (Cards == null)
+                return;
+
             // get list
             List<Card> cardList = Cards.ToList();
 

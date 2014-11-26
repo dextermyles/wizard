@@ -56,12 +56,12 @@ namespace WizardGame.Helpers
             // get number of cards to deal
             int numCardsToDeal = (Round * Players.Length);
 
+            // current index
+            int currentIndex = PlayerTurnIndex;
+
             // deal cards
             for (int i = 0; i < numCardsToDeal; i++)
             {
-                // current index
-                int currentIndex = PlayerTurnIndex;
-                
                 // take top card from deck
                 Card topCard = Deck.TakeTopCard();
 

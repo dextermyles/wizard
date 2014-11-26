@@ -195,6 +195,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Global.asax" />
     <Content Include="Home.aspx" />
     <Content Include="HostGame.aspx" />
     <Content Include="Logout.aspx" />
@@ -207,6 +208,7 @@
     </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="GameLobbyRoom.aspx" />
+    <Content Include="Play.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -240,6 +242,9 @@
       <DependentUpon>Cron.aspx</DependentUpon>
     </Compile>
     <Compile Include="GameSessionHub.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ConnectionManager.cs" />
     <Compile Include="Helpers\Deck.cs" />
     <Compile Include="Helpers\GameLobby.cs" />
@@ -291,6 +296,13 @@
     </Compile>
     <Compile Include="GameLobbyRoom.aspx.designer.cs">
       <DependentUpon>GameLobbyRoom.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Play.aspx.cs">
+      <DependentUpon>Play.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Play.aspx.designer.cs">
+      <DependentUpon>Play.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.aspx.cs">

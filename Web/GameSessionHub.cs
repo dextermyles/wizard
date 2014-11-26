@@ -38,12 +38,16 @@ namespace WizardGame
             // get player
             Player player = wizWS.GetPlayerByConnectionId(connectionId);
 
-            // broadcast player left
-            Clients.Group(gameLobby.GroupNameId).playerLeftLobby(player.Name, connectionId);
+            // validate
+            if (!string.IsNullOrEmpty(gameLobby.GroupNameId))
+            {
+                // broadcast player left
+                Clients.Group(gameLobby.GroupNameId).playerLeftLobby(player.Name, connectionId);
 
-            // remove player from game lobby
-            wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
-
+                // remove player from game lobby
+                wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
+            }
+            
             return base.OnDisconnected(stopCalled);
         }
 
@@ -74,7 +78,7 @@ namespace WizardGame
             GameLobby gameLobby = wizWS.GetGameLobbyById(gameLobbyId);
             Player[] players = wizWS.ListPlayersByGameLobbyId(gameLobbyId);
 
-            if (gameLobby != null && players != null)
+            if (gameLobby != null && players != null && players.Length > 2)
             {
                 // create game
                 GameState gameState = new GameState();
@@ -90,6 +94,11 @@ namespace WizardGame
                 
                 // redirect players to game
                 Clients.Group(groupNameId).gameStarted(game);
+            }
+            else
+            {
+                // send error
+                SendChatMessage("Server", "Game requires at least 3 players to start", groupNameId);
             }
         }
 
