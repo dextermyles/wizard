@@ -50,25 +50,12 @@
 
             // setup keep-alive
             keepAliveInterval = setInterval(function () {
-                keepAlive();
+                sendKeepAlive();
             }, 30000);
         };
 
         // Start the connection
         $.connection.hub.start().done(onConnectionInit);
-
-
-
-        // get reference to hub
-        var hub = $.connection.gameLobbyHub;
-
-        /*******************************************
-         * functions that are called by the server *
-         *******************************************/
-
-        $.connection.hub.disconnected(function () {
-            
-        });
 
         $.connection.hub.reconnecting(function () {
             appendChatMessage("Server", "Attempting to reconnect to game lobby.");
@@ -96,6 +83,13 @@
 
             isConnected = false;
         });
+
+        // get reference to hub
+        var hub = $.connection.gameLobbyHub;
+
+        /*******************************************
+         * functions that are called by the server *
+         *******************************************/
 
         // playerJoinedLobby
         hub.client.playerJoinedLobby = function (playerId, playerName, connectionId) {
@@ -294,14 +288,12 @@
             return false; 
         };
 
-        function keepAlive() {
-            if (isConnected) {
-                hub.server.ping()
-                    .done(function () {
-                        logMessage("-- keep-alive request sent to server --");
-                    });
+        function sendKeepAlive() {
+            if(isConnected) {
+                // send keep-alive
+                hub.server.keepAlive(currentPlayer.PlayerId, gameLobbyId, groupNameId);
             }
-        }
+        };
 
         function startGame() {
             // disable start button
@@ -324,7 +316,7 @@
             } 
 
             return false;
-        }
+        };
 
         function cancelGame() {
             if(isConnected) {
@@ -340,7 +332,7 @@
             }
 
             return false;
-        }
+        };
 
         /******************************************
          * functions that are called on page load *

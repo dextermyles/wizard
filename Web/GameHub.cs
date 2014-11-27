@@ -140,9 +140,16 @@ namespace WizardGame
             }
         }
 
-        public void Ping()
+        public void keepAlive(int playerId, int gameId, string groupNameId)
         {
-            Clients.Caller.ping();
+            // service
+            WizardService wizWS = new WizardService();
+
+            // connection id
+            string connectionId = Context.ConnectionId;
+
+            // update database + last active time
+            wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.CONNECTED);
         }
     }
 }

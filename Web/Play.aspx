@@ -57,12 +57,39 @@
 
             // get updated player list every 10 seconds
             keepAliveInterval = setInterval(function () {
-                getListOfPlayersInGame();
-            }, 10000);
+                sendKeepAlive();
+            }, 30000);
         };
 
         // Start the connection
         $.connection.hub.start().done(onConnectionInit);
+
+        $.connection.hub.reconnecting(function () {
+            appendChatMessage("Server", "Attempting to reconnect to game lobby.");
+
+            isConnected = false;
+        });
+
+        $.connection.hub.reconnected(function () {
+            appendChatMessage("Server", "Reconnected to game lobby.");
+
+            // tell server we are joining the lobby
+            joinGameLobby(currentPlayer.PlayerId, groupNameId);
+
+            isConnected = true;
+        });
+
+        $.connection.hub.disconnected(function () {
+            // has error
+            if ($.connection.hub.lastError) { 
+                appendChatMessage("Server", $.connection.hub.lastError.message);
+            }
+            else {
+                appendChatMessage("Server", "You have been disconnected from game lobby.");
+            }
+
+            isConnected = false;
+        });
 
         // get reference to hub
         var hub = $.connection.gameHub;
@@ -161,6 +188,13 @@
         function getListOfPlayersInGame() {
             if (isConnected) {
                 hub.server.listPlayersInGame(gameId, groupNameId);
+            }
+        };
+
+        function sendKeepAlive() {
+            if(isConnected) {
+                // send keep-alive
+                hub.server.keepAlive(currentPlayer.PlayerId, gameId, groupNameId);
             }
         };
     </script>
