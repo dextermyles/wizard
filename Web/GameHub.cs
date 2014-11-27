@@ -100,6 +100,16 @@ namespace WizardGame
 
                 // add player to game lobby
                 wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.CONNECTED);
+
+                // get game data
+                Game game = wizWS.GetGameById(gameId);
+
+                // validate
+                if (game != null && game.GameId > 0)
+                {
+                    // send game data
+                    Clients.Caller.receiveGameData(game);
+                } 
             }
         }
 

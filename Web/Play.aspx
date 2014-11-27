@@ -81,7 +81,18 @@
         hub.client.receiveChatMessage = function receiveChatMessage(playerName, message) {
             // append to chat window
             appendChatMessage(playerName, message);
-        }
+        };
+
+        // receivePlayerList
+        hub.client.receivePlayerList = function receivePlayerList(players) {
+            // update player list
+            updatePlayerList(players);
+        };
+
+        // receiveGameData
+        hub.client.receiveGameData = function receiveGameData(gameData) {
+            console.log(gameData);
+        };
 
         /*******************************************
          * functions that are called by the client *
@@ -144,18 +155,12 @@
         };
 
         function updatePlayerList(players) {
-
+            console.log(players);
         };
 
         function getListOfPlayersInGame() {
             if (isConnected) {
-                hub.server.ListPlayersInGame()
-                    .done(function(playerList) {
-                        console.log(playerList);
-                    })
-                    .fail(function(msg) {
-                        logMessage("-- error: " + msg + " --");
-                    });
+                hub.server.listPlayersInGame(gameId, groupNameId);
             }
         };
     </script>
