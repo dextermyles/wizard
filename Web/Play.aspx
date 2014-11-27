@@ -119,6 +119,8 @@
         // receiveGameData
         hub.client.receiveGameData = function receiveGameData(gameData) {
             console.log(gameData);
+
+            processGameData(gameData);
         };
 
         /*******************************************
@@ -197,6 +199,37 @@
                 hub.server.keepAlive(currentPlayer.PlayerId, gameId, groupNameId);
             }
         };
+
+        function processGameData(gameData) {
+            var players = gameData.GameStateData.Players;
+            var deck = gameData.GameStateData.Deck;
+            var round = gameData.GameStateData.Round;
+            var status = gameData.GameStateData.Status;
+            var cardsPlayed = gameData.GameStateData.CardsPlayed;
+            var dealerPositionIndex = gameData.GameStateData.DealerPositionIndex;
+            var playerTurnIndex = gameData.GameStateData.PlayerTurnIndex;
+
+            console.log(players);
+            console.log(deck);
+            console.log("Round: " + round);
+            console.log("Status: " + status);
+            console.log(cardsPlayed);
+            console.log("Dealer: " + players[dealerPositionIndex].Name);
+            console.log("Player turn: " + players[playerTurnIndex].Name);
+
+            for(var i = 0; i < players.length; i++) {
+                // update names
+                var $playerDiv = $("#position-" + (i+1));
+                var player = players[i];
+
+                $playerDiv.children("span").html(player.Name);
+
+                if(player.IsDealer) {
+                    $playerDiv.children("span").removeClass("label-info");
+                    $playerDiv.children("span").addClass("label-danger");
+                }
+            }   
+        };
     </script>
     <style type="text/css">
         .auto-style2 {
@@ -212,32 +245,44 @@
                     <tr>
                         <td></td>
                         <td>
-                            <span class="label label-info">Player 1</span>
+                            <div id="position-1">
+                                <span class="label label-info">Player 1</span>
+                            </div>
                         </td>
                         <td>
-                            <span class="label label-info">Player 2</span>
+                            <div id="position-2">
+                                <span class="label label-info">Player 2</span>
+                            </div>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>
-                            <span class="label label-info">Player 6</span>
+                            <div id="position-6">
+                                <span class="label label-info">Player 6</span>
+                            </div>
                         </td>
                         <td colspan="2">
                             <div class="cards-played">
                             </div>
                         </td>
                         <td>
-                            <span class="label label-info">Player 3</span>
+                            <div id="position-3">
+                                <span class="label label-info">Player 3</span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                         <td>
-                            <span class="label label-info">Player 5</span>
+                            <div id="position-4">
+                                <span class="label label-info">Player 4</span>
+                            </div>
                         </td>
                         <td>
-                            <span class="label label-info">Player 4</span>
+                            <div id="position-5">
+                                <span class="label label-info">Player 5</span>
+                            </div>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
