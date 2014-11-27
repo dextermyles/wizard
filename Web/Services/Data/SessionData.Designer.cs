@@ -22,7 +22,7 @@ namespace WizardGame.Services.Data {
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
     [global::System.Xml.Serialization.XmlRootAttribute("Session")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class SessionData : global::System.Data.DataSet {
+    public partial class Session : global::System.Data.DataSet {
         
         private SessionDataTable tableSession;
         
@@ -36,7 +36,7 @@ namespace WizardGame.Services.Data {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public SessionData() {
+        public Session() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -47,7 +47,7 @@ namespace WizardGame.Services.Data {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected SessionData(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected Session(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -172,7 +172,7 @@ namespace WizardGame.Services.Data {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            SessionData cln = ((SessionData)(base.Clone()));
+            Session cln = ((Session)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -321,7 +321,7 @@ namespace WizardGame.Services.Data {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            SessionData ds = new SessionData();
+            Session ds = new Session();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -682,7 +682,7 @@ namespace WizardGame.Services.Data {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                SessionData ds = new SessionData();
+                Session ds = new Session();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -1047,7 +1047,7 @@ namespace WizardGame.Services.Data {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                SessionData ds = new SessionData();
+                Session ds = new Session();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -1327,7 +1327,7 @@ namespace WizardGame.Services.Data {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                SessionData ds = new SessionData();
+                Session ds = new Session();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -1661,7 +1661,7 @@ namespace WizardGame.Services.Data {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                SessionData ds = new SessionData();
+                Session ds = new Session();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -2684,7 +2684,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual SessionData.SessionDataTable Login(string Username, string Password, string IpAddress) {
+        public virtual Session.SessionDataTable Login(string Username, string Password, string IpAddress) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((Username == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2704,7 +2704,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[3].Value = ((string)(IpAddress));
             }
-            SessionData.SessionDataTable dataTable = new SessionData.SessionDataTable();
+            Session.SessionDataTable dataTable = new Session.SessionDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -2713,7 +2713,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.SessionDataTable FacebookLogin(string FB_Email, string FB_UserId, string IpAddress) {
+        public virtual Session.SessionDataTable FacebookLogin(string FB_Email, string FB_UserId, string IpAddress) {
             this.Adapter.SelectCommand = this.CommandCollection[3];
             if ((FB_Email == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2733,7 +2733,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[3].Value = ((string)(IpAddress));
             }
-            SessionData.SessionDataTable dataTable = new SessionData.SessionDataTable();
+            Session.SessionDataTable dataTable = new Session.SessionDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -2742,7 +2742,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.SessionDataTable GetSessionBySecret(string Secret, string IpAddress) {
+        public virtual Session.SessionDataTable GetSessionBySecret(string Secret, string IpAddress) {
             this.Adapter.SelectCommand = this.CommandCollection[4];
             if ((Secret == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2756,7 +2756,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[2].Value = ((string)(IpAddress));
             }
-            SessionData.SessionDataTable dataTable = new SessionData.SessionDataTable();
+            Session.SessionDataTable dataTable = new Session.SessionDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -2765,7 +2765,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.SessionDataTable UpdateSession(string Secret, global::System.Nullable<int> UserId, global::System.Nullable<int> PlayerId, string IpAddress, string ConnectionId) {
+        public virtual Session.SessionDataTable UpdateSession(string Secret, global::System.Nullable<int> UserId, global::System.Nullable<int> PlayerId, string IpAddress, string ConnectionId) {
             this.Adapter.SelectCommand = this.CommandCollection[5];
             if ((Secret == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2797,7 +2797,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[5].Value = ((string)(ConnectionId));
             }
-            SessionData.SessionDataTable dataTable = new SessionData.SessionDataTable();
+            Session.SessionDataTable dataTable = new Session.SessionDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -2806,7 +2806,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.SessionDataTable ValidateSession(string Secret, string IpAddress) {
+        public virtual Session.SessionDataTable ValidateSession(string Secret, string IpAddress) {
             this.Adapter.SelectCommand = this.CommandCollection[6];
             if ((Secret == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2820,7 +2820,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[2].Value = ((string)(IpAddress));
             }
-            SessionData.SessionDataTable dataTable = new SessionData.SessionDataTable();
+            Session.SessionDataTable dataTable = new Session.SessionDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3054,7 +3054,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual SessionData.UserDataTable GetUserById(global::System.Nullable<int> UserId) {
+        public virtual Session.UserDataTable GetUserById(global::System.Nullable<int> UserId) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((UserId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(UserId.Value));
@@ -3062,7 +3062,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            SessionData.UserDataTable dataTable = new SessionData.UserDataTable();
+            Session.UserDataTable dataTable = new Session.UserDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3071,7 +3071,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.UserDataTable GetUserByUsername(string Username) {
+        public virtual Session.UserDataTable GetUserByUsername(string Username) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             if ((Username == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -3079,7 +3079,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Username));
             }
-            SessionData.UserDataTable dataTable = new SessionData.UserDataTable();
+            Session.UserDataTable dataTable = new Session.UserDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3088,7 +3088,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.UserDataTable UpdateUser(global::System.Nullable<int> UserId, string Username, string Password, string EmailAddress, global::System.Nullable<bool> Active, string FB_UserId) {
+        public virtual Session.UserDataTable UpdateUser(global::System.Nullable<int> UserId, string Username, string Password, string EmailAddress, global::System.Nullable<bool> Active, string FB_UserId) {
             this.Adapter.SelectCommand = this.CommandCollection[2];
             if ((UserId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(UserId.Value));
@@ -3126,7 +3126,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[6].Value = ((string)(FB_UserId));
             }
-            SessionData.UserDataTable dataTable = new SessionData.UserDataTable();
+            Session.UserDataTable dataTable = new Session.UserDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3298,7 +3298,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual SessionData.RegisterDataTable NewUser(string Username, string Password, string EmailAddress, string IpAddress, global::System.Nullable<bool> Active) {
+        public virtual Session.RegisterDataTable NewUser(string Username, string Password, string EmailAddress, string IpAddress, global::System.Nullable<bool> Active) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((Username == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -3330,7 +3330,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[5].Value = global::System.DBNull.Value;
             }
-            SessionData.RegisterDataTable dataTable = new SessionData.RegisterDataTable();
+            Session.RegisterDataTable dataTable = new Session.RegisterDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3594,7 +3594,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual SessionData.PlayerDataTable GetPlayerById(global::System.Nullable<int> PlayerId) {
+        public virtual Session.PlayerDataTable GetPlayerById(global::System.Nullable<int> PlayerId) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((PlayerId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(PlayerId.Value));
@@ -3602,7 +3602,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3611,7 +3611,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.PlayerDataTable GetPlayerByConnectionId(string ConnectionId) {
+        public virtual Session.PlayerDataTable GetPlayerByConnectionId(string ConnectionId) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             if ((ConnectionId == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -3619,7 +3619,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(ConnectionId));
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3628,7 +3628,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.PlayerDataTable GetPlayerByName(string Name) {
+        public virtual Session.PlayerDataTable GetPlayerByName(string Name) {
             this.Adapter.SelectCommand = this.CommandCollection[2];
             if ((Name == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -3636,7 +3636,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Name));
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3645,7 +3645,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.PlayerDataTable ListPlayersByGameId(global::System.Nullable<int> GameId) {
+        public virtual Session.PlayerDataTable ListPlayersByGameId(global::System.Nullable<int> GameId) {
             this.Adapter.SelectCommand = this.CommandCollection[3];
             if ((GameId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(GameId.Value));
@@ -3653,7 +3653,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3662,7 +3662,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.PlayerDataTable ListPlayersByGameLobbyId(global::System.Nullable<int> GameLobbyId) {
+        public virtual Session.PlayerDataTable ListPlayersByGameLobbyId(global::System.Nullable<int> GameLobbyId) {
             this.Adapter.SelectCommand = this.CommandCollection[4];
             if ((GameLobbyId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(GameLobbyId.Value));
@@ -3670,7 +3670,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3679,7 +3679,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.PlayerDataTable ListPlayersByUserId(global::System.Nullable<int> UserId) {
+        public virtual Session.PlayerDataTable ListPlayersByUserId(global::System.Nullable<int> UserId) {
             this.Adapter.SelectCommand = this.CommandCollection[5];
             if ((UserId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(UserId.Value));
@@ -3687,7 +3687,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3696,7 +3696,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual SessionData.PlayerDataTable UpdatePlayer(global::System.Nullable<int> PlayerId, string Name, string PictureURL, global::System.Nullable<int> UserId) {
+        public virtual Session.PlayerDataTable UpdatePlayer(global::System.Nullable<int> PlayerId, string Name, string PictureURL, global::System.Nullable<int> UserId) {
             this.Adapter.SelectCommand = this.CommandCollection[6];
             if ((PlayerId.HasValue == true)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((int)(PlayerId.Value));
@@ -3722,7 +3722,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
-            SessionData.PlayerDataTable dataTable = new SessionData.PlayerDataTable();
+            Session.PlayerDataTable dataTable = new Session.PlayerDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -3796,7 +3796,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateUpdatedRows(SessionData dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateUpdatedRows(Session dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             return result;
         }
@@ -3806,7 +3806,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateInsertedRows(SessionData dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateInsertedRows(Session dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             return result;
         }
@@ -3816,7 +3816,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateDeletedRows(SessionData dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+        private int UpdateDeletedRows(Session dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
             return result;
         }
@@ -3850,7 +3850,7 @@ namespace WizardGame.Services.Data.SessionTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public virtual int UpdateAll(SessionData dataSet) {
+        public virtual int UpdateAll(Session dataSet) {
             if ((dataSet == null)) {
                 throw new global::System.ArgumentNullException("dataSet");
             }
