@@ -11,16 +11,10 @@ using WizardGame.Helpers;
 
 namespace WizardGame
 {
-    public class GameSessionHub : Hub
+    public class GameLobbyHub : Hub
     {
         public override Task OnConnected()
         {
-            // Add your own code here.
-            // For example: in a chat application, record the association between
-            // the current connection ID and user name, and mark the user as online.
-            // After the code in this method completes, the client is informed that
-            // the connection is established; for example, in a JavaScript client,
-            // the start().done callback is executed.
             return base.OnConnected();
         }
 
@@ -32,26 +26,41 @@ namespace WizardGame
             // connection id
             string connectionId = Context.ConnectionId;
 
-            // get game lobby
-            GameLobby gameLobby = wizWS.GetGameLobbyByConnectionId(connectionId);
+            // get game lobby players data
+            GameLobbyPlayers glp = wizWS.GetGameLobbyPlayersByConnectionId(connectionId);
 
-            // player forced disconnected
-            if (stopCalled)
+            // validate
+            if (glp != null && glp.GameLobbyId > 0)
             {
+                // get game lobby data
+                GameLobby lobby = wizWS.GetGameLobbyById(glp.GameLobbyId);
+
                 // validate
-                if (!string.IsNullOrEmpty(gameLobby.GroupNameId))
+                if (lobby != null && !string.IsNullOrEmpty(lobby.GroupNameId))
                 {
                     // get player
-                    Player player = wizWS.GetPlayerByConnectionId(connectionId);
+                    Player player = wizWS.GetPlayerById(glp.PlayerId);
 
                     // validate
-                    if (player.PlayerId > 0)
+                    if (player != null && player.PlayerId > 0)
                     {
-                        // broadcast player left
-                        Clients.Group(gameLobby.GroupNameId).playerLeftLobby(player.Name, connectionId);
+                        // player quit
+                        if (stopCalled)
+                        {
+                            // remove player from game lobby
+                            wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
 
-                        // remove player from game lobby
-                        wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
+                            // broadcast player left
+                            Clients.Group(lobby.GroupNameId).playerLeftLobby(player.PlayerId, player.Name);
+                        }
+                        else
+                        {
+                            // player timed out / went inactive
+                            wizWS.UpdateGameLobbyPlayers(lobby.GameLobbyId, player.PlayerId, connectionId, ConnectionState.DISCONNECTED);
+
+                            // broadcast player timed out
+                            Clients.Group(lobby.GroupNameId).playerTimedOut(player.PlayerId, player.Name);
+                        }
                     }
                 }
             }
@@ -61,10 +70,38 @@ namespace WizardGame
 
         public override Task OnReconnected()
         {
-            // Add your own code here.
-            // For example: in a chat application, you might have marked the
-            // user as offline after a period of inactivity; in that case 
-            // mark the user as online again.
+            // service
+            WizardService wizWS = new WizardService();
+
+            // connection id
+            string connectionId = Context.ConnectionId;
+
+            // get game lobby players data
+            GameLobbyPlayers glp = wizWS.GetGameLobbyPlayersByConnectionId(connectionId);
+
+            // validate
+            if (glp != null && glp.GameLobbyId > 0)
+            {
+                // get game lobby data
+                GameLobby lobby = wizWS.GetGameLobbyById(glp.GameLobbyId);
+
+                // validate
+                if (lobby != null && !string.IsNullOrEmpty(lobby.GroupNameId))
+                {
+                    // get player data
+                    Player player = wizWS.GetPlayerById(glp.PlayerId);
+
+                    if (player != null && player.PlayerId > 0)
+                    {
+                        // update record
+                        wizWS.UpdateGameLobbyPlayers(lobby.GameLobbyId, player.PlayerId, connectionId, ConnectionState.CONNECTED);
+
+                        // broadcast player reconnected
+                        Clients.Group(lobby.GroupNameId).playerReconnected(player.PlayerId, player.Name, connectionId);
+                    }
+                }
+            }
+
             return base.OnReconnected();
         }
 
@@ -127,20 +164,24 @@ namespace WizardGame
             // service
             WizardService wizWS = new WizardService();
 
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
             // add user to group
             await Groups.Add(Context.ConnectionId, groupNameId);
 
             // get player data
             Player player = wizWS.GetPlayerById(playerId);
 
-            // get connectionId
-            string connectionId = Context.ConnectionId;
+            // validation
+            if (player != null && player.PlayerId > 0)
+            {
+                // call playerJoinedLobby on client
+                Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
 
-            // call playerJoinedLobby on client
-            Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
-
-            // add player to game lobby
-            wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId, ConnectionState.CONNECTED);
+                // add player to game lobby
+                wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId, ConnectionState.CONNECTED);
+            }
         }
 
         public async Task LeaveGameLobby(string playerName, string groupNameId)
@@ -164,24 +205,6 @@ namespace WizardGame
         public void Ping()
         {
             Clients.Caller.ping();
-        }
-
-        public async Task JoinGame(int playerId, int gameId, string groupNameId)
-        {
-            // service
-            WizardService wizWS = new WizardService();
-
-            // add user to group
-            await Groups.Add(Context.ConnectionId, groupNameId);
-
-            // get player data
-            Player player = wizWS.GetPlayerById(playerId);
-
-            // get connectionId
-            string connectionId = Context.ConnectionId;
-
-            // call playerJoinedLobby on client
-            Clients.Group(groupNameId).playerJoinedGame(playerId, player.Name, connectionId);
         }
     }
 }

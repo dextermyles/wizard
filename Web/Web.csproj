@@ -243,7 +243,8 @@
       <DependentUpon>Cron.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConnectionState.cs" />
-    <Compile Include="GameSessionHub.cs" />
+    <Compile Include="GameHub.cs" />
+    <Compile Include="GameLobbyHub.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

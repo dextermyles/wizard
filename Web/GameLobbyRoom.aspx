@@ -57,12 +57,20 @@
         // Start the connection
         $.connection.hub.start().done(onConnectionInit);
 
+
+
         // get reference to hub
-        var hub = $.connection.gameSessionHub;
+        var hub = $.connection.gameLobbyHub;
 
         /*******************************************
          * functions that are called by the server *
          *******************************************/
+
+        $.connection.hub.disconnected(function () {
+            if ($.connection.hub.lastError) { 
+                appendChatMessage("Server", "Disconnected. Reason: " +  $.connection.hub.lastError.message);
+            }
+        });
 
         $.connection.hub.reconnecting(function () {
             appendChatMessage("Server", "Attempting to reconnect to game lobby.");
@@ -102,7 +110,7 @@
         };
 
         // playerLeftLobby
-        hub.client.playerLeftLobby = function playerLeftLobby(playerName, connectionId) {
+        hub.client.playerLeftLobby = function playerLeftLobby(playerId, playerName) {
             // log message
             logMessage("-- " + playerName + " has left the game lobby --");
             
@@ -114,6 +122,24 @@
 
             // update player count
             updatePlayerCount();
+        };
+
+        // playerLeftLobby
+        hub.client.playerTimedOut = function playerTimedOut(playerId, playerName) {
+            // log message
+            logMessage("-- " + playerName + " has timed out--");
+            
+            // chat message player left lobby
+            appendChatMessage(playerName, "Timed out.");
+        };
+
+        // playerReconnected
+        hub.client.playerReconnected = function playerReconnected(playerId, playerName) {
+            // log message
+            logMessage("-- " + playerName + " has reconnected--");
+            
+            // chat message player left lobby
+            appendChatMessage(playerName, "Reconnected.");
         };
 
         // receiveChatMessage
@@ -299,11 +325,28 @@
             if(isConnected) {
                 hub.server.cancelGame(gameLobbyId, groupNameId).
                     done(function() {
+                        // log msg
                         logMessage("-- cancel game sent to server --");
                     })
                     .fail(function (msg) {
+                        // log error
                         logMessage("-- " + msg + " --");
                     });
+            }
+
+            return false;
+        }
+
+        function quitGameLobby() {
+            if(isConnected) {
+                // force quit connection to hub
+                $.connection.hub.stop();
+
+                // update flag
+                isConnected = false;
+
+                // goto home page
+                window.location = 'Home.aspx';
             }
 
             return false;
@@ -371,7 +414,7 @@
                     <%= ListGameLobbyPlayersHtml()%>
                 </ul>
                 <div class="panel-footer">
-                    Connected: <span class="total-players"><%=LobbyPlayers.Length %></span>
+                    Connected: <span class="total-players"><%=Players.Length %></span>
                 </div>
             </div>
             <div class="form-group">
@@ -393,7 +436,9 @@
                     {
                         // player is not the host 
                 %>
-                <asp:Button runat="server" ID="btnQuitGame" CssClass="btn btn-lg btn-primary btn-block" Text="Quit game" OnClick="btnQuitGame_Click" />
+                <button id="btnQuitGame" class="btn btn-lg btn-primary btn-block" onclick="return quitGameLobby();">
+                    Quit game
+                </button>
                 <% 
                     }
                 %>

@@ -29,7 +29,7 @@ namespace WizardGame.Helpers
             Bid = points;
         }
 
-        public void GiveCard(Card _card)
+        public void ReceiveCard(Card _card)
         {
             // get list
             List<Card> cardList = (Cards == null) ? 

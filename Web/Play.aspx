@@ -65,7 +65,7 @@
         $.connection.hub.start().done(onConnectionInit);
 
         // get reference to hub
-        var hub = $.connection.gameSessionHub;
+        var hub = $.connection.gameHub;
 
         /*******************************************
          * functions that are called by the server *
