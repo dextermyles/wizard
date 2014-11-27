@@ -7,6 +7,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container login well well-sm">
+        <h1></h1>
         <h3 class="form-signin-heading" style="margin-top: 0px;">
             <span class="glyphicon glyphicon-user"></span>
             Please sign in

@@ -17,7 +17,7 @@ namespace WizardGame.Helpers
         public GameStateStatus Status = GameStateStatus.Setup;
         public Deck Deck = null;
 
-        public void ClearBids()
+        public void ClearAllBids()
         {
             if (Players != null && Players.Length > 0)
             {
@@ -79,7 +79,7 @@ namespace WizardGame.Helpers
                 Card topCard = Deck.TakeTopCard();
 
                 // give to player
-                Players[currentIndex].GiveCard(topCard);
+                Players[currentIndex].ReceiveCard(topCard);
 
                 // increment index
                 currentIndex++;
@@ -142,7 +142,7 @@ namespace WizardGame.Helpers
                 Card topCard = Deck.TakeTopCard();
 
                 // give to player
-                Players[currentIndex].GiveCard(topCard);
+                Players[currentIndex].ReceiveCard(topCard);
 
                 // increment index
                 currentIndex++;
