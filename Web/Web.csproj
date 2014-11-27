@@ -242,6 +242,7 @@
     <Compile Include="Auto\Cron.aspx.designer.cs">
       <DependentUpon>Cron.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ConnectionState.cs" />
     <Compile Include="GameSessionHub.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -250,6 +251,7 @@
     <Compile Include="Helpers\Deck.cs" />
     <Compile Include="Helpers\GameLobby.cs" />
     <Compile Include="Helpers\GameLobbyPlayers.cs" />
+    <Compile Include="Helpers\GamePlayers.cs" />
     <Compile Include="Helpers\GameState.cs" />
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
@@ -313,15 +315,15 @@
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Services\Data\Game.Designer.cs">
+    <Compile Include="Services\Data\GameData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Game.xsd</DependentUpon>
+      <DependentUpon>GameData.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Services\Data\Session.Designer.cs">
+    <Compile Include="Services\Data\SessionData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Session.xsd</DependentUpon>
+      <DependentUpon>SessionData.xsd</DependentUpon>
     </Compile>
     <Compile Include="Services\IWizardService.cs" />
     <Compile Include="Services\WizardService.svc.cs">
@@ -337,28 +339,28 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Services\Data\Game.xsc">
-      <DependentUpon>Game.xsd</DependentUpon>
+    <Content Include="Services\Data\GameData.xsc">
+      <DependentUpon>GameData.xsd</DependentUpon>
     </Content>
     <Content Include="packages.config" />
-    <None Include="Services\Data\Game.xsd">
+    <None Include="Services\Data\GameData.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Game.Designer.cs</LastGenOutput>
+      <LastGenOutput>GameData.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Services\Data\Game.xss">
-      <DependentUpon>Game.xsd</DependentUpon>
+    <Content Include="Services\Data\GameData.xss">
+      <DependentUpon>GameData.xsd</DependentUpon>
     </Content>
-    <Content Include="Services\Data\Session.xsc">
-      <DependentUpon>Session.xsd</DependentUpon>
+    <Content Include="Services\Data\SessionData.xsc">
+      <DependentUpon>SessionData.xsd</DependentUpon>
     </Content>
-    <None Include="Services\Data\Session.xsd">
+    <None Include="Services\Data\SessionData.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Session.Designer.cs</LastGenOutput>
+      <LastGenOutput>SessionData.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Services\Data\Session.xss">
-      <DependentUpon>Session.xsd</DependentUpon>
+    <Content Include="Services\Data\SessionData.xss">
+      <DependentUpon>SessionData.xsd</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

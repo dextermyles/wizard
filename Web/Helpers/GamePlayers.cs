@@ -5,14 +5,13 @@ using System.Web;
 
 namespace WizardGame.Helpers
 {
-    public class GameLobbyPlayers
+    public class GamePlayers
     {
-        public int GameLobbyPlayersId = 0;
-        public int GameLobbyId = 0;
+        public int GamePlayersId = 0;
+        public int GameId = 0;
         public int PlayerId = 0;
         public string ConnectionId = string.Empty;
         public ConnectionState ConnectionState = ConnectionState.DISCONNECTED;
-        public DateTime DateCreated;
         public DateTime DateLastActive;
     }
 }

@@ -35,17 +35,25 @@ namespace WizardGame
             // get game lobby
             GameLobby gameLobby = wizWS.GetGameLobbyByConnectionId(connectionId);
 
-            // get player
-            Player player = wizWS.GetPlayerByConnectionId(connectionId);
-
-            // validate
-            if (!string.IsNullOrEmpty(gameLobby.GroupNameId))
+            // player forced disconnected
+            if (stopCalled)
             {
-                // broadcast player left
-                Clients.Group(gameLobby.GroupNameId).playerLeftLobby(player.Name, connectionId);
+                // validate
+                if (!string.IsNullOrEmpty(gameLobby.GroupNameId))
+                {
+                    // get player
+                    Player player = wizWS.GetPlayerByConnectionId(connectionId);
 
-                // remove player from game lobby
-                wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
+                    // validate
+                    if (player.PlayerId > 0)
+                    {
+                        // broadcast player left
+                        Clients.Group(gameLobby.GroupNameId).playerLeftLobby(player.Name, connectionId);
+
+                        // remove player from game lobby
+                        wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);
+                    }
+                }
             }
             
             return base.OnDisconnected(stopCalled);
@@ -132,7 +140,7 @@ namespace WizardGame
             Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
 
             // add player to game lobby
-            wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId);
+            wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId, ConnectionState.CONNECTED);
         }
 
         public async Task LeaveGameLobby(string playerName, string groupNameId)

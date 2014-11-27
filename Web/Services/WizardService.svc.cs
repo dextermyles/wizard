@@ -20,8 +20,8 @@ namespace WizardGame.Services
             {
                 // get db results
                 Data.SessionTableAdapters.PlayerTableAdapter playerApapter = new Data.SessionTableAdapters.PlayerTableAdapter();
-                Data.Session.PlayerDataTable dtPlayer = playerApapter.UpdatePlayer(playerId, name, pictureUrl, userId);
-                Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+                Data.SessionData.PlayerDataTable dtPlayer = playerApapter.UpdatePlayer(playerId, name, pictureUrl, userId);
+                Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayer.Rows[0];
 
                 if (row != null)
                 {
@@ -323,11 +323,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
-                Data.Session.PlayerDataTable dtPlayer = adapter.GetPlayerByConnectionId(connectionId);
+                Data.SessionData.PlayerDataTable dtPlayer = adapter.GetPlayerByConnectionId(connectionId);
 
                 if (dtPlayer != null && dtPlayer.Rows.Count > 0)
                 {
-                    Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+                    Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayer.Rows[0];
 
                     if (!row.IsNameNull())
                         player.Name = row.Name;
@@ -357,11 +357,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
-                Data.Session.PlayerDataTable dtPlayer = adapter.GetPlayerById(playerId);
+                Data.SessionData.PlayerDataTable dtPlayer = adapter.GetPlayerById(playerId);
 
                 if (dtPlayer != null && dtPlayer.Rows.Count > 0)
                 {
-                    Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+                    Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayer.Rows[0];
 
                     if (!row.IsNameNull())
                         player.Name = row.Name;
@@ -391,11 +391,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
-                Data.Session.PlayerDataTable dtPlayer = adapter.GetPlayerByName(name);
+                Data.SessionData.PlayerDataTable dtPlayer = adapter.GetPlayerByName(name);
 
                 if (dtPlayer != null && dtPlayer.Rows.Count > 0)
                 {
-                    Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[0];
+                    Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayer.Rows[0];
 
                     if (!row.IsNameNull())
                         player.Name = row.Name;
@@ -425,11 +425,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.UserTableAdapter adapter = new Data.SessionTableAdapters.UserTableAdapter();
-                Data.Session.UserDataTable dtUser = adapter.GetUserById(userId);
+                Data.SessionData.UserDataTable dtUser = adapter.GetUserById(userId);
 
                 if (dtUser != null && dtUser.Rows.Count > 0)
                 {
-                    Data.Session.UserRow row = (Data.Session.UserRow)dtUser.Rows[0];
+                    Data.SessionData.UserRow row = (Data.SessionData.UserRow)dtUser.Rows[0];
 
                     user.Active = row.Active;
                     user.DateCreated = row.DateCreated;
@@ -466,11 +466,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.UserTableAdapter adapter = new Data.SessionTableAdapters.UserTableAdapter();
-                Data.Session.UserDataTable dtUser = adapter.GetUserByUsername(username);
+                Data.SessionData.UserDataTable dtUser = adapter.GetUserByUsername(username);
 
                 if (dtUser != null && dtUser.Rows.Count > 0)
                 {
-                    Data.Session.UserRow row = (Data.Session.UserRow)dtUser.Rows[0];
+                    Data.SessionData.UserRow row = (Data.SessionData.UserRow)dtUser.Rows[0];
 
                     user.Active = row.Active;
                     user.DateCreated = row.DateCreated;
@@ -500,20 +500,20 @@ namespace WizardGame.Services
             return user;
         }
 
-        public Player[] ListPlayersByGameLobbyId(int gameLobbyId)
+        public Player[] ListPlayersByGameId(int gameId)
         {
             List<Player> players = new List<Player>();
 
             try
             {
                 Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
-                Data.Session.PlayerDataTable dtPlayer = adapter.ListPlayersByGameLobbyId(gameLobbyId);
+                Data.SessionData.PlayerDataTable dtPlayer = adapter.ListPlayersByGameId(gameId);
 
                 if (dtPlayer != null && dtPlayer.Rows.Count > 0)
                 {
                     for (int i = 0; i < dtPlayer.Rows.Count; i++)
                     {
-                        Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayer.Rows[i];
+                        Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayer.Rows[i];
 
                         Player player = new Player();
 
@@ -527,6 +527,77 @@ namespace WizardGame.Services
 
                         if (!row.IsUserIdNull())
                             player.UserId = row.UserId;
+
+                        player.ConnectionId = row.ConnectionId;
+
+                        switch (row.ConnectionState)
+                        {
+                            case "CONNECTED":
+                                player.ConnectionState = ConnectionState.CONNECTED;
+                                break;
+                            case "DISCONNECTED":
+                                player.ConnectionState = ConnectionState.DISCONNECTED;
+                                break;
+                            case "INACTIVE":
+                                player.ConnectionState = ConnectionState.INACTIVE;
+                                break;
+                        }
+
+                        // add to list
+                        players.Add(player);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return players.ToArray();
+        }
+
+        public Player[] ListPlayersByGameLobbyId(int gameLobbyId)
+        {
+            List<Player> players = new List<Player>();
+
+            try
+            {
+                Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
+                Data.SessionData.PlayerDataTable dtPlayer = adapter.ListPlayersByGameLobbyId(gameLobbyId);
+
+                if (dtPlayer != null && dtPlayer.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dtPlayer.Rows.Count; i++)
+                    {
+                        Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayer.Rows[i];
+
+                        Player player = new Player();
+
+                        if (!row.IsNameNull())
+                            player.Name = row.Name;
+
+                        if (!row.IsPictureURLNull())
+                            player.PictureURL = row.PictureURL;
+
+                        player.PlayerId = row.PlayerId;
+
+                        if (!row.IsUserIdNull())
+                            player.UserId = row.UserId;
+
+                        player.ConnectionId = row.ConnectionId;
+
+                        switch (row.ConnectionState)
+                        {
+                            case "CONNECTED":
+                                player.ConnectionState = ConnectionState.CONNECTED;
+                                break;
+                            case "DISCONNECTED":
+                                player.ConnectionState = ConnectionState.DISCONNECTED;
+                                break;
+                            case "INACTIVE":
+                                player.ConnectionState = ConnectionState.INACTIVE;
+                                break;
+                        }
 
                         // add to list
                         players.Add(player);
@@ -548,13 +619,13 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.PlayerTableAdapter adapter = new Data.SessionTableAdapters.PlayerTableAdapter();
-                Data.Session.PlayerDataTable dtPlayers = adapter.ListPlayersByUserId(userId);
+                Data.SessionData.PlayerDataTable dtPlayers = adapter.ListPlayersByUserId(userId);
 
                 if (dtPlayers != null && dtPlayers.Rows.Count > 0)
                 {
                     for (int i = 0; i < dtPlayers.Rows.Count; i++)
                     {
-                        Data.Session.PlayerRow row = (Data.Session.PlayerRow)dtPlayers.Rows[i];
+                        Data.SessionData.PlayerRow row = (Data.SessionData.PlayerRow)dtPlayers.Rows[i];
                         
                         Player player = new Player();
 
@@ -692,11 +763,11 @@ namespace WizardGame.Services
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
 
-                Data.Session.SessionDataTable dtSession = adapter.Login(username, password, ipAddress);
+                Data.SessionData.SessionDataTable dtSession = adapter.Login(username, password, ipAddress);
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
-                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    Data.SessionData.SessionRow row = (Data.SessionData.SessionRow)dtSession.Rows[0];
                     
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
@@ -746,7 +817,7 @@ namespace WizardGame.Services
             {
                 Data.SessionTableAdapters.RegisterTableAdapter adapter = new Data.SessionTableAdapters.RegisterTableAdapter();
 
-                Data.Session.RegisterDataTable dtRegister = adapter.NewUser(username, password, emailAddress, Functions.GetUserIPAddress(), active);
+                Data.SessionData.RegisterDataTable dtRegister = adapter.NewUser(username, password, emailAddress, Functions.GetUserIPAddress(), active);
 
                 if (dtRegister != null && dtRegister.Rows.Count > 0)
                 {
@@ -774,11 +845,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.ValidateSession(secret, Functions.GetUserIPAddress());
+                Data.SessionData.SessionDataTable dtSession = adapter.ValidateSession(secret, Functions.GetUserIPAddress());
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
-                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    Data.SessionData.SessionRow row = (Data.SessionData.SessionRow)dtSession.Rows[0];
 
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
@@ -859,11 +930,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, Functions.GetUserIPAddress(), connectionId);
+                Data.SessionData.SessionDataTable dtSession = adapter.UpdateSession(secret, userId, playerId, Functions.GetUserIPAddress(), connectionId);
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
-                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    Data.SessionData.SessionRow row = (Data.SessionData.SessionRow)dtSession.Rows[0];
                     
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
@@ -902,11 +973,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.FacebookLogin(fb_email, fb_userId, Functions.GetUserIPAddress());
+                Data.SessionData.SessionDataTable dtSession = adapter.FacebookLogin(fb_email, fb_userId, Functions.GetUserIPAddress());
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
-                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    Data.SessionData.SessionRow row = (Data.SessionData.SessionRow)dtSession.Rows[0];
 
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
@@ -944,11 +1015,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.UserTableAdapter adapter = new Data.SessionTableAdapters.UserTableAdapter();
-                Data.Session.UserDataTable dtUser = adapter.UpdateUser(userId, username, password, emailAddress, active, fb_userId);
+                Data.SessionData.UserDataTable dtUser = adapter.UpdateUser(userId, username, password, emailAddress, active, fb_userId);
 
                 if (dtUser != null && dtUser.Rows.Count > 0)
                 {
-                    Data.Session.UserRow row = (Data.Session.UserRow)dtUser.Rows[0];
+                    Data.SessionData.UserRow row = (Data.SessionData.UserRow)dtUser.Rows[0];
 
                     user.Active = row.Active;
                     user.DateCreated = row.DateCreated;
@@ -1012,11 +1083,11 @@ namespace WizardGame.Services
             try
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
-                Data.Session.SessionDataTable dtSession = adapter.GetSessionBySecret(secret, Functions.GetUserIPAddress());
+                Data.SessionData.SessionDataTable dtSession = adapter.GetSessionBySecret(secret, Functions.GetUserIPAddress());
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {
-                    Data.Session.SessionRow row = (Data.Session.SessionRow)dtSession.Rows[0];
+                    Data.SessionData.SessionRow row = (Data.SessionData.SessionRow)dtSession.Rows[0];
 
                     session.DateCreated = row.DateCreated;
                     session.DateLastActive = row.DateLastActive;
@@ -1045,6 +1116,18 @@ namespace WizardGame.Services
             return session;
         }
 
+        public void DeletePlayerFromGame(int playerId, int gameId, string connectionId)
+        {
+            try
+            {
+                Data.GameTableAdapters.GamePlayersTableAdapter adapter = new Data.GameTableAdapters.GamePlayersTableAdapter();
+                adapter.DeletePlayerFromGame(gameId, playerId, connectionId);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
 
         public void DeleteGameLobbyById(int gameLobbyId)
         {
@@ -1265,14 +1348,14 @@ namespace WizardGame.Services
             }
         }
 
-        public GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId)
+        public GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId, ConnectionState state)
         {
             GameLobbyPlayers lobbyPlayers = new GameLobbyPlayers();
 
             try
             {
                 Data.GameTableAdapters.GameLobbyPlayersTableAdapter adapter = new Data.GameTableAdapters.GameLobbyPlayersTableAdapter();
-                Data.Game.GameLobbyPlayersDataTable lobbyPlayersDt = adapter.UpdateGameLobbyPlayers(playerId, gameLobbyId, connectionId);
+                Data.Game.GameLobbyPlayersDataTable lobbyPlayersDt = adapter.UpdateGameLobbyPlayers(playerId, gameLobbyId, connectionId, state.ToString());
 
                 if (lobbyPlayersDt != null && lobbyPlayersDt.Rows.Count > 0)
                 {
@@ -1283,6 +1366,19 @@ namespace WizardGame.Services
                     lobbyPlayers.GameLobbyId = row.GameLobbyId;
                     lobbyPlayers.GameLobbyPlayersId = row.GameLobbyPlayersId;
                     lobbyPlayers.PlayerId = row.PlayerId;
+
+                    switch (row.ConnectionState)
+                    {
+                        case "CONNECTED":
+                            lobbyPlayers.ConnectionState = ConnectionState.CONNECTED;
+                            break;
+                        case "DISCONNECTED":
+                            lobbyPlayers.ConnectionState = ConnectionState.DISCONNECTED;
+                            break;
+                        case "INACTIVE":
+                            lobbyPlayers.ConnectionState = ConnectionState.INACTIVE;
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1293,29 +1389,35 @@ namespace WizardGame.Services
             return lobbyPlayers;
         }
 
-
-        public GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId)
+        public GamePlayers UpdateGamePlayers(int gameId, int playerId, string connectionId, ConnectionState state)
         {
-            List<GameLobbyPlayers> lobbyPlayersList = new List<GameLobbyPlayers>();
+            GamePlayers gamePlayers = new GamePlayers();
 
             try
             {
-                Data.GameTableAdapters.GameLobbyPlayersTableAdapter adapter = new Data.GameTableAdapters.GameLobbyPlayersTableAdapter();
-                Data.Game.GameLobbyPlayersDataTable lobbyPlayersDt = adapter.ListGameLobbyPlayers(gameLobbyId);
+                Data.GameTableAdapters.GamePlayersTableAdapter adapter = new Data.GameTableAdapters.GamePlayersTableAdapter();
+                Data.Game.GamePlayersDataTable dtGamePlayers = adapter.UpdateGamePlayers(gameId, playerId, connectionId, state.ToString());
 
-                if (lobbyPlayersDt != null && lobbyPlayersDt.Rows.Count > 0)
+                if (dtGamePlayers != null && dtGamePlayers.Rows.Count > 0)
                 {
-                    Data.Game.GameLobbyPlayersRow row = (Data.Game.GameLobbyPlayersRow)lobbyPlayersDt.Rows[0];
+                    Data.Game.GamePlayersRow row = (Data.Game.GamePlayersRow)dtGamePlayers.Rows[0];
 
-                    GameLobbyPlayers lobbyPlayers = new GameLobbyPlayers();
-
-                    lobbyPlayers.ConnectionId = row.ConnectionId;
-                    lobbyPlayers.DateCreated = row.DateCreated;
-                    lobbyPlayers.GameLobbyId = row.GameLobbyId;
-                    lobbyPlayers.GameLobbyPlayersId = row.GameLobbyPlayersId;
-                    lobbyPlayers.PlayerId = row.PlayerId;
-
-                    lobbyPlayersList.Add(lobbyPlayers);
+                    gamePlayers.GameId = row.GameId;
+                    gamePlayers.PlayerId = row.PlayerId;
+                    gamePlayers.DateLastActive = row.DateLastActive;
+                    gamePlayers.ConnectionId = row.ConnectionId;
+                    
+                    switch(row.ConnectionState) {
+                        case "CONNECTED":
+                            gamePlayers.ConnectionState = ConnectionState.CONNECTED;
+                            break;
+                        case "DISCONNECTED":
+                            gamePlayers.ConnectionState = ConnectionState.DISCONNECTED;
+                            break;
+                        case "INACTIVE":
+                            gamePlayers.ConnectionState = ConnectionState.INACTIVE;
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1323,10 +1425,9 @@ namespace WizardGame.Services
                 LogError(ex);
             }
 
-            return lobbyPlayersList.ToArray();
+            return gamePlayers;
         }
-
-
+        
         
     }
 }

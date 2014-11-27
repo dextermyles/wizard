@@ -43,6 +43,9 @@ namespace WizardGame.Services
         void DeleteGameLobbyById(int gameLobbyId);
 
         [OperationContract]
+        void DeletePlayerFromGame(int playerId, int gameId, string connectionId);
+
+        [OperationContract]
         void DeletePlayerFromGameLobby(int playerId, int gameLobbyId, string connectionId);
 
         // Gets
@@ -93,10 +96,10 @@ namespace WizardGame.Services
         Player[] ListPlayersByGameLobbyId(int gameLobbyId);
 
         [OperationContract]
-        GameLobby[] ListAllGameLobbies(bool showInProgress);
+        Player[] ListPlayersByGameId(int gameId);
 
         [OperationContract]
-        GameLobbyPlayers[] ListGameLobbyPlayers(int gameLobbyId);
+        GameLobby[] ListAllGameLobbies(bool showInProgress);
 
         // Updates
         [OperationContract]
@@ -106,7 +109,10 @@ namespace WizardGame.Services
         GameLobby UpdateGameLobby(int gameLobbyId, int ownerPlayerId, string name, int maxPlayers, string groupNameId, string password, bool inProgress);
 
         [OperationContract]
-        GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId);
+        GameLobbyPlayers UpdateGameLobbyPlayers(int gameLobbyId, int playerId, string connectionId, ConnectionState state);
+
+        [OperationContract]
+        GamePlayers UpdateGamePlayers(int gameId, int playerId, string connectionId, ConnectionState state);
 
         [OperationContract]
         GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);

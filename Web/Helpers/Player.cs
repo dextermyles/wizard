@@ -20,7 +20,9 @@ namespace WizardGame.Helpers
         public bool IsBidRequired = false;
         public Card[] Cards = null;
         public Card LastCardPlayed = null;
-
+        public string ConnectionId = string.Empty;
+        public ConnectionState ConnectionState = ConnectionState.DISCONNECTED;
+        
         public void SetBid(int points)
         {
             IsBidRequired = false;
@@ -51,6 +53,9 @@ namespace WizardGame.Helpers
             // validation
             if (Cards == null)
                 return;
+
+            // update last used card
+            LastCardPlayed = _card;
 
             // get list
             List<Card> cardList = Cards.ToList();

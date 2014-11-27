@@ -17,7 +17,7 @@ namespace WizardGame
         public User UserData = null;
         public GameLobby GameLobby = null;
         public bool IsGameHost = false;
-        public GameLobbyPlayers[] LobbyPlayers = null;
+        public Player[] Players = null;
 
         private WizardService wizWS = new WizardService();
         private int gameLobbyId = 0;
@@ -79,7 +79,7 @@ namespace WizardGame
                 }
 
                 // get lobby players
-                LobbyPlayers = wizWS.ListGameLobbyPlayers(GameLobby.GameLobbyId);
+                Players = wizWS.ListPlayersByGameLobbyId(GameLobby.GameLobbyId);
             }
             else
             {
@@ -93,10 +93,9 @@ namespace WizardGame
         {
             StringBuilder html = new StringBuilder();
 
-            for (int i = 0; i < LobbyPlayers.Length; i++)
+            for (int i = 0; i < Players.Length; i++)
             {
-                GameLobbyPlayers lobbyPlayer = LobbyPlayers[i];
-                Player player = wizWS.GetPlayerById(lobbyPlayer.PlayerId);
+                Player player = Players[i];
 
                 string playerName = (player != null) ? player.Name : "Error";
 
