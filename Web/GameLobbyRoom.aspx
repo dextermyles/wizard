@@ -67,9 +67,7 @@
          *******************************************/
 
         $.connection.hub.disconnected(function () {
-            if ($.connection.hub.lastError) { 
-                appendChatMessage("Server", "Disconnected. Reason: " +  $.connection.hub.lastError.message);
-            }
+            
         });
 
         $.connection.hub.reconnecting(function () {
@@ -88,13 +86,19 @@
         });
 
         $.connection.hub.disconnected(function () {
-            appendChatMessage("Server", "You have been disconnected from game lobby.");
+            // has error
+            if ($.connection.hub.lastError) { 
+                appendChatMessage("Server", $.connection.hub.lastError.message);
+            }
+            else {
+                appendChatMessage("Server", "You have been disconnected from game lobby.");
+            }
 
             isConnected = false;
         });
 
         // playerJoinedLobby
-        hub.client.playerJoinedLobby = function (playerId, playerName, playerConnectionId) {
+        hub.client.playerJoinedLobby = function (playerId, playerName, connectionId) {
             // log message
             logMessage("-- " + playerName + " has joined the game lobby --");
 
@@ -103,7 +107,7 @@
 
             // add player to list
             if(!isPlayerInList(playerName))
-                $(".player-list").append("<li class='list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
+                $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
 
             // update player count
             updatePlayerCount();
@@ -118,7 +122,7 @@
             appendChatMessage(playerName, "Left the game lobby.");
 
             // remove name from player list
-            $("#player-" + playerName).remove();
+            $("#player-" + playerId).remove();
 
             // update player count
             updatePlayerCount();
@@ -134,7 +138,7 @@
         };
 
         // playerReconnected
-        hub.client.playerReconnected = function playerReconnected(playerId, playerName) {
+        hub.client.playerReconnected = function playerReconnected(playerId, playerName, connectionId) {
             // log message
             logMessage("-- " + playerName + " has reconnected--");
             
@@ -192,8 +196,6 @@
          *******************************************/
 
         function joinGameLobby(playerId, groupNameId) {
-            logMessage("-- calling joinGameLobby(" + playerId + "," + groupNameId + ") on server --");
-
             // call joinGameLobby on server
             hub.server.joinGameLobby(playerId, gameLobbyId, groupNameId)
                 .done(function () {
@@ -205,12 +207,13 @@
         };
 
         function leaveGameLobby() {
-            logMessage("-- calling leaveGameLobby(" + player.Name + "," + groupNameId + ") on server --");
-
             // call leaveGameLobby on server
-            hub.server.leaveGameLobby(player.Name, groupNameId)
+            hub.server.leaveGameLobby(gameLobbyId, currentPlayer.PlayerId, currentPlayer.Name, groupNameId)
                 .done(function () {
                     logMessage("-- leaveGameLobby executed on server --");
+
+                    // redirect to home page
+                    window.location = 'Home.aspx';
                 })
                 .fail(function (msg) {
                     logMessage("-- " + msg + " --");
@@ -218,8 +221,6 @@
         };
 
         function sendChatMessage() {
-            logMessage("-- calling sendChatMessage on server --");
-
             // get chat message box
             var $chatbox = $("#txtChatMessage");
 
@@ -244,8 +245,6 @@
 
             // clear chat window
             $chatwindow.val('');
-
-            logMessage("-- cleared chat window --");
         };
 
         function appendChatMessage(playerName, message) {
@@ -256,6 +255,12 @@
 
             // append new message
             $("#txtChatWindow").val(oldMessages + chatStr);
+
+            // scroll to bottom
+            var psconsole = $('#txtChatWindow');
+
+            if(psconsole.length)
+                psconsole.scrollTop(psconsole[0].scrollHeight - psconsole.height());
         };
 
         function updatePlayerCount() {
@@ -337,21 +342,6 @@
             return false;
         }
 
-        function quitGameLobby() {
-            if(isConnected) {
-                // force quit connection to hub
-                $.connection.hub.stop();
-
-                // update flag
-                isConnected = false;
-
-                // goto home page
-                window.location = 'Home.aspx';
-            }
-
-            return false;
-        }
-
         /******************************************
          * functions that are called on page load *
          ******************************************/
@@ -396,6 +386,8 @@
                                         // enter key pressed
                                         if (event.keyCode == 13) {
                                             sendChatMessage();
+
+                                            return false;
                                         }
                                     });
                                 </script>
@@ -424,21 +416,15 @@
                     {
                         // player is the game host
                 %>
-                <button id="btnStartGame" class="btn btn-lg btn-primary btn-block" onclick="return startGame();" disabled>
-                    Start game
-                </button>
-                <button id="btnCancelGame" class="btn btn-lg btn-default btn-block" onclick="return cancelGame();">
-                    Cancel game
-                </button>
+                <input type="button" id="btnStartGame" class="btn btn-lg btn-primary btn-block" onclick="return startGame(); return false;" value="Start game" disabled />
+                <input type="button" id="btnCancelGame" class="btn btn-lg btn-default btn-block" onclick="return cancelGame(); return false;" value="Cancel game" />
                 <% 
                     }
                     else
                     {
                         // player is not the host 
                 %>
-                <button id="btnQuitGame" class="btn btn-lg btn-primary btn-block" onclick="return quitGameLobby();">
-                    Quit game
-                </button>
+                <input type="button" id="btnQuitGame" class="btn btn-lg btn-primary btn-block" onclick="return leaveGameLobby(); return false;" value="Quit game" />
                 <% 
                     }
                 %>

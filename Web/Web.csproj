@@ -315,6 +315,10 @@
     <Compile Include="Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Data\GameData.cs">
+      <DependentUpon>GameData.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Services\Data\GameData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -68,43 +68,6 @@ namespace WizardGame
             return base.OnDisconnected(stopCalled);
         }
 
-        public override Task OnReconnected()
-        {
-            // service
-            WizardService wizWS = new WizardService();
-
-            // connection id
-            string connectionId = Context.ConnectionId;
-
-            // get game lobby players data
-            GameLobbyPlayers glp = wizWS.GetGameLobbyPlayersByConnectionId(connectionId);
-
-            // validate
-            if (glp != null && glp.GameLobbyId > 0)
-            {
-                // get game lobby data
-                GameLobby lobby = wizWS.GetGameLobbyById(glp.GameLobbyId);
-
-                // validate
-                if (lobby != null && !string.IsNullOrEmpty(lobby.GroupNameId))
-                {
-                    // get player data
-                    Player player = wizWS.GetPlayerById(glp.PlayerId);
-
-                    if (player != null && player.PlayerId > 0)
-                    {
-                        // update record
-                        wizWS.UpdateGameLobbyPlayers(lobby.GameLobbyId, player.PlayerId, connectionId, ConnectionState.CONNECTED);
-
-                        // broadcast player reconnected
-                        Clients.Group(lobby.GroupNameId).playerReconnected(player.PlayerId, player.Name, connectionId);
-                    }
-                }
-            }
-
-            return base.OnReconnected();
-        }
-
         public void SendChatMessage(string playerName, string message, string groupNameId)
         {
             // get connectionId
@@ -176,15 +139,27 @@ namespace WizardGame
             // validation
             if (player != null && player.PlayerId > 0)
             {
-                // call playerJoinedLobby on client
-                Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
+                // get game lobby players data
+                GameLobbyPlayers glp = wizWS.GetGameLobbyPlayersByGameLobbyIdAndPlayerId(gameLobbyId, playerId);
+
+                // validation
+                if (glp != null && glp.GameLobbyPlayersId > 0)
+                {
+                    // call playerJoinedLobby on client
+                    Clients.Group(groupNameId).playerReconnected(playerId, player.Name, connectionId);
+                }
+                else
+                {
+                    // call playerJoinedLobby on client
+                    Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
+                }
 
                 // add player to game lobby
                 wizWS.UpdateGameLobbyPlayers(gameLobbyId, playerId, connectionId, ConnectionState.CONNECTED);
             }
         }
 
-        public async Task LeaveGameLobby(string playerName, string groupNameId)
+        public async Task LeaveGameLobby(int gameLobbyId, int playerId, string playerName, string groupNameId)
         {
             // service
             WizardService wizWS = new WizardService();
@@ -196,7 +171,7 @@ namespace WizardGame
             await Groups.Remove(connectionId, groupNameId);
 
             // client playerLeftLobby on client
-            Clients.Group(groupNameId).playerLeftLobby(playerName, connectionId);
+            Clients.Group(groupNameId).playerLeftLobby(playerId, playerName);
 
             // remove player from lobby table
             wizWS.DeletePlayerFromGameLobby(0, 0, connectionId);

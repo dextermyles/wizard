@@ -55,10 +55,10 @@
             // append chat message
             appendChatMessage("Server", "Connected to game lobby!");
 
-            // setup keep-alive
+            // get updated player list every 10 seconds
             keepAliveInterval = setInterval(function () {
-                keepAlive();
-            }, 15000);
+                getListOfPlayersInGame();
+            }, 10000);
         };
 
         // Start the connection
@@ -135,16 +135,29 @@
 
             // append new message
             $("#txtChatWindow").val(oldMessages + chatStr);
+
+            // scroll to bottom
+            var psconsole = $('#txtChatWindow');
+
+            if(psconsole.length)
+                psconsole.scrollTop(psconsole[0].scrollHeight - psconsole.height());
         };
 
-        function keepAlive() {
+        function updatePlayerList(players) {
+
+        };
+
+        function getListOfPlayersInGame() {
             if (isConnected) {
-                hub.server.ping()
-                    .done(function () {
-                        logMessage("-- keep-alive request sent to server --");
+                hub.server.ListPlayersInGame()
+                    .done(function(playerList) {
+                        console.log(playerList);
+                    })
+                    .fail(function(msg) {
+                        logMessage("-- error: " + msg + " --");
                     });
             }
-        }
+        };
     </script>
     <style type="text/css">
         .auto-style2 {

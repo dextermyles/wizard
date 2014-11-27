@@ -99,7 +99,7 @@ namespace WizardGame
 
                 string playerName = (player != null) ? player.Name : "Error";
 
-                html.AppendLine("<li class='list-group-item' id='player-" + playerName + "'>" + playerName + "</li>");
+                html.AppendLine("<li class='list-group-item' id='player-" + player.PlayerId + "'>" + playerName + "</li>");
             }
 
             return html.ToString();

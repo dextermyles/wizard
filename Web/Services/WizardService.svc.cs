@@ -1315,6 +1315,49 @@ namespace WizardGame.Services
             return glp;
         }
 
+        public GameLobbyPlayers GetGameLobbyPlayersByGameLobbyIdAndPlayerId(int gameLobbyId, int playerId)
+        {
+            GameLobbyPlayers glp = new GameLobbyPlayers();
+
+            try
+            {
+                Data.GameTableAdapters.GameLobbyPlayersTableAdapter adapter = new Data.GameTableAdapters.GameLobbyPlayersTableAdapter();
+                Data.Game.GameLobbyPlayersDataTable dtGameLobbyPlayers = adapter.GetGameLobbyPlayersByGameLobbyIdAndPlayerId(gameLobbyId, playerId);
+
+                if (dtGameLobbyPlayers != null && dtGameLobbyPlayers.Rows.Count > 0)
+                {
+                    Data.Game.GameLobbyPlayersRow row = (Data.Game.GameLobbyPlayersRow)dtGameLobbyPlayers.Rows[0];
+
+                    glp.ConnectionId = row.ConnectionId;
+                    glp.DateCreated = row.DateCreated;
+                    glp.DateLastActive = row.DateLastActive;
+                    glp.GameLobbyId = row.GameLobbyId;
+                    glp.GameLobbyPlayersId = row.GameLobbyPlayersId;
+                    glp.PlayerId = row.PlayerId;
+
+                    switch (row.ConnectionState)
+                    {
+                        case "DISCONNECTED":
+                            glp.ConnectionState = ConnectionState.DISCONNECTED;
+                            break;
+                        case "CONNECTED":
+                            glp.ConnectionState = ConnectionState.CONNECTED;
+                            break;
+                        case "INACTIVE":
+                            glp.ConnectionState = ConnectionState.INACTIVE;
+                            break;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return glp;
+        }
+
         public GamePlayers GetGamePlayersByConnectionId(string connectionId)
         {
             GamePlayers gp = new GamePlayers();
@@ -1345,8 +1388,53 @@ namespace WizardGame.Services
                         case "INACTIVE":
                             gp.ConnectionState = ConnectionState.INACTIVE;
                             break;
-                    }  
+                    }
                 }
+
+
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return gp;
+        }
+
+        public GamePlayers GetGamePlayersByGameIdAndPlayerId(int gameId, int playerId)
+        {
+            GamePlayers gp = new GamePlayers();
+
+            try
+            {
+                Data.GameTableAdapters.GamePlayersTableAdapter adapter = new Data.GameTableAdapters.GamePlayersTableAdapter();
+                Data.Game.GamePlayersDataTable dtGamePlayers = adapter.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
+
+                if (dtGamePlayers != null && dtGamePlayers.Rows.Count > 0)
+                {
+                    Data.Game.GamePlayersRow row = (Data.Game.GamePlayersRow)dtGamePlayers.Rows[0];
+
+                    gp.ConnectionId = row.ConnectionId;
+                    gp.DateLastActive = row.DateLastActive;
+                    gp.GameId = row.GameId;
+                    gp.GamePlayersId = row.GamePlayersId;
+                    gp.PlayerId = row.PlayerId;
+
+                    switch (row.ConnectionState)
+                    {
+                        case "DISCONNECTED":
+                            gp.ConnectionState = ConnectionState.DISCONNECTED;
+                            break;
+                        case "CONNECTED":
+                            gp.ConnectionState = ConnectionState.CONNECTED;
+                            break;
+                        case "INACTIVE":
+                            gp.ConnectionState = ConnectionState.INACTIVE;
+                            break;
+                    }
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -1552,7 +1640,6 @@ namespace WizardGame.Services
             return gamePlayers;
         }
 
-
-        
+       
     }
 }
