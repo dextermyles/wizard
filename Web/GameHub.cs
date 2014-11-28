@@ -181,6 +181,17 @@ namespace WizardGame
                     {
                         var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
 
+                        if(trumpCards.Count > 0)
+                            highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
+                    }
+
+                    // no trump cards, first card played is trump
+                    if (highestCard == null)
+                    {
+                        Card trumpCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
+
+                        var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == trumpCard.Suit).ToList();
+
                         highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
                     }
                 }
@@ -199,6 +210,9 @@ namespace WizardGame
 
                 // erase cards played
                 gameState.CardsPlayed = null;
+
+                // update game status
+                gameState.Status = GameStateStatus.RoundInProgress;
             }
 
             // check if round ended
