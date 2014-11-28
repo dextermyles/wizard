@@ -17,11 +17,23 @@ namespace WizardGame.Helpers
         public int TricksTaken = 0;
         public bool IsDealer = false;
         public bool IsTurn = false;
+
         public Card[] Cards = null;
         public Card LastCardPlayed = null;
         public string ConnectionId = string.Empty;
         public ConnectionState ConnectionState = ConnectionState.DISCONNECTED;
-        
+
+        public bool HasCards()
+        {
+            if (Cards == null)
+                return false;
+
+            if (Cards.Length > 0)
+                return true;
+
+            return false;
+        }
+
         public void ReceiveCard(Card _card)
         {
             // get list
@@ -47,16 +59,22 @@ namespace WizardGame.Helpers
             if (Cards == null)
                 return;
 
+            // card list
+            List<Card> cardList = Cards.ToList();
+
             // update last used card
             LastCardPlayed = _card;
 
-            // get list
-            List<Card> cardList = Cards.ToList();
-
             // remove card
-            cardList.Remove(_card);
+            for (int i = 0; i < Cards.Length; i++)
+            {
+                Card card = Cards[i];
 
-            // update cards
+                if (card.Value == _card.Value && card.Suit == _card.Suit)
+                    cardList.Remove(card);
+            }
+
+            // get array from list
             Cards = cardList.ToArray();
 
             // clear list

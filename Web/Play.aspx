@@ -22,11 +22,62 @@
             Finished:4
         };
 
+        // card suits
+        var suit = {
+            Spades: 0,
+            Hearts: 1,
+            Clubs: 2,
+            Diamonds: 3,
+            Fluff: 4,
+            Wizard: 5
+        };
+
+        // get suit name by value/id
+        function getSuitName(suitId) {
+            switch(suitId) {
+                case suit.Spades:
+                    return "Spades";
+                case suit.Hearts:
+                    return "Hearts";
+                case suit.Clubs:
+                    return "Clubs";
+                case suit.Diamonds:
+                    return "Diamonds";
+                case suit.Fluff:
+                    return "Fluff";
+                case suit.Wizard:
+                    return "Wizard";
+                default:
+                    return "Unknown";
+            }
+        };
+
+        // get card image path
+        function getCardImagePath(card) {
+            if(card == null)
+                return "";
+
+            var suitName = getSuitName(card.Suit);
+            var value = card.Value;
+            var imageFileName = suitName.toLowerCase() + "_" + value + ".png";
+
+            if(card.Suit == suit.Wizard)
+                imageFileName = "wizard.png";
+
+            if(card.Suit == suit.Fluff)
+                imageFileName = "fluff.png";
+
+            return "/Assets/Cards/" + imageFileName;
+        };
+
         // keep track of last game state
         var lastGameState = null;
 
         // playerList array
         var playerList = Array();
+
+        // playerCards array
+        var playerCards = Array();
 
         // server group id
         var groupNameId = '<%=Game.GroupNameId%>';
@@ -135,9 +186,33 @@
 
         // receiveBid
         hub.client.receiveBid = function receiveBid(playerId, playerName, bid) {
-            $playerDiv = $("#position-" + playerId);
+            var $playerDiv = $("#position-" + playerId);
 
             showToolTip($playerDiv, "I bid " + bid);
+
+            appendChatMessage("Server", playerName + " bid " + bid);
+        };
+
+        // playerWonTrick
+        hub.client.playerWonTrick = function playerWonTrick(playerId, playerName, card) {
+            appendChatMessage("Server", playerName + " won the trick with a " + card.Value + " of " + getSuitName(card.Suit));
+        };
+
+        // roundEnded
+        hub.client.roundEnded = function() {
+            logMessage("-- round ended --");
+
+            var $cardsPlayed = $(".cards-played");
+
+            // clear cards played
+            $cardsPlayed.html('');
+
+            appendChatMessage("Server", "Round has ended");
+        };
+
+        // gameEnded
+        hub.client.gameEnded = function() {
+            appendChatMessage("Server", "Game has ended");
         };
 
         /*******************************************
@@ -244,6 +319,7 @@
             var cardsPlayed = lastGameState.CardsPlayed;
             var dealerPositionIndex = lastGameState.DealerPositionIndex;
             var playerTurnIndex = lastGameState.PlayerTurnIndex;
+            var i = 0;
 
             // log data
             console.log(players);
@@ -258,7 +334,7 @@
             playerList = players;
 
             // update UI
-            for(var i = 0; i < players.length; i++) {
+            for(i = 0; i < players.length; i++) {
                 // update names
                 var $playerDiv = $("#position-" + (i+1));
                 var player = players[i];
@@ -269,6 +345,9 @@
                 // remove labels
                 $playerDiv.children("span").removeClass("label-danger");
                 $playerDiv.children("span").removeClass("label-info");
+
+                // remove borders
+                $(".profile-pic").css("border", "1px solid #000");
 
                 // add special label for dealer
                 if(player.IsDealer) {
@@ -303,6 +382,39 @@
                 }
             } 
             
+            // draw cards played in middle
+            var $cardsPlayed = $(".cards-played");
+
+            if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
+                for(i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                    var card = lastGameState.CardsPlayed[i];
+
+                    var suitName = getSuitName(card.Suit);
+                    var value = card.Value;
+                    var ownerPlayerId = card.OwnerPlayerId;
+                    var imageFileName = getCardImagePath(card);
+
+                    $cardsPlayed.append("<a class='img-rounded card'><img src=\"" + imageFileName + "\" /></a>");
+                }
+            }
+
+            // draw player cards
+            var $playerCards = $(".player-cards");
+
+            // clear existing cards
+            $playerCards.html('');
+
+            for(i = 0; i < currentPlayer.Cards.length; i++) {
+                var card = currentPlayer.Cards[i];
+
+                var suitName = getSuitName(card.Suit);
+                var value = card.Value;
+                var ownerPlayerId = card.OwnerPlayerId;
+                var imageFileName = getCardImagePath(card);
+
+                $playerCards.append("<a class='card' onclick='verifySelectedCard(this);' suit='" + card.Suit + "' value='" + card.Value + "'><img src=\"" + imageFileName + "\" class=\"img-rounded\" /></a>");
+            }
+
             // check if current player turn
             if(currentPlayer.IsTurn) {
                 if(status == gameStateStatus.BiddingInProgress) {
@@ -315,6 +427,8 @@
                     selectCard();
                 }
             }
+
+
         };
 
         // select bid
@@ -340,6 +454,17 @@
         // select card to play
         function selectCard() {
             logMessage("-- select a card to play --");
+
+            // first to act
+            if(lastGameState.CardsPlayed == null) {
+                $(".first-bid-info").show();
+            }
+            else {
+                $(".first-bid-info").hide();
+            }
+
+            // show select card box
+            $('#selectCardModal').modal('show');
         };
 
         function updateBidField(buttonPressed) {
@@ -348,7 +473,7 @@
 
             // update player bid value
             $("#txtPlayerBid").val(bidValue);
-        }
+        };
 
         function verifyBid() {
             var bidValue = parseInt($("#txtPlayerBid").val());
@@ -365,7 +490,27 @@
                         });
                 }
             } 
-        }
+        };
+
+        function verifySelectedCard(selectedCard) {
+            var $card = $(selectedCard);
+            var cardSuit = parseInt($card.attr("suit"));
+            var cardValue = parseInt($card.attr("value"));
+
+            $('#selectCardModal').modal('hide');
+
+            logMessage("-- selected card: " + cardValue + " of " + getSuitName(cardSuit) + " (" + cardSuit + ")");
+
+            var cardObject = {
+                OwnerPlayerId: currentPlayer.PlayerId,
+                Suit: cardSuit,
+                Value: cardValue
+            };
+
+            if(isConnected) {
+                hub.server.playCard(gameId, currentPlayer.PlayerId, cardObject, groupNameId);
+            }
+        };
     </script>
     <style type="text/css">
         .auto-style2 {
@@ -403,6 +548,7 @@
                         </td>
                         <td colspan="2">
                             <div class="cards-played">
+                                <!-- place holder for cards played -->
                             </div>
                         </td>
                         <td>
@@ -447,6 +593,9 @@
                         text-align: center;
                     }
             </style>
+            <div class="player-cards">
+
+            </div>
         </div>
         <div class="col-md-3">
             <div class="panel panel-default">
@@ -496,12 +645,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>Your cards:</label>
+                            <div class="player-cards"></div>
+                        </div>
+                        
+                        <div class="form-group">
                             <label>Your bid:</label>
                             <input type="text" id="txtPlayerBid" class="form-control"  readonly />
                         </div>
                         <div class="player-bid">
-                            <a onclick="updateBidField(this);" class="btn btn-lg btn-default">0</a>
-                            <a onclick="updateBidField(this);" class="btn btn-lg btn-default">1</a>
+                            <!-- placeholder for buttons -->
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -510,5 +663,36 @@
                 </div>
             </div>
         </div>
+        <div class="modal" id="selectCardModal" tabindex="-1" role="dialog" aria-labelledby="selectCardModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="selectCardModalLabel">Its your turn! Select a card to play</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info first-bid-info">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                            <strong>Remember!</strong>
+                            You are first to act. Other players will have to follow suit!
+                        </div>
+                        <div class="cards-played">
+                            <!-- placeholder for cards played -->
+                        </div>
+                        <div class="player-cards">
+                            <!-- placeholder for cards -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $(".modal").modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                    show: false
+                });
+            });
+        </script>
     </div>
 </asp:Content>

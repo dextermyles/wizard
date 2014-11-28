@@ -143,6 +143,71 @@ namespace WizardGame
             Clients.Group(groupNameId).receiveBid(player.PlayerId, player.Name, bid);
         }
 
+        public void PlayCard(int gameId, int playerId, Card card, string groupNameId)
+        {
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // get game data
+            Game game = wizWS.GetGameById(gameId);
+
+            // get game state data
+            GameState gameState = game.GameStateData;
+
+            // get player data
+            Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
+
+            // play card
+            gameState.PlayCard(player.PlayerId, card);
+
+            // check if turns ended
+            if(gameState.Status == GameStateStatus.TurnEnded)
+            {
+                // get cards played list
+                List<Card> cardsPlayedList = gameState.CardsPlayed.ToList();
+
+                // get highest card in pile
+                Card highestCard = cardsPlayedList.OrderByDescending(c => c.Suit).ThenBy(c => c.Value).FirstOrDefault();
+                
+                // get winning player
+                Player playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
+
+                // incrememnt num of tricks taken
+                playerWinner.TricksTaken++;
+
+                // broadcast trick winner
+                Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard);
+
+                // erase cards played
+                gameState.CardsPlayed = null;
+            }
+
+            // check if round ended
+            if (gameState.HasRoundEnded())
+            {
+                // update score cards
+                gameState.AddScoreEntries();
+
+                // announce end of round
+                Clients.Group(groupNameId).roundEnded();
+
+                // start next round
+                bool canStartNextRound = gameState.StartNextRound();
+
+                if (!canStartNextRound)
+                {
+                    // broadcast game has ended
+                    Clients.Group(groupNameId).gameEnded();
+                }
+            }
+
+            // save game state in db
+            wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+
+            // broadcast game data
+            Clients.Group(groupNameId).receiveGameData(game);
+        }
+
         public void SendChatMessage(string playerName, string message, string groupNameId)
         {
             // get connectionId

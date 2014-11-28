@@ -18,6 +18,15 @@ body {
     background-color: #f5f5f5;
 }
 
+.card {
+    cursor: pointer;
+}
+
+.card img {
+    max-height: 90px;
+     border: 1px solid #000;
+}
+
 .footer > .container {
     padding-right: 15px;
     padding-left: 15px;

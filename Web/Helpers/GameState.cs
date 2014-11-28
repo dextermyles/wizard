@@ -27,14 +27,90 @@ namespace WizardGame.Helpers
             Deck = new Deck();
         }
 
-        public void ClearAllBids()
+        public void ClearBidsAndTricks()
         {
             if (Players != null && Players.Length > 0)
             {
                 for (int i = 0; i < Players.Length; i++)
                 {
                     Players[i].Bid = 0;
+                    Players[i].TricksTaken = 0;
                 }
+            }
+        }
+
+        public void AddScoreEntries()
+        {
+            if (Players != null && Players.Length > 0)
+            {
+                for (int i = 0; i < Players.Length; i++)
+                {
+                    Player player = Players[i];
+
+                    // add score card entry
+                    scoreCard.AddPlayerScore(player.PlayerId, Round, player.Bid, player.TricksTaken);
+                }
+            }
+        }
+        public bool HasRoundEnded()
+        {
+            if (Players != null)
+            {
+                // loop through players
+                for (int i = 0; i < Players.Length; i++)
+                {
+                    // round has not ended if player still has cards
+                    if (Players[i].HasCards())
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        public void PlayCard(int playerId, Card card)
+        {
+            // get player object
+            Player player = Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
+
+            // validate
+            if (player != null && player.PlayerId > 0)
+            {
+                // play card
+                player.PlayCard(card);
+
+                // update turn flag
+                player.IsTurn = false;
+
+                // get cards played list
+                List<Card> cardsPlayList = (CardsPlayed == null) ? 
+                    new List<Card>() : CardsPlayed.ToList();
+
+                // add card to played pile
+                cardsPlayList.Add(card);
+
+                // replace array
+                CardsPlayed = cardsPlayList.ToArray();
+
+                // check if last player
+                if (PlayerTurnIndex == DealerPositionIndex)
+                {
+                    Status = GameStateStatus.TurnEnded;
+                }
+                else
+                {
+                    // next player turn
+                    PlayerTurnIndex++;
+
+                    if (PlayerTurnIndex > Players.Length - 1)
+                        PlayerTurnIndex = 0;
+
+                    // update turn flag
+                    Players[PlayerTurnIndex].IsTurn = true;
+                }
+
+                // clear list
+                cardsPlayList = null;
             }
         }
 
@@ -70,11 +146,14 @@ namespace WizardGame.Helpers
             }  
         }
 
-        public void StartNextRound()
+        public bool StartNextRound()
         {
             // validation
             if (Players == null)
-                return;
+                return false;
+
+            // reset cards played
+            CardsPlayed = null;
 
             // max rounds
             int maxRounds = (60 / Players.Length);
@@ -83,7 +162,13 @@ namespace WizardGame.Helpers
             Round++;
 
             if (Round > maxRounds)
-                Round = maxRounds;
+                return false;
+
+            // clear existing bids
+            ClearBidsAndTricks();
+
+            // set dealer flag on old dealer
+            Players[DealerPositionIndex].IsDealer = false;
 
             // next dealer
             DealerPositionIndex++;
@@ -131,6 +216,8 @@ namespace WizardGame.Helpers
 
             // set game status
             Status = GameStateStatus.BiddingInProgress;
+
+            return true;
         }
 
         public void StartGame(Player[] _players)
@@ -138,6 +225,9 @@ namespace WizardGame.Helpers
             // validate players
             if(_players == null || _players.Length < 3)
                 throw new Exception("3 players minimum required to play");
+
+            // reset cards played
+            CardsPlayed = null;
 
             // update players
             Players = _players;
@@ -213,6 +303,7 @@ namespace WizardGame.Helpers
         BiddingInProgress = 1,
         RoundInProgress = 2,
         Setup = 3,
-        Finished = 4
+        Finished = 4,
+        TurnEnded = 5
     }
 }
