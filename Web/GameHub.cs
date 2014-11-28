@@ -11,6 +11,9 @@ namespace WizardGame
 {
     public class GameHub : Hub
     {
+        // service
+        WizardService wizWS = new WizardService();
+
         public override Task OnConnected()
         {
             return base.OnConnected();
@@ -18,9 +21,6 @@ namespace WizardGame
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            // service
-            WizardService wizWS = new WizardService();
-
             // connection id
             string connectionId = Context.ConnectionId;
 
@@ -68,9 +68,6 @@ namespace WizardGame
 
         public async Task JoinGame(int playerId, int gameId, string groupNameId)
         {
-            // service
-            WizardService wizWS = new WizardService();
-
             // get connectionId
             string connectionId = Context.ConnectionId;
 
@@ -113,6 +110,39 @@ namespace WizardGame
             }
         }
 
+        public void EnterBid(int gameId, int playerId, int bid, string groupNameId)
+        {
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // get game data
+            Game game = wizWS.GetGameById(gameId);
+
+            // get game state data
+            GameState gameState = game.GameStateData;
+
+            // get player data
+            Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
+
+            // make sure gameId is set
+            gameState.GameId = gameId;
+
+            // enter player bid
+            gameState.EnterBid(playerId, bid);
+
+            // save data in db
+            game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+
+            // update player last active date
+            wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
+
+            // broadcast game data
+            Clients.Group(groupNameId).receiveGameData(game);
+
+            // broadcast enterBid event
+            Clients.Group(groupNameId).receiveBid(player.PlayerId, player.Name, bid);
+        }
+
         public void SendChatMessage(string playerName, string message, string groupNameId)
         {
             // get connectionId
@@ -124,9 +154,6 @@ namespace WizardGame
 
         public void ListPlayersInGame(int gameId, string groupNameId)
         {
-            // service
-            WizardService wizWS = new WizardService();
-
             // get connectionId
             string connectionId = Context.ConnectionId;
 
@@ -142,9 +169,6 @@ namespace WizardGame
 
         public void keepAlive(int playerId, int gameId, string groupNameId)
         {
-            // service
-            WizardService wizWS = new WizardService();
-
             // connection id
             string connectionId = Context.ConnectionId;
 

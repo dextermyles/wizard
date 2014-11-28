@@ -16,6 +16,16 @@ namespace WizardGame.Helpers
         public Card[] CardsPlayed = null;
         public GameStateStatus Status = GameStateStatus.Setup;
         public Deck Deck = null;
+        public ScoreCard scoreCard = null;
+
+        public GameState()
+        {
+            // new score card
+            scoreCard = new ScoreCard();
+
+            // generate new deck
+            Deck = new Deck();
+        }
 
         public void ClearAllBids()
         {
@@ -24,9 +34,40 @@ namespace WizardGame.Helpers
                 for (int i = 0; i < Players.Length; i++)
                 {
                     Players[i].Bid = 0;
-                    Players[i].IsBidRequired = true;
                 }
             }
+        }
+
+        public void EnterBid(int playerId, int bid)
+        {
+            // get player object
+            Player player = Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
+
+            // validate
+            if (player != null && player.PlayerId > 0)
+            {
+                // set bid
+                player.Bid = bid;
+
+                // set flag
+                player.IsTurn = false;
+
+                // check if last player to bid
+                if (PlayerTurnIndex == DealerPositionIndex)
+                {
+                    // done bidding, start round
+                    Status = GameStateStatus.RoundInProgress;
+                }
+
+                // update player turn index
+                PlayerTurnIndex++;
+
+                if (PlayerTurnIndex > Players.Length - 1)
+                    PlayerTurnIndex = 0;
+
+                // update next player turn flag
+                Players[PlayerTurnIndex].IsTurn = true;
+            }  
         }
 
         public void StartNextRound()
@@ -62,7 +103,6 @@ namespace WizardGame.Helpers
             // set flag
             Players[PlayerTurnIndex].IsTurn = true;
 
-            // deal cards
             // set game status
             Status = GameStateStatus.DealInProgress;
 
@@ -98,9 +138,6 @@ namespace WizardGame.Helpers
             // validate players
             if(_players == null || _players.Length < 3)
                 throw new Exception("3 players minimum required to play");
-
-            // generate new deck
-            Deck = new Deck();
 
             // update players
             Players = _players;

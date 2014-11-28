@@ -17,18 +17,11 @@ namespace WizardGame.Helpers
         public int TricksTaken = 0;
         public bool IsDealer = false;
         public bool IsTurn = false;
-        public bool IsBidRequired = false;
         public Card[] Cards = null;
         public Card LastCardPlayed = null;
         public string ConnectionId = string.Empty;
         public ConnectionState ConnectionState = ConnectionState.DISCONNECTED;
         
-        public void SetBid(int points)
-        {
-            IsBidRequired = false;
-            Bid = points;
-        }
-
         public void ReceiveCard(Card _card)
         {
             // get list
@@ -48,7 +41,7 @@ namespace WizardGame.Helpers
             cardList = null;
         }
 
-        public void UseCard(Card _card)
+        public void PlayCard(Card _card)
         {
             // validation
             if (Cards == null)

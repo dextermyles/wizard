@@ -2,18 +2,28 @@
 
 <asp:Content ID="ContentHead" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
-        // player object
+        // current player object
         var currentPlayer = new function () {
             this.PlayerId = 0,
             this.Name = "",
             this.PictureURL = "",
             this.UserId = 0,
-            this.connectionId = ""
+            this.ConnectionId = ""
+            this.IsTurn = false,
+            this.isDealer = false
         };
 
-        var gameState = new function() {
-            this.GameId = 0
+        // game state status enum
+        var gameStateStatus = {
+            DealInProgress: 0,
+            BiddingInProgress: 1,
+            RoundInProgress: 2,
+            Setup: 3,
+            Finished:4
         };
+
+        // keep track of last game state
+        var lastGameState = null;
 
         // playerList array
         var playerList = Array();
@@ -74,7 +84,7 @@
             appendChatMessage("Server", "Reconnected to game lobby.");
 
             // tell server we are joining the lobby
-            joinGameLobby(currentPlayer.PlayerId, groupNameId);
+            joinGame(currentPlayer.PlayerId, groupNameId);
 
             isConnected = true;
         });
@@ -121,6 +131,13 @@
             console.log(gameData);
 
             processGameData(gameData);
+        };
+
+        // receiveBid
+        hub.client.receiveBid = function receiveBid(playerId, playerName, bid) {
+            $playerDiv = $("#position-" + playerId);
+
+            showToolTip($playerDiv, "I bid " + bid);
         };
 
         /*******************************************
@@ -183,6 +200,21 @@
                 psconsole.scrollTop(psconsole[0].scrollHeight - psconsole.height());
         };
 
+        function showToolTip(target, message) {
+            // configure tooltip
+            target.tooltip({
+                title: message
+            });
+
+            // show tool tip
+            target.tooltip('show');
+
+            // destroy it after delay
+            setTimeout(function() {
+                target.tooltip('destroy');
+            }, 3000);
+        };
+
         function updatePlayerList(players) {
             console.log(players);
         };
@@ -201,14 +233,19 @@
         };
 
         function processGameData(gameData) {
-            var players = gameData.GameStateData.Players;
-            var deck = gameData.GameStateData.Deck;
-            var round = gameData.GameStateData.Round;
-            var status = gameData.GameStateData.Status;
-            var cardsPlayed = gameData.GameStateData.CardsPlayed;
-            var dealerPositionIndex = gameData.GameStateData.DealerPositionIndex;
-            var playerTurnIndex = gameData.GameStateData.PlayerTurnIndex;
+            // update game data
+            lastGameState = gameData.GameStateData;
 
+            // get vars
+            var players = lastGameState.Players;
+            var deck = lastGameState.Deck;
+            var round = lastGameState.Round;
+            var status = lastGameState.Status;
+            var cardsPlayed = lastGameState.CardsPlayed;
+            var dealerPositionIndex = lastGameState.DealerPositionIndex;
+            var playerTurnIndex = lastGameState.PlayerTurnIndex;
+
+            // log data
             console.log(players);
             console.log(deck);
             console.log("Round: " + round);
@@ -217,19 +254,118 @@
             console.log("Dealer: " + players[dealerPositionIndex].Name);
             console.log("Player turn: " + players[playerTurnIndex].Name);
 
+            // update local variables
+            playerList = players;
+
+            // update UI
             for(var i = 0; i < players.length; i++) {
                 // update names
                 var $playerDiv = $("#position-" + (i+1));
                 var player = players[i];
 
+                // update player name
                 $playerDiv.children("span").html(player.Name);
 
+                // remove labels
+                $playerDiv.children("span").removeClass("label-danger");
+                $playerDiv.children("span").removeClass("label-info");
+
+                // add special label for dealer
                 if(player.IsDealer) {
-                    $playerDiv.children("span").removeClass("label-info");
                     $playerDiv.children("span").addClass("label-danger");
                 }
-            }   
+                else {
+                    $playerDiv.children("span").addClass("label-info");
+                }
+
+                // add special label for players turn
+                if(player.IsTurn) {
+                    // apply border to profile pic
+                    $playerDiv.children(".profile-pic").css("border", "2px solid #ff0000");
+
+                    // server msg
+                    appendChatMessage("Server", player.Name + "'s turn to bid");
+
+                    // only show tool tip for other players
+                    if(currentPlayer.PlayerId != player.PlayerId) {
+                        // show tool tip
+                        showToolTip($playerDiv, "My turn to bid!");
+                    }
+                }
+
+                // get player data for current user
+                if(player.PlayerId == currentPlayer.PlayerId) {
+                    // update current player object
+                    currentPlayer = player;
+
+                    console.log("updated player object");
+                    console.log(currentPlayer);
+                }
+            } 
+            
+            // check if current player turn
+            if(currentPlayer.IsTurn) {
+                if(status == gameStateStatus.BiddingInProgress) {
+                    // select bid
+                    selectBid(round);
+                }
+
+                if(status == gameStateStatus.RoundInProgress) {
+                    // select card to play
+                    selectCard();
+                }
+            }
         };
+
+        // select bid
+        function selectBid(round) {
+            // reset bid value
+            $("#txtPlayerBid").val('0');
+
+            // generate bid # buttons
+            $playerBid = $(".player-bid");
+
+            // erase buttons
+            $playerBid.html('');
+
+            // add new button based on round #
+            for(var i = 0; i <= round; i++) {
+                $playerBid.append("<a onclick=\"updateBidField(this);\" class=\"btn btn-lg btn-default\">" + i + "</a>");
+            }
+
+            // show bid box
+            $('#selectBidModal').modal('show');
+        };
+
+        // select card to play
+        function selectCard() {
+            logMessage("-- select a card to play --");
+        };
+
+        function updateBidField(buttonPressed) {
+            // get bid value
+            var bidValue = $(buttonPressed).html();
+
+            // update player bid value
+            $("#txtPlayerBid").val(bidValue);
+        }
+
+        function verifyBid() {
+            var bidValue = parseInt($("#txtPlayerBid").val());
+
+            if(bidValue != NaN) {
+                $('#selectBidModal').modal('hide');
+
+                if(isConnected) {
+                    logMessage("-- enter bid --");
+
+                    hub.server.enterBid(gameId, currentPlayer.PlayerId, bidValue, groupNameId)
+                        .done(function() {
+                            logMessage("-- enter bid executed on server --");
+                        });
+                }
+            } 
+        }
     </script>
     <style type="text/css">
         .auto-style2 {
@@ -246,12 +382,14 @@
                         <td></td>
                         <td>
                             <div id="position-1">
+                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
                                 <span class="label label-info">Player 1</span>
                             </div>
                         </td>
                         <td>
                             <div id="position-2">
                                 <span class="label label-info">Player 2</span>
+                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
                             </div>
                         </td>
                         <td></td>
@@ -259,6 +397,7 @@
                     <tr>
                         <td>
                             <div id="position-6">
+                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
                                 <span class="label label-info">Player 6</span>
                             </div>
                         </td>
@@ -269,6 +408,7 @@
                         <td>
                             <div id="position-3">
                                 <span class="label label-info">Player 3</span>
+                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
                             </div>
                         </td>
                     </tr>
@@ -276,12 +416,14 @@
                         <td>&nbsp;</td>
                         <td>
                             <div id="position-4">
+                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
                                 <span class="label label-info">Player 4</span>
                             </div>
                         </td>
                         <td>
                             <div id="position-5">
                                 <span class="label label-info">Player 5</span>
+                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
                             </div>
                         </td>
                         <td>&nbsp;</td>
@@ -342,6 +484,28 @@
                                 </script>
                             </span>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="selectBidModal" tabindex="-1" role="dialog" aria-labelledby="selectBidModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="selectBidModalLabel">Enter your bid</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Your bid:</label>
+                            <input type="text" id="txtPlayerBid" class="form-control"  readonly />
+                        </div>
+                        <div class="player-bid">
+                            <a onclick="updateBidField(this);" class="btn btn-lg btn-default">0</a>
+                            <a onclick="updateBidField(this);" class="btn btn-lg btn-default">1</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="verifyBid(); return false;">Enter my bid</button>
                     </div>
                 </div>
             </div>

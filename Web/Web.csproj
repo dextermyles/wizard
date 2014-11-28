@@ -289,8 +289,7 @@
     <Compile Include="Helpers\HandHistory.cs" />
     <Compile Include="Helpers\NewUserResult.cs" />
     <Compile Include="Helpers\Player.cs" />
-    <Compile Include="Helpers\PlayerData.cs" />
-    <Compile Include="Helpers\ScoreData.cs" />
+    <Compile Include="Helpers\ScoreCard.cs" />
     <Compile Include="Helpers\Session.cs" />
     <Compile Include="Helpers\User.cs" />
     <Compile Include="GameLobbyRoom.aspx.cs">
