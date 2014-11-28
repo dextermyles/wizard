@@ -381,9 +381,18 @@
                     console.log(currentPlayer);
                 }
             } 
+
+            // update trump
+            if(lastGameState.TrumpCard != null) {
+                // announce trump
+                appendChatMessage("Server", "Trump is " + getSuitName(lastGameState.TrumpCard.Suit));
+            }
             
             // draw cards played in middle
             var $cardsPlayed = $(".cards-played");
+
+            // clear cards on table
+            $cardsPlayed.html('');
 
             if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
                 for(i = 0; i < lastGameState.CardsPlayed.length; i++) {
@@ -675,11 +684,13 @@
                             <strong>Remember!</strong>
                             You are first to act. Other players will have to follow suit!
                         </div>
-                        <div class="cards-played">
-                            <!-- placeholder for cards played -->
+                        <div class="form-group">
+                            <label>Cards played:</label>
+                            <div class="cards-played"></div>
                         </div>
-                        <div class="player-cards">
-                            <!-- placeholder for cards -->
+                        <div class="form-group">
+                            <label>Select a card to play:</label>
+                            <div class="player-cards"></div>
                         </div>
                     </div>
                 </div>

@@ -163,12 +163,28 @@ namespace WizardGame
             // check if turns ended
             if(gameState.Status == GameStateStatus.TurnEnded)
             {
-                // get cards played list
-                List<Card> cardsPlayedList = gameState.CardsPlayed.ToList();
-
                 // get highest card in pile
-                Card highestCard = cardsPlayedList.OrderByDescending(c => c.Suit).ThenBy(c => c.Value).FirstOrDefault();
-                
+                Card highestCard = null;
+
+                // if no trump determined (everyone played a fluff), last card played wins it
+                if (gameState.TrumpCard == null)
+                {
+                    highestCard = gameState.CardsPlayed[gameState.CardsPlayed.Length - 1];
+                }
+                else
+                {
+                    // look for first wizard (if any)
+                    highestCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
+
+                    // no wizard, get highest trump card
+                    if (highestCard == null)
+                    {
+                        var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
+
+                        highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
+                    }
+                }
+
                 // get winning player
                 Player playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
 
@@ -177,6 +193,9 @@ namespace WizardGame
 
                 // broadcast trick winner
                 Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard);
+
+                // set turn flag
+                playerWinner.IsTurn = true;
 
                 // erase cards played
                 gameState.CardsPlayed = null;

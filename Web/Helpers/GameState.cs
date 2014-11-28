@@ -17,6 +17,7 @@ namespace WizardGame.Helpers
         public GameStateStatus Status = GameStateStatus.Setup;
         public Deck Deck = null;
         public ScoreCard scoreCard = null;
+        public Card TrumpCard = null;
 
         public GameState()
         {
@@ -86,6 +87,14 @@ namespace WizardGame.Helpers
                 List<Card> cardsPlayList = (CardsPlayed == null) ? 
                     new List<Card>() : CardsPlayed.ToList();
 
+                // if first card, set trump if not set
+                if (TrumpCard == null)
+                {
+                    // set trump if card is not fluff or wizard
+                    if (card.Suit != Suit.Fluff && card.Suit != Suit.Wizard)
+                        TrumpCard = card;
+                }
+                
                 // add card to played pile
                 cardsPlayList.Add(card);
 
@@ -214,6 +223,10 @@ namespace WizardGame.Helpers
                     currentIndex = 0;
             }
 
+            // update trump card if cards remain
+            if(Deck.Cards.Length > 0)
+                TrumpCard = Deck.TakeTopCard();
+
             // set game status
             Status = GameStateStatus.BiddingInProgress;
 
@@ -279,6 +292,9 @@ namespace WizardGame.Helpers
                     currentIndex = 0;
             }
 
+            // update trump card
+            TrumpCard = Deck.TakeTopCard();
+                
             // set game status
             Status = GameStateStatus.BiddingInProgress;
         }
