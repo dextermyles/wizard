@@ -192,7 +192,7 @@ namespace WizardGame
                 playerWinner.TricksTaken++;
 
                 // broadcast trick winner
-                Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard);
+                Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard.ToString());
 
                 // set turn flag
                 playerWinner.IsTurn = true;
@@ -221,7 +221,7 @@ namespace WizardGame
             }
 
             // save game state in db
-            wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+            game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
 
             // broadcast game data
             Clients.Group(groupNameId).receiveGameData(game);

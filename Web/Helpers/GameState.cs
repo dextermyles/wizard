@@ -28,6 +28,18 @@ namespace WizardGame.Helpers
             Deck = new Deck();
         }
 
+        public void ClearTurnAndDealerFlags()
+        {
+            if (Players != null && Players.Length > 0)
+            {
+                for (int i = 0; i < Players.Length; i++)
+                {
+                    Players[i].IsTurn = false;
+                    Players[i].IsDealer = false;
+                }
+            }
+        }
+
         public void ClearBidsAndTricks()
         {
             if (Players != null && Players.Length > 0)
@@ -173,11 +185,11 @@ namespace WizardGame.Helpers
             if (Round > maxRounds)
                 return false;
 
+            // clear turn flags
+            ClearTurnAndDealerFlags();
+
             // clear existing bids
             ClearBidsAndTricks();
-
-            // set dealer flag on old dealer
-            Players[DealerPositionIndex].IsDealer = false;
 
             // next dealer
             DealerPositionIndex++;

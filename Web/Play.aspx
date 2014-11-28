@@ -19,7 +19,8 @@
             BiddingInProgress: 1,
             RoundInProgress: 2,
             Setup: 3,
-            Finished:4
+            Finished:4,
+            TurnEnded: 5
         };
 
         // card suits
@@ -195,7 +196,7 @@
 
         // playerWonTrick
         hub.client.playerWonTrick = function playerWonTrick(playerId, playerName, card) {
-            appendChatMessage("Server", playerName + " won the trick with a " + card.Value + " of " + getSuitName(card.Suit));
+            appendChatMessage("Server", playerName + " won the trick with a " + card);
         };
 
         // roundEnded
@@ -310,6 +311,9 @@
         function processGameData(gameData) {
             // update game data
             lastGameState = gameData.GameStateData;
+
+            console.log("Last game state:");
+            console.log(lastGameState);
 
             // get vars
             var players = lastGameState.Players;
