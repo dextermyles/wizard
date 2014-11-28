@@ -143,6 +143,33 @@ namespace WizardGame
             Clients.Group(groupNameId).receiveBid(player.PlayerId, player.Name, bid);
         }
 
+        public void SetTrump(int gameId, int playerId, Suit suit, string groupNameId)
+        {
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // get game data
+            Game game = wizWS.GetGameById(gameId);
+
+            // get game state data
+            GameState gameState = game.GameStateData;
+
+            // get player data
+            Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
+
+            // set trump suit
+            gameState.TrumpCard.Suit = suit;
+
+            // save game state in db
+            game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+
+            // broadcast trump set
+            Clients.Group(groupNameId).trumpUpdated(player.PlayerId, player.Name, suit);
+
+            // broadcast game data
+            Clients.Group(groupNameId).receiveGameData(game);
+        }
+
         public void PlayCard(int gameId, int playerId, Card card, string groupNameId)
         {
             // get connectionId

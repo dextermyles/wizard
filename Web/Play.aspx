@@ -199,6 +199,10 @@
             appendChatMessage("Server", playerName + " won the trick with a " + card);
         };
 
+        hub.client.trumpUpdated = function trumpUpdated(playerId, playerName, newSuite) {
+            appendChatMessage("Server", playerName + " has made " + getSuitName(newSuite) + " trump!");
+        };
+
         // roundEnded
         hub.client.roundEnded = function() {
             logMessage("-- round ended --");
@@ -388,8 +392,18 @@
 
             // update trump
             if(lastGameState.TrumpCard != null) {
-                // announce trump
-                appendChatMessage("Server", "Trump is " + getSuitName(lastGameState.TrumpCard.Suit));
+                // determine trump
+                if(lastGameState.TrumpCard.Suit == suit.Fluff) {
+                    appendChatMessage("Server", "Dealer turned a Fluff! There is no trump this round");
+                }
+                else if(lastGameState.TrumpCard.Suit == suit.Wizard) {
+                    // player chooses trump
+                    appendChatMessage("Server", "Dealer turned a Wizard! Waiting for trump to be decided");
+                }
+                else {
+                    // announce trump
+                    appendChatMessage("Server", "Trump is: " + getSuitName(lastGameState.TrumpCard.Suit));
+                } 
             }
             
             // draw cards played in middle
@@ -431,8 +445,14 @@
             // check if current player turn
             if(currentPlayer.IsTurn) {
                 if(status == gameStateStatus.BiddingInProgress) {
-                    // select bid
-                    selectBid(round);
+                    
+                    if(lastGameState.TrumpCard.Suit == suit.Wizard) {
+                        selectTrump();
+                    }
+                    else {
+                        // select bid
+                        selectBid(round);
+                    } 
                 }
 
                 if(status == gameStateStatus.RoundInProgress) {
@@ -440,12 +460,13 @@
                     selectCard();
                 }
             }
-
-
         };
 
         // select bid
         function selectBid(round) {
+            if(!currentPlayer.IsTurn)
+                return;
+
             // reset bid value
             $("#txtPlayerBid").val('0');
 
@@ -466,7 +487,8 @@
 
         // select card to play
         function selectCard() {
-            logMessage("-- select a card to play --");
+            if(!currentPlayer.IsTurn)
+                return;
 
             // first to act
             if(lastGameState.CardsPlayed == null) {
@@ -489,6 +511,9 @@
         };
 
         function verifyBid() {
+            if(!currentPlayer.IsTurn)
+                return;
+
             var bidValue = parseInt($("#txtPlayerBid").val());
 
             if(bidValue != NaN) {
@@ -506,9 +531,39 @@
         };
 
         function verifySelectedCard(selectedCard) {
+            if(!currentPlayer.IsTurn)
+                return;
+
             var $card = $(selectedCard);
             var cardSuit = parseInt($card.attr("suit"));
             var cardValue = parseInt($card.attr("value"));
+
+            // check that player is following suit
+            if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
+                var suitToFollow = null;
+
+                for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                    // get suit to follow from first non fluff card
+                    if(lastGameState.CardsPlayed[i].Suit != suit.Fluff) {
+                        // get suit from first played card
+                        suitToFollow = lastGameState.CardsPlayed[i].Suit;
+
+                        break;
+                    }
+                }
+
+                // alert player to follow suit
+                if(suitToFollow != null && suitToFollow != suit.Wizard && cardSuit != suitToFollow) {
+                    // check that player can follow suit
+                    for(var i = 0; i < currentPlayer.Cards.length; i++) {
+                        if(currentPlayer.Cards[i].Suit == suitToFollow) {
+                            alert('You have to follow suit! Picked: ' + cardSuit + ' - should be: ' + suitToFollow);
+
+                            return;
+                        }
+                    } 
+                }
+            }
 
             $('#selectCardModal').modal('hide');
 
@@ -522,6 +577,23 @@
 
             if(isConnected) {
                 hub.server.playCard(gameId, currentPlayer.PlayerId, cardObject, groupNameId);
+            }
+        };
+
+        function selectTrump() {
+            if(!currentPlayer.IsTurn)
+                return;
+
+            // show select trump modal
+            $('#selectTrumpModal').modal('show');
+        };
+
+        function verifySelectedTrump(suitId) {
+            // hide select trump modal
+            $('#selectTrumpModal').modal('hide');
+
+            if(isConnected) {
+                hub.server.setTrump(gameId, currentPlayer.PlayerId, suitId, groupNameId);
             }
         };
     </script>
@@ -695,6 +767,36 @@
                         <div class="form-group">
                             <label>Select a card to play:</label>
                             <div class="player-cards"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="selectTrumpModal" tabindex="-1" role="dialog" aria-labelledby="selectTrumpModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="selectTrumpModalLabel">Its your turn! Please choose Trump</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info first-bid-info">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                            <strong>Trump required!</strong>
+                            You must choose Trump for this round
+                        </div>
+                        <div class="form-group">
+                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Spades);">
+                                Spades
+                            </a>
+                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Clubs);">
+                                Clubs
+                            </a>
+                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Hearts);">
+                                Hearts
+                            </a>
+                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Diamonds);">
+                                Diamonds
+                            </a>
                         </div>
                     </div>
                 </div>
