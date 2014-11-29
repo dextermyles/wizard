@@ -235,9 +235,6 @@
             }
             
             appendChatMessage("Server", firstPlayerName + " is first to act!");
-
-            console.log("score data:");
-            console.log(scoreArray);
         };
 
         // gameEnded
@@ -655,14 +652,14 @@
                     <td></td>
                     <td>
                         <div id="position-1" class="player-container">
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; left: -22px;" />
                             <span class="label label-info">Player 1</span>
                         </div>
                     </td>
                     <td>
                         <div id="position-2" class="player-container">
                             <span class="label label-info">Player 2</span>
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; right: -22px;" />
                         </div>
                     </td>
                     <td></td>
@@ -670,7 +667,7 @@
                 <tr>
                     <td>
                         <div id="position-6" class="player-container">
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; left: -22px;" />
                             <span class="label label-info">Player 6</span>
                         </div>
                     </td>
@@ -682,7 +679,7 @@
                     <td>
                         <div id="position-3" class="player-container">
                             <span class="label label-info">Player 3</span>
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; right: -22px;" />
                         </div>
                     </td>
                 </tr>
@@ -690,14 +687,14 @@
                     <td>&nbsp;</td>
                     <td>
                         <div id="position-4" class="player-container">
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; left: -22px;" />
                             <span class="label label-info">Player 4</span>
                         </div>
                     </td>
                     <td>
                         <div id="position-5" class="player-container">
                             <span class="label label-info">Player 5</span>
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; right: -22px;" />
                         </div>
                     </td>
                     <td>&nbsp;</td>

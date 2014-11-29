@@ -29,13 +29,10 @@ body {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25em;
-    position:relative;
-    top: -20px;
 }
 
 .trump {
-    position:relative;
-    top: 0px;
+    
 }
 
 .game-board {
@@ -71,6 +68,13 @@ body {
     border: 1px solid #000;
     background: #000;
     margin: 0px 1px;
+    opacity:0.9;
+    border-radius: 50px;
+}
+
+.player-container span {
+    position: relative;
+    top: -20px;
 }
 
 .player-container img {
