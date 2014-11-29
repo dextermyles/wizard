@@ -498,7 +498,7 @@
             }
             else {
                 $(".first-bid-info").hide();
-                $(".modal-cards-played.").show();
+                $(".modal-cards-played").show();
             }
 
             // show select card box
