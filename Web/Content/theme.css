@@ -39,7 +39,7 @@ body {
     background-image: url('/assets/table/table-default.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    max-width: 860px;
+    max-width: 940px;
     margin: 0 auto;
 }
 
@@ -68,13 +68,18 @@ body {
     border: 1px solid #000;
     background: #000;
     margin: 0px 1px;
-    opacity:0.9;
-    border-radius: 50px;
+    opacity: 0.9;
+    border-radius: 10px;
+    width: 230px;
 }
 
 .player-container span {
-    position: relative;
+    position:relative;
     top: -20px;
+    width: 105px;
+    display: inline-block;
+    height: 15px;
+    line-height: 1;
 }
 
 .player-container img {

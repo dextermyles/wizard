@@ -481,7 +481,7 @@
         // select bid
         function selectBid(round) {
             // validate
-            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.BiddingInProgress)
+            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.BiddingInProgress)
                 return;
 
             // reset bid value
@@ -505,7 +505,7 @@
         // select card to play
         function selectCard() {
             // validate
-            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.RoundInProgress)
+            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.RoundInProgress)
                 return;
 
             // first to act
@@ -531,7 +531,7 @@
         };
 
         function verifyBid() {
-            if(!currentPlayer.IsTurn)
+            if(currentPlayer.IsTurn == false)
                 return;
 
             if(lastGameState.Status != gameStateStatus.BiddingInProgress)
@@ -555,8 +555,11 @@
 
         function verifySelectedCard(selectedCard) {
             // validate
-            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.RoundInProgress)
+            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.RoundInProgress)
                 return;
+
+
+            console.log(currentPlayer);
 
             var $card = $(selectedCard);
             var cardSuit = parseInt($card.attr("suit"));
@@ -613,7 +616,7 @@
 
         function selectTrump() {
             // validate
-            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.SelectTrump)
+            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.SelectTrump)
                 return;
 
             // show select trump modal
@@ -622,7 +625,7 @@
 
         function verifySelectedTrump(suitId) {
             // validate
-            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.SelectTrump)
+            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.SelectTrump)
                 return;
 
             // hide select trump modal
