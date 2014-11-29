@@ -23,6 +23,7 @@ body {
     width: 64px;
     height: 90px;
     margin: 2px 5px;
+    display: inline-block;
 }
 
 .card img {
