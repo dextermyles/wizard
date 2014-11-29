@@ -12,6 +12,7 @@
             this.IsTurn = false,
             this.IsDealer = false,
             this.IsLastToAct = false
+            this.Score = 0;
         };
 
         // game state status enum
@@ -21,7 +22,8 @@
             RoundInProgress: 2,
             Setup: 3,
             Finished:4,
-            TurnEnded: 5
+            TurnEnded: 5,
+            SelectTrump: 6
         };
 
         // card suits
@@ -181,8 +183,7 @@
 
         // receiveGameData
         hub.client.receiveGameData = function receiveGameData(gameData) {
-            console.log(gameData);
-
+            // update game data
             processGameData(gameData);
         };
 
@@ -200,12 +201,13 @@
             appendChatMessage("Server", playerName + " won the trick with a " + card);
         };
 
+        // trumpUpdated
         hub.client.trumpUpdated = function trumpUpdated(playerId, playerName, newSuite) {
             appendChatMessage("Server", playerName + " has made " + getSuitName(newSuite) + " trump!");
         };
 
         // roundEnded
-        hub.client.roundEnded = function(dealerPlayerName, firstPlayerName, scoreArray) {
+        hub.client.roundEnded = function(dealerPlayerName, firstPlayerName, trumpCard) {
             logMessage("-- round ended --");
 
             var $cardsPlayed = $(".cards-played");
@@ -213,7 +215,25 @@
             // clear cards played
             $cardsPlayed.html('');
 
-            appendChatMessage("Server", "Round has ended! " + dealerPlayerName + " is the new dealer");
+            appendChatMessage("Server", "Round has ended. " + dealerPlayerName + " is now dealing!");
+
+            // announce trump
+            if(trumpCard != null) {
+                // annouce dealer is choosing trump
+                if(trumpCard.Suit == suit.Wizard) {
+                    appendChatMessage("Server", dealerPlayerName + " turned a Wizard and is choosing trump!");
+                }
+                else if(trumpCard.Suit == suit.Fluff) {
+                    appendChatMessage("Server", dealerPlayerName + " turned a Fluff. There is no Trump this round!");
+                }
+                else {
+                    appendChatMessage("Server", dealerPlayerName + " turned a " + getSuitName(trumpCard.Suit) + "!");
+                }
+            }
+            else {
+                appendChatMessage("Server", "Last round! There is no trump.");
+            }
+            
             appendChatMessage("Server", firstPlayerName + " is first to act!");
 
             console.log("score data:");
@@ -347,7 +367,7 @@
                 var player = players[i];
 
                 // update player name
-                $playerDiv.children("span").html(player.Name);
+                $playerDiv.children("span").html(player.Name + " (" + player.Score + " points)");
 
                 // remove labels
                 $playerDiv.children("span").removeClass("label-danger");
@@ -367,7 +387,7 @@
                 // add special label for players turn
                 if(player.IsTurn) {
                     // apply border to profile pic
-                    $playerDiv.children(".profile-pic").css("border", "2px solid #ff0000");
+                    $playerDiv.children(".profile-pic").css("border", "1px solid #ff0000");
 
                     // server msg
                     appendChatMessage("Server", player.Name + "'s turn");
@@ -391,8 +411,6 @@
 
             // update trump
             if(lastGameState.TrumpCard != null) {
-                
-
                 // determine trump
                 if(lastGameState.TrumpCard.Suit == suit.Fluff) {
                     $(".trump").html("No trump");
@@ -445,15 +463,15 @@
 
             // check if current player turn
             if(currentPlayer.IsTurn) {
+
+                if(status == gameStateStatus.SelectTrump) {
+                    // select trump
+                    selectTrump();
+                }
+
                 if(status == gameStateStatus.BiddingInProgress) {
-                    
-                    if(lastGameState.TrumpCard.Suit == suit.Wizard) {
-                        selectTrump();
-                    }
-                    else {
-                        // select bid
-                        selectBid(round);
-                    } 
+                    // select bid
+                    selectBid(round); 
                 }
 
                 if(status == gameStateStatus.RoundInProgress) {
@@ -465,7 +483,8 @@
 
         // select bid
         function selectBid(round) {
-            if(!currentPlayer.IsTurn)
+            // validate
+            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.BiddingInProgress)
                 return;
 
             // reset bid value
@@ -479,7 +498,7 @@
 
             // add new button based on round #
             for(var i = 0; i <= round; i++) {
-                $playerBid.append("<a onclick=\"updateBidField(this);\" class=\"btn btn-lg btn-default\">" + i + "</a>");
+                $playerBid.append("<a onclick=\"updateBidField(this);\" class=\"btn btn-lg btn-default\">" + i + "</a>&nbsp;");
             }
 
             // show bid box
@@ -488,7 +507,8 @@
 
         // select card to play
         function selectCard() {
-            if(!currentPlayer.IsTurn)
+            // validate
+            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.RoundInProgress)
                 return;
 
             // first to act
@@ -537,10 +557,8 @@
         };
 
         function verifySelectedCard(selectedCard) {
-            if(!currentPlayer.IsTurn)
-                return;
-
-            if(lastGameState.Status != gameStateStatus.RoundInProgress)
+            // validate
+            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.RoundInProgress)
                 return;
 
             var $card = $(selectedCard);
@@ -597,7 +615,8 @@
         };
 
         function selectTrump() {
-            if(!currentPlayer.IsTurn)
+            // validate
+            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.SelectTrump)
                 return;
 
             // show select trump modal
@@ -605,6 +624,10 @@
         };
 
         function verifySelectedTrump(suitId) {
+            // validate
+            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.SelectTrump)
+                return;
+
             // hide select trump modal
             $('#selectTrumpModal').modal('hide');
 
@@ -621,229 +644,209 @@
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h1 class="page-header">
-            Round: <span class="round-number">0</span>
-            <span class="pull-right label label-danger">
-                Trump: <span class="trump">Loading</span>
+        <h1 class="page-header">Round: <span class="round-number">0</span>
+            <span class="pull-right">Trump:
+                <span class="trump label label-danger" style="top:0px;">Loading</span>
             </span>
         </h1>
-        <div class="col-md-8">
-            <div class="game-board">
-                <table class="game-board-table">
-                    <tr>
-                        <td></td>
-                        <td>
-                            <div id="position-1">
-                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
-                                <span class="label label-info">Player 1</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div id="position-2">
-                                <span class="label label-info">Player 2</span>
-                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
-                            </div>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div id="position-6">
-                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
-                                <span class="label label-info">Player 6</span>
-                            </div>
-                        </td>
-                        <td colspan="2">
-                            <div class="cards-played">
-                                <!-- place holder for cards played -->
-                            </div>
-                        </td>
-                        <td>
-                            <div id="position-3">
-                                <span class="label label-info">Player 3</span>
-                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>
-                            <div id="position-4">
-                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
-                                <span class="label label-info">Player 4</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div id="position-5">
-                                <span class="label label-info">Player 5</span>
-                                <img data-src="holder.js/64x64" class="img-circle profile-pic" />
-                            </div>
-                        </td>
-                        <td>&nbsp;</td>
-                    </tr>
-                </table>
-            </div>
-            <style type="text/css">
-                .game-board {
-                    background-image: url('/assets/table/table-default.png');
-                    background-repeat: no-repeat;
-                    background-size: 100% 100%;
-                }
-
-                .game-board-table {
-                    width: 100%;
-                    height: 360px;
-                }
-
-                    .game-board-table tr td {
-                        vertical-align: middle;
-                        text-align: center;
-                    }
+        <div class="game-board">
+            <table class="game-board-table">
+                <tr>
+                    <td></td>
+                    <td>
+                        <div id="position-1" class="player-container">
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <span class="label label-info">Player 1</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="position-2" class="player-container">
+                            <span class="label label-info">Player 2</span>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="position-6" class="player-container">
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <span class="label label-info">Player 6</span>
+                        </div>
+                    </td>
+                    <td colspan="2">
+                        <div class="cards-played">
+                            <!-- place holder for cards played -->
+                        </div>
+                    </td>
+                    <td>
+                        <div id="position-3" class="player-container">
+                            <span class="label label-info">Player 3</span>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <div id="position-4" class="player-container">
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <span class="label label-info">Player 4</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="position-5" class="player-container">
+                            <span class="label label-info">Player 5</span>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                        </div>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <style type="text/css">
+                
             </style>
-            <hr />
-            <div class="player-cards"></div>
-            <hr />
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Chat window</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="8" readonly></textarea>
-                        <style type="text/css">
-                            #txtChatWindow {
-                                width: 100%;
-                                border: none;
-                                resize: none;
-                                background-color: transparent;
-                            }
-                        </style>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0px;">
-                        <div class="input-group">
-                            <input type="text" id="txtChatMessage" name="txtChatMessage" class="form-control" placeholder="Chat message" />
-                            <span class="input-group-btn">
-                                <!--input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-default" value="Clear" onclick="clearChatWindow(); return false;" /-->
-                                <input type="button" id="btnSendChat" name="btnSendChat" class="btn btn-primary" value="Send" onclick="sendChatMessage(); return false;" />
-                                <script type="text/javascript">
-                                    $(document).ready(function() {
-                                        // bind enter event to chat text box
-                                        $("#txtChatMessage").bind("keypress", function (event) {
-                                            // enter key pressed
-                                            if (event.keyCode == 13) {
-                                                sendChatMessage();
+        <hr />
+        <div class="player-cards well well-sm"></div>
+        <hr />
+    </div>
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">Chat window</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="8" readonly></textarea>
+                    <style type="text/css">
+                        #txtChatWindow {
+                            width: 100%;
+                            border: none;
+                            resize: none;
+                            background-color: transparent;
+                        }
+                    </style>
+                </div>
+                <div class="form-group" style="margin-bottom: 0px;">
+                    <div class="input-group">
+                        <input type="text" id="txtChatMessage" name="txtChatMessage" class="form-control" placeholder="Chat message" />
+                        <span class="input-group-btn">
+                            <!--input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-default" value="Clear" onclick="clearChatWindow(); return false;" /-->
+                            <input type="button" id="btnSendChat" name="btnSendChat" class="btn btn-primary" value="Send" onclick="sendChatMessage(); return false;" />
+                            <script type="text/javascript">
+                                $(document).ready(function() {
+                                    // bind enter event to chat text box
+                                    $("#txtChatMessage").bind("keypress", function (event) {
+                                        // enter key pressed
+                                        if (event.keyCode == 13) {
+                                            sendChatMessage();
 
-                                                return false;
-                                            }
-                                        });
+                                            return false;
+                                        }
                                     });
-                                </script>
+                                });
+                            </script>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="selectBidModal" tabindex="-1" role="dialog" aria-labelledby="selectBidModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="selectBidModalLabel">Enter your bid
+                            <span class="pull-right">Trump:
+                                <span class="trump label label-danger">Loading</span>
                             </span>
-                        </div>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Your cards:</label>
+                        <div class="player-cards well well-sm"></div>
                     </div>
+                    <div class="form-group">
+                        <label>Your bid:</label>
+                        <input type="text" id="txtPlayerBid" class="form-control bid-box" readonly />
+                    </div>
+                    <hr />
+                    <div class="player-bid">
+                        <!-- placeholder for buttons -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="verifyBid(); return false;">Enter my bid</button>
                 </div>
             </div>
         </div>
-        <div class="modal" id="selectBidModal" tabindex="-1" role="dialog" aria-labelledby="selectBidModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="selectBidModalLabel">
-                            Enter your bid
-                            <span class="pull-right">
-                                Trump:
-                                <span class="trump">Loading</span>
+    </div>
+    <div class="modal" id="selectCardModal" tabindex="-1" role="dialog" aria-labelledby="selectCardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="selectCardModalLabel">Play a card
+                            <span class="pull-right">Trump:
+                                <span class="trump label label-danger">Loading</span>
                             </span>
-                        </h4>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info first-bid-info">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <strong>Your are first to act!</strong>
+                        Other players will have to try and follow suit.
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Your cards:</label>
-                            <div class="player-cards"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Your bid:</label>
-                            <input type="text" id="txtPlayerBid" class="form-control"  readonly />
-                        </div>
-                        <div class="player-bid">
-                            <!-- placeholder for buttons -->
-                        </div>
+                    <div class="form-group modal-cards-played">
+                        <label>Cards played:</label>
+                        <div class="cards-played well well-sm"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="verifyBid(); return false;">Enter my bid</button>
+                    <div>
+                        <label>Select a card to play:</label>
+                        <div class="player-cards well well-sm"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal" id="selectCardModal" tabindex="-1" role="dialog" aria-labelledby="selectCardModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="selectCardModalLabel">
-                            Play a card
-                            <span class="pull-right">
-                                Trump:
-                                <span class="trump">Loading</span>
-                            </span>
-                        </h4>
+    </div>
+    <div class="modal" id="selectTrumpModal" tabindex="-1" role="dialog" aria-labelledby="selectTrumpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="selectTrumpModalLabel">Please select Trump for this round</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info first-bid-info">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <strong>Dealer turned a Wizard!</strong>
+                        You get to select trump for this round
                     </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info first-bid-info">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                            <strong>Your are first to act!</strong>
-                            Other players will have to follow suit!
-                        </div>
-                        <div class="form-group modal-cards-played">
-                            <label>Cards played:</label>
-                            <div class="cards-played"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>Select a card to play:</label>
-                            <div class="player-cards"></div>
-                        </div>
+                    <div class="form-group">
+                        <label>Your cards</label>
+                        <div class="player-cards well well-sm"></div>
+                    </div>
+                    <div>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Spades);">Spades
+                        </a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Clubs);">Clubs
+                        </a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Hearts);">Hearts
+                        </a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Diamonds);">Diamonds
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal" id="selectTrumpModal" tabindex="-1" role="dialog" aria-labelledby="selectTrumpModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="selectTrumpModalLabel">Its your turn! Please choose Trump</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info first-bid-info">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                            <strong>Trump required!</strong>
-                            You must choose Trump for this round
-                        </div>
-                        <div class="form-group">
-                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Spades);">
-                                Spades
-                            </a>
-                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Clubs);">
-                                Clubs
-                            </a>
-                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Hearts);">
-                                Hearts
-                            </a>
-                            <a class="btn btn-default btn-lg btn-block" onclick="selectTrump(suit.Diamonds);">
-                                Diamonds
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-            $(document).ready(function() {
-                $(".modal").modal({
-                    backdrop: 'static',
-                    keyboard: false,
-                    show: false
-                });
+    </div>
+    <script>
+        $(document).ready(function() {
+            $(".modal").modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
             });
-        </script>
+        });
+    </script>
     </div>
 </asp:Content>

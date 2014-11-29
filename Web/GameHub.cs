@@ -160,6 +160,9 @@ namespace WizardGame
             // set trump suit
             gameState.TrumpCard.Suit = suit;
 
+            // update game state status to bidding
+            gameState.Status = GameStateStatus.BiddingInProgress;
+
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
 
@@ -280,7 +283,8 @@ namespace WizardGame
                 Player dealer = gameState.Players[gameState.DealerPositionIndex];
                 Player first_to_act = gameState.Players[gameState.PlayerTurnIndex];
 
-                Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.scoreCard.PlayerScores());
+                // annouce end of round + trump
+                Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.TrumpCard);
 
                 if (!canStartNextRound)
                 {

@@ -65,12 +65,16 @@ namespace WizardGame.Helpers
                     // add score card entry
                     scoreCard.AddPlayerScore(player.PlayerId, Round, player.Bid, player.TricksTaken);
 
+                    int score = scoreCard.PlayerScores().Where(p => p.PlayerId == player.PlayerId).Sum(c => c.Score);
+
                     // clear entries
                     player.Bid = 0;
                     player.TricksTaken = 0;
+                    player.Score = score;
                 }
             }
         }
+
         public bool HasRoundEnded()
         {
             if (Players != null)
@@ -249,12 +253,21 @@ namespace WizardGame.Helpers
                     currentIndex = 0;
             }
 
-            // update trump card if cards remain
-            if (Deck.Cards != null && Deck.Cards.Length > 0)
-                TrumpCard = Deck.TakeTopCard();
-
             // set game status
             Status = GameStateStatus.BiddingInProgress;
+
+            // update trump card if cards remain
+            if (Deck.Cards != null && Deck.Cards.Length > 0)
+            {
+                // determine trump
+                TrumpCard = Deck.TakeTopCard();
+
+                // check if trump must be determined
+                if (TrumpCard.Suit == Suit.Wizard)
+                {
+                    Status = GameStateStatus.SelectTrump;
+                }
+            }
 
             return true;
         }
@@ -328,6 +341,12 @@ namespace WizardGame.Helpers
                 
             // set game status
             Status = GameStateStatus.BiddingInProgress;
+
+            // check if trump must be determined
+            if (TrumpCard.Suit == Suit.Wizard)
+            {
+                Status = GameStateStatus.SelectTrump;
+            }
         }
     }
 
@@ -338,6 +357,7 @@ namespace WizardGame.Helpers
         RoundInProgress = 2,
         Setup = 3,
         Finished = 4,
-        TurnEnded = 5
+        TurnEnded = 5,
+        SelectTrump = 6
     }
 }
