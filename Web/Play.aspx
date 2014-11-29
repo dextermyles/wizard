@@ -738,7 +738,13 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="selectBidModalLabel">Enter your bid</h4>
+                        <h4 class="modal-title" id="selectBidModalLabel">
+                            Enter your bid
+                            <span class="pull-right">
+                                Trump:
+                                <span class="trump">Loading</span>
+                            </span>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -764,13 +770,19 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="selectCardModalLabel">Its your turn! Select a card to play</h4>
+                        <h4 class="modal-title" id="selectCardModalLabel">
+                            Play a card
+                            <span class="pull-right">
+                                Trump:
+                                <span class="trump">Loading</span>
+                            </span>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-info first-bid-info">
                             <span class="glyphicon glyphicon-info-sign"></span>
                             <strong>Remember!</strong>
-                            You are first to act. Other players will have to follow suit!
+                            You are first to act. Other players will have to follow suit! If they can not follow suit, they are able to play trump.
                         </div>
                         <div class="form-group">
                             <label>Cards played:</label>
