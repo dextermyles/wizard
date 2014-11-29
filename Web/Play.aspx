@@ -552,27 +552,30 @@
                 if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
                     var suitToFollow = null;
 
-                    // loop through cards played
-                    for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
-                        // get suit to follow from first non fluff card
-                        if(lastGameState.CardsPlayed[i].Suit != suit.Fluff) {
-                            // get suit from first played card
-                            suitToFollow = lastGameState.CardsPlayed[i].Suit;
+                    // if wizard is led, then allow any card to be played
+                    if(lastGameState.CardsPlayed[0].Suit != suit.Wizard) {
+                        // loop through cards played
+                        for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                            // get suit to follow from first non fluff card
+                            if(lastGameState.CardsPlayed[i].Suit != suit.Fluff) {
+                                // get suit from first played card
+                                suitToFollow = lastGameState.CardsPlayed[i].Suit;
 
-                            break;
-                        }
-                    }
-
-                    // alert player to follow suit
-                    if(suitToFollow != null && cardSuit != suitToFollow) {
-                        // check that player can follow suit
-                        for(var i = 0; i < currentPlayer.Cards.length; i++) {
-                            if(currentPlayer.Cards[i].Suit == suitToFollow) {
-                                alert('You have to follow suit! Picked: ' + cardSuit + ' - should be: ' + suitToFollow);
-
-                                return;
+                                break;
                             }
-                        } 
+                        }
+
+                        // alert player to follow suit
+                        if(suitToFollow != null && cardSuit != suitToFollow) {
+                            // check that player can follow suit
+                            for(var i = 0; i < currentPlayer.Cards.length; i++) {
+                                if(currentPlayer.Cards[i].Suit == suitToFollow) {
+                                    alert('You have to follow suit! Picked: ' + cardSuit + ' - should be: ' + suitToFollow);
+
+                                    return;
+                                }
+                            } 
+                        }
                     }
                 }
             }
