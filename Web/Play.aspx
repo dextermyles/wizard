@@ -494,9 +494,11 @@
             // first to act
             if(lastGameState.CardsPlayed == null) {
                 $(".first-bid-info").show();
+                $(".modal-cards-played").hide();
             }
             else {
                 $(".first-bid-info").hide();
+                $(".modal-cards-played.").show();
             }
 
             // show select card box
@@ -784,7 +786,7 @@
                             <strong>Remember!</strong>
                             You are first to act. Other players will have to follow suit! If they can not follow suit, they are able to play trump.
                         </div>
-                        <div class="form-group">
+                        <div class="form-group modal-cards-played">
                             <label>Cards played:</label>
                             <div class="cards-played"></div>
                         </div>
