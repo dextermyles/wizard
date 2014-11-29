@@ -618,7 +618,7 @@
                 Trump: <span class="trump">Loading</span>
             </span>
         </h1>
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="game-board">
                 <table class="game-board-table">
                     <tr>
@@ -692,11 +692,10 @@
                     }
             </style>
             <hr />
-            <div class="player-cards">
-
-            </div>
+            <div class="player-cards"></div>
+            <hr />
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">Chat window</div>
                 <div class="panel-body">
