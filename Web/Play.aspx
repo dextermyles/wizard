@@ -782,8 +782,8 @@
                     <div class="modal-body">
                         <div class="alert alert-info first-bid-info">
                             <span class="glyphicon glyphicon-info-sign"></span>
-                            <strong>Remember!</strong>
-                            You are first to act. Other players will have to follow suit! If they can not follow suit, they are able to play trump.
+                            <strong>Your are first to act!</strong>
+                            Other players will have to follow suit!
                         </div>
                         <div class="form-group modal-cards-played">
                             <label>Cards played:</label>
