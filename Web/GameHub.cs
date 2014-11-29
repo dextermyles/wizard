@@ -193,10 +193,17 @@ namespace WizardGame
                 // get highest card in pile
                 Card highestCard = null;
 
-                // if no trump determined (everyone played a fluff), last card played wins it
+                // if no trump determined (last round)
                 if (gameState.TrumpCard == null)
                 {
-                    highestCard = gameState.CardsPlayed[gameState.CardsPlayed.Length - 1];
+                    gameState.TrumpCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
+                }
+
+                // no trump card found, everyone played a fluff
+                if (gameState.TrumpCard == null)
+                {
+                    // last fluff is the highest card
+                    highestCard = gameState.CardsPlayed.LastOrDefault();
                 }
                 else
                 {
@@ -208,7 +215,7 @@ namespace WizardGame
                     {
                         var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
 
-                        if(trumpCards.Count > 0)
+                        if (trumpCards.Count > 0)
                             highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
                     }
 
@@ -223,6 +230,8 @@ namespace WizardGame
                     }
                 }
 
+                
+
                 // get winning player
                 Player playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
 
@@ -234,6 +243,16 @@ namespace WizardGame
 
                 // set turn flag
                 playerWinner.IsTurn = true;
+
+                // get last to act index
+                int winningPlayerIndex = Array.IndexOf(gameState.Players, playerWinner);
+                int lastToActIndex = winningPlayerIndex - 1;
+
+                if (lastToActIndex < 0)
+                    lastToActIndex = gameState.Players.Length - 1;
+
+                // set last to act flag
+                gameState.Players[lastToActIndex].IsLastToAct = true;
 
                 // erase cards played
                 gameState.CardsPlayed = null;

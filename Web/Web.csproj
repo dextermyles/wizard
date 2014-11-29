@@ -108,6 +108,7 @@
     <Content Include="Assets\Cards\clubs_5.png" />
     <Content Include="Assets\Cards\clubs_6.png" />
     <Content Include="Assets\Cards\clubs_7.png" />
+    <Content Include="Assets\Cards\clubs_8.png" />
     <Content Include="Assets\Cards\clubs_9.png" />
     <Content Include="Assets\Cards\diamonds_10.png" />
     <Content Include="Assets\Cards\diamonds_11.png" />

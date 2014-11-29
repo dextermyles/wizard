@@ -10,7 +10,8 @@
             this.UserId = 0,
             this.ConnectionId = ""
             this.IsTurn = false,
-            this.isDealer = false
+            this.IsDealer = false,
+            this.IsLastToAct = false
         };
 
         // game state status enum

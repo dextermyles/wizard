@@ -12,6 +12,7 @@ namespace WizardGame.Helpers
         public int Round = 0;
         public int DealerPositionIndex = 0;
         public int PlayerTurnIndex = 0;
+        public int LastToActIndex = 0;
         public Player[] Players = null;
         public Card[] CardsPlayed = null;
         public GameStateStatus Status = GameStateStatus.Setup;
@@ -28,7 +29,7 @@ namespace WizardGame.Helpers
             Deck = new Deck();
         }
 
-        public void ClearTurnAndDealerFlags()
+        public void ClearTurnFlags()
         {
             if (Players != null && Players.Length > 0)
             {
@@ -36,6 +37,7 @@ namespace WizardGame.Helpers
                 {
                     Players[i].IsTurn = false;
                     Players[i].IsDealer = false;
+                    Players[i].IsLastToAct = false;
                 }
             }
         }
@@ -62,6 +64,10 @@ namespace WizardGame.Helpers
 
                     // add score card entry
                     scoreCard.AddPlayerScore(player.PlayerId, Round, player.Bid, player.TricksTaken);
+
+                    // clear entries
+                    player.Bid = 0;
+                    player.TricksTaken = 0;
                 }
             }
         }
@@ -114,7 +120,7 @@ namespace WizardGame.Helpers
                 CardsPlayed = cardsPlayList.ToArray();
 
                 // check if last player
-                if (PlayerTurnIndex == DealerPositionIndex)
+                if (PlayerTurnIndex == LastToActIndex)
                 {
                     Status = GameStateStatus.TurnEnded;
                 }
@@ -179,14 +185,14 @@ namespace WizardGame.Helpers
             // max rounds
             int maxRounds = (60 / Players.Length);
 
-            // increment rounds
-            Round++;
-
             if (Round > maxRounds)
                 return false;
 
+            // increment rounds
+            Round++;
+
             // clear turn flags
-            ClearTurnAndDealerFlags();
+            ClearTurnFlags();
 
             // clear existing bids
             ClearBidsAndTricks();
@@ -208,6 +214,11 @@ namespace WizardGame.Helpers
 
             // set flag
             Players[PlayerTurnIndex].IsTurn = true;
+
+            // last to act flag
+            LastToActIndex = DealerPositionIndex;
+
+            Players[LastToActIndex].IsLastToAct = true;
 
             // set game status
             Status = GameStateStatus.DealInProgress;
@@ -236,7 +247,7 @@ namespace WizardGame.Helpers
             }
 
             // update trump card if cards remain
-            if(Deck.Cards.Length > 0)
+            if (Deck.Cards != null && Deck.Cards.Length > 0)
                 TrumpCard = Deck.TakeTopCard();
 
             // set game status
@@ -275,6 +286,11 @@ namespace WizardGame.Helpers
             // set flag
             Players[PlayerTurnIndex].IsTurn = true;
 
+            // set last to act flag
+            LastToActIndex = DealerPositionIndex;
+
+            Players[LastToActIndex].IsLastToAct = true;
+
             // set round #
             Round = 1;
 
@@ -309,19 +325,6 @@ namespace WizardGame.Helpers
                 
             // set game status
             Status = GameStateStatus.BiddingInProgress;
-        }
-
-        public void PlayCard(Card _card)
-        {
-            // get list of cards played
-            List<Card> cardsPlayedList = (CardsPlayed == null) ? 
-                new List<Card>() : CardsPlayed.ToList();
-
-            // add card to played list
-            cardsPlayedList.Add(_card);
-
-            // replace cards played array
-            CardsPlayed = cardsPlayedList.ToArray();
         }
     }
 

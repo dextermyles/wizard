@@ -17,6 +17,7 @@ namespace WizardGame.Helpers
         public int TricksTaken = 0;
         public bool IsDealer = false;
         public bool IsTurn = false;
+        public bool IsLastToAct = false;
 
         public Card[] Cards = null;
         public Card LastCardPlayed = null;
