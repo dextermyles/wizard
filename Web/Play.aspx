@@ -205,7 +205,7 @@
         };
 
         // roundEnded
-        hub.client.roundEnded = function() {
+        hub.client.roundEnded = function(dealerPlayerName, firstPlayerName, scoreArray) {
             logMessage("-- round ended --");
 
             var $cardsPlayed = $(".cards-played");
@@ -213,7 +213,11 @@
             // clear cards played
             $cardsPlayed.html('');
 
-            appendChatMessage("Server", "Round has ended");
+            appendChatMessage("Server", "Round has ended! " + dealerPlayerName + " is the new dealer");
+            appendChatMessage("Server", firstPlayerName + " is first to act!");
+
+            console.log("score data:");
+            console.log(scoreArray);
         };
 
         // gameEnded

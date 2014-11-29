@@ -273,11 +273,14 @@ namespace WizardGame
                 // update score cards
                 gameState.AddScoreEntries();
 
-                // announce end of round
-                Clients.Group(groupNameId).roundEnded();
-
                 // start next round
                 bool canStartNextRound = gameState.StartNextRound();
+
+                // announce end of round
+                Player dealer = gameState.Players[gameState.DealerPositionIndex];
+                Player first_to_act = gameState.Players[gameState.PlayerTurnIndex];
+
+                Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.scoreCard.PlayerScores());
 
                 if (!canStartNextRound)
                 {
