@@ -517,6 +517,9 @@
             if(!currentPlayer.IsTurn)
                 return;
 
+            if(lastGameState.Status != gameStateStatus.BiddingInProgress)
+                return;
+
             var bidValue = parseInt($("#txtPlayerBid").val());
 
             if(bidValue != NaN) {
@@ -535,6 +538,9 @@
 
         function verifySelectedCard(selectedCard) {
             if(!currentPlayer.IsTurn)
+                return;
+
+            if(lastGameState.Status != gameStateStatus.RoundInProgress)
                 return;
 
             var $card = $(selectedCard);
