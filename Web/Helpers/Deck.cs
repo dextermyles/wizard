@@ -36,7 +36,7 @@ namespace WizardGame.Helpers
             Card[] cards = Cards; // copy of cards
             Random r = new Random();
 
-            for (int n = 0; n < Cards.Length - 1; n++)
+            for (int n = 0; n < Cards.Length; n++)
             {
                 int k = r.Next(n + 1);
                 Card temp = cards[n];

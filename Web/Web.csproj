@@ -153,6 +153,7 @@
     <Content Include="Assets\Cards\wizard.png" />
     <Content Include="Assets\Table\table-default.png" />
     <Content Include="Auto\Cron.aspx" />
+    <Content Include="clear_game_data.sql" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />

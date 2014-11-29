@@ -230,8 +230,6 @@ namespace WizardGame
                     }
                 }
 
-                
-
                 // get winning player
                 Player playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
 
@@ -244,15 +242,18 @@ namespace WizardGame
                 // set turn flag
                 playerWinner.IsTurn = true;
 
+                // unset old last to act flag
+                gameState.Players[gameState.LastToActIndex].IsLastToAct = false;
+
                 // get last to act index
                 int winningPlayerIndex = Array.IndexOf(gameState.Players, playerWinner);
-                int lastToActIndex = winningPlayerIndex - 1;
+                gameState.LastToActIndex = winningPlayerIndex - 1;
 
-                if (lastToActIndex < 0)
-                    lastToActIndex = gameState.Players.Length - 1;
+                if (gameState.LastToActIndex < 0)
+                    gameState.LastToActIndex = gameState.Players.Length - 1;
 
                 // set last to act flag
-                gameState.Players[lastToActIndex].IsLastToAct = true;
+                gameState.Players[gameState.LastToActIndex].IsLastToAct = true;
 
                 // erase cards played
                 gameState.CardsPlayed = null;
