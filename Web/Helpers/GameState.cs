@@ -191,6 +191,9 @@ namespace WizardGame.Helpers
             // increment rounds
             Round++;
 
+            // new deck
+            Deck = new Deck();
+
             // clear turn flags
             ClearTurnFlags();
 

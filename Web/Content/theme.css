@@ -20,6 +20,9 @@ body {
 
 .card {
     cursor: pointer;
+    width: 64px;
+    height: 90px;
+    margin: 2px 5px;
 }
 
 .card img {

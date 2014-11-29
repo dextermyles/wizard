@@ -247,6 +247,11 @@ namespace WizardGame
 
                 // get last to act index
                 int winningPlayerIndex = Array.IndexOf(gameState.Players, playerWinner);
+
+                // update current player index
+                gameState.PlayerTurnIndex = winningPlayerIndex;
+
+                // update last to act index
                 gameState.LastToActIndex = winningPlayerIndex - 1;
 
                 if (gameState.LastToActIndex < 0)

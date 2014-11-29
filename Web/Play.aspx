@@ -330,17 +330,11 @@
             var playerTurnIndex = lastGameState.PlayerTurnIndex;
             var i = 0;
 
-            // log data
-            console.log(players);
-            console.log(deck);
-            console.log("Round: " + round);
-            console.log("Status: " + status);
-            console.log(cardsPlayed);
-            console.log("Dealer: " + players[dealerPositionIndex].Name);
-            console.log("Player turn: " + players[playerTurnIndex].Name);
-
             // update local variables
             playerList = players;
+
+            // upodate round #
+            $(".round-number").html(round);
 
             // update UI
             for(i = 0; i < players.length; i++) {
@@ -372,12 +366,12 @@
                     $playerDiv.children(".profile-pic").css("border", "2px solid #ff0000");
 
                     // server msg
-                    appendChatMessage("Server", player.Name + "'s turn to bid");
+                    appendChatMessage("Server", player.Name + "'s turn");
 
                     // only show tool tip for other players
                     if(currentPlayer.PlayerId != player.PlayerId) {
                         // show tool tip
-                        showToolTip($playerDiv, "My turn to bid!");
+                        showToolTip($playerDiv, "My turn!");
                     }
                 }
 
@@ -393,17 +387,19 @@
 
             // update trump
             if(lastGameState.TrumpCard != null) {
+                
+
                 // determine trump
                 if(lastGameState.TrumpCard.Suit == suit.Fluff) {
-                    appendChatMessage("Server", "Dealer turned a Fluff! There is no trump this round");
+                    $(".trump").html("No trump");
                 }
                 else if(lastGameState.TrumpCard.Suit == suit.Wizard) {
-                    // player chooses trump
-                    appendChatMessage("Server", "Dealer turned a Wizard! Waiting for trump to be decided");
+                    // update trump value
+                    $(".trump").html("Trump TBD");
                 }
                 else {
-                    // announce trump
-                    appendChatMessage("Server", "Trump is: " + getSuitName(lastGameState.TrumpCard.Suit));
+                    // update trump value
+                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit));
                 } 
             }
             
@@ -539,32 +535,36 @@
             var cardSuit = parseInt($card.attr("suit"));
             var cardValue = parseInt($card.attr("value"));
 
-            // check that player is following suit
-            if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
-                var suitToFollow = null;
+            // check that player is following suit (except when playing fluff or wizard)
+            if(cardSuit != suit.Fluff && cardSuit != suit.Wizard) {
+                if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
+                    var suitToFollow = null;
 
-                for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
-                    // get suit to follow from first non fluff card
-                    if(lastGameState.CardsPlayed[i].Suit != suit.Fluff) {
-                        // get suit from first played card
-                        suitToFollow = lastGameState.CardsPlayed[i].Suit;
+                    // loop through cards played
+                    for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                        // get suit to follow from first non fluff card
+                        if(lastGameState.CardsPlayed[i].Suit != suit.Fluff) {
+                            // get suit from first played card
+                            suitToFollow = lastGameState.CardsPlayed[i].Suit;
 
-                        break;
+                            break;
+                        }
+                    }
+
+                    // alert player to follow suit
+                    if(suitToFollow != null && cardSuit != suitToFollow) {
+                        // check that player can follow suit
+                        for(var i = 0; i < currentPlayer.Cards.length; i++) {
+                            if(currentPlayer.Cards[i].Suit == suitToFollow) {
+                                alert('You have to follow suit! Picked: ' + cardSuit + ' - should be: ' + suitToFollow);
+
+                                return;
+                            }
+                        } 
                     }
                 }
-
-                // alert player to follow suit
-                if(suitToFollow != null && suitToFollow != suit.Wizard && cardSuit != suitToFollow) {
-                    // check that player can follow suit
-                    for(var i = 0; i < currentPlayer.Cards.length; i++) {
-                        if(currentPlayer.Cards[i].Suit == suitToFollow) {
-                            alert('You have to follow suit! Picked: ' + cardSuit + ' - should be: ' + suitToFollow);
-
-                            return;
-                        }
-                    } 
-                }
             }
+            
 
             $('#selectCardModal').modal('hide');
 
@@ -606,6 +606,12 @@
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
+        <h1 class="page-header">
+            Round: <span class="round-number">0</span>
+            <span class="pull-right label label-danger">
+                Trump: <span class="trump">Loading</span>
+            </span>
+        </h1>
         <div class="col-md-9">
             <div class="game-board">
                 <table class="game-board-table">
@@ -679,6 +685,7 @@
                         text-align: center;
                     }
             </style>
+            <hr />
             <div class="player-cards">
 
             </div>
