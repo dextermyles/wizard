@@ -104,9 +104,6 @@
         // keep alive interval
         var keepAliveInterval = 0;
 
-        // is first hand
-        var isFirstHand = true;
-
         // is deal animation in progress
         var isDealing = false;
 
@@ -199,28 +196,44 @@
 
         // receiveBid
         hub.client.receiveBid = function receiveBid(playerId, playerName, bid) {
-            var $playerDiv = $("#position-" + playerId);
+            // only show div if not current players turn (modal window will be showing)
+            if(!currentPlayer.IsTurn) {
+                // get player div
+                var $playerDiv = getPlayerDivByPlayerId(playerId);
 
-            showToolTip($playerDiv, "I bid " + bid);
+                // show tool tip
+                showToolTip($playerDiv, "I bid " + bid);
+            }
 
             appendChatMessage("Server", playerName + " bid " + bid);
         };
 
         // playerWonTrick
         hub.client.playerWonTrick = function playerWonTrick(playerId, playerName, card) {
+            // only show tooltip if not players turn
+            if(!currentPlayer.IsTurn) {
+                // get player div
+                var $playerDiv = getPlayerDivByPlayerId(playerId);
+
+                // show tool tip
+                showToolTip($playerDiv, "Won the trick");
+            }
+
+            // broadcast message
             appendChatMessage("Server", playerName + " won the trick with a " + card);
         };
 
         // trumpUpdated
-        hub.client.trumpUpdated = function trumpUpdated(playerId, playerName, newSuite) {
-            appendChatMessage("Server", playerName + " has made " + getSuitName(newSuite) + " trump!");
+        hub.client.trumpUpdated = function trumpUpdated(playerId, playerName, newTrumpCard) {
+            // broadcast to chat
+            appendChatMessage("Server", playerName + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
+
+            // update trump graphic
+            updateTrumpCardGraphic(newTrumpCard);
         };
 
         // roundEnded
         hub.client.roundEnded = function(dealerPlayerName, firstPlayerName, roundNumber, trumpCard) {
-            // update first hand flag
-            isFirstHand = false;
-
             logMessage("-- round ended --");
 
             var $cardsPlayed = $(".cards-played");
@@ -251,7 +264,6 @@
 
             // animate card deal
             dealCards(roundNumber);
-
         };
 
         // gameEnded
@@ -394,7 +406,7 @@
                 player = players[i];
 
                 // update player name
-                $playerDiv.children(".player-name").html(player.Name);
+                $playerDiv.children(".player-name").html(player.Name + " (" + player.TricksTaken + "/" + player.Bid + ")");
                 $playerDiv.children(".player-score").html(player.Score + " points");
 
                 // remove labels
@@ -515,6 +527,12 @@
 
             // turn off flag
             pageJustLoaded = false;
+
+            // if we are not dealing cards, do turn
+            if(!isDealing) {
+                // start turn
+                startTurn();
+            }
         };
 
         // select bid
@@ -526,8 +544,34 @@
                 return false;
             }
 
-            // reset bid value
-            $("#txtPlayerBid").val('0');
+            // draw player bids
+            var playerBidsHtml = "<tr class='active'>";
+            
+            // player names
+            for(var i = 0; i < lastGameState.Players.length; i ++) {
+                playerBidsHtml += "<th class='text-center'>" + lastGameState.Players[i].Name + "</th>";
+            }
+            
+            playerBidsHtml += "</tr>";
+            playerBidsHtml += "<tr>";
+            
+            // player bids
+            for(var i = 0; i < lastGameState.Players.length; i ++) {
+                playerBidsHtml += "<td class='text-center'>" + lastGameState.Players[i].Bid + "</td>";
+            }
+  
+            playerBidsHtml += "</tr>";
+
+            $(".player-bids").html(''); //clear player bids
+            $(".player-bids").append(playerBidsHtml);
+
+            // first to act
+            if(lastGameState.CardsPlayed == null) {
+                $(".first-bid-info").show();
+            }
+            else {
+                $(".first-bid-info").hide();
+            }
 
             // generate bid # buttons
             $playerBid = $(".player-bid");
@@ -771,7 +815,26 @@
                             var trumpCard = lastGameState.TrumpCard;
                             var trumpFileName = getCardImagePath(trumpCard);
 
-                            $(".trump-card").children("img").attr("src", trumpFileName);
+                            // flip final card for trump
+                            $("body").append("<img id='deal-card-trump' src='" + trumpFileName + "' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
+                            
+                            // trump div
+                            var $trumpDiv = $(".trump-card img");
+
+                            // trump position
+                            var trumpPosition = $trumpDiv.offset();
+
+                            // animate to trump card container
+                            $("#deal-card-trump").animate({
+                                left: trumpPosition.left + 'px',
+                                top: trumpPosition.top + 'px'
+                            }, 1000, function() {
+                                // fade/remove dealt card
+                                $("#deal-card-trump").fadeOut("slow").remove();
+
+                                // update trump card
+                                updateTrumpCardGraphic(trumpCard);
+                            });
 
                             // switch flag
                             isDealing = false;
@@ -792,6 +855,23 @@
                 }, 500); 
             } // for: numCards
         };
+
+        function updateTrumpCardGraphic(_trumpCard) {
+            // update trump card
+            var trumpFileName = getCardImagePath(_trumpCard);
+
+            $(".trump-card").children("img").attr("src", trumpFileName);
+        };
+
+        function getPlayerDivByPlayerId(_playerId) {
+            if(lastGameState != null) {
+                for(var i = 0; i < lastGameState.Players.length; i++) {
+                    if(lastGameState.Players[i].PlayerId == _playerId) {
+                        return $("#position-" + (i + 1));
+                    }
+                }
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
@@ -865,11 +945,8 @@
         <hr />
         <div class="card-holder" style="min-width: 500px;">
             <div class="player-cards alert alert-success col-xs-9" style="height: 126px;">
-                <a class="card">
-                    <img src="Assets/Cards/deck_cover.png" alt="" />
-                </a>
             </div>
-            <div class="trump-card alert alert-danger col-xs-offset-3 text-center" style="margin-left: 5px; height: 126px;">
+            <div class="trump-card-container alert alert-danger col-xs-offset-3 text-center" style="margin-left: 5px; height: 126px;">
                 <a class="card trump-card">
                     <img src="Assets/Cards/deck_cover.png" alt="trump card" />
                 </a>
@@ -927,7 +1004,13 @@
                 <div class="modal-body">
                     <div class="alert alert-info first-bid-info">
                         <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your turn to bid!</strong></p>
-                        <p>Select the amount of Tricks you intend to win. Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>.</p>
+                        <p>Select the amount of Tricks <span class="text-danger">you intend to win</span>. Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>.</p>
+                    </div>
+                    <div class="form-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>Player bids</strong></div>
+                            <table class="table table-responsive player-bids"></table>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Your cards:</label>

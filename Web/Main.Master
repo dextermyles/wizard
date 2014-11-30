@@ -77,6 +77,9 @@
     <footer class="footer hidden-xs">
         <div class="container">
             <textarea id="logwindow" class="text-muted" style="width:100%; height: 54px; background-color: transparent; border: none; resize: none;" readonly></textarea>
+            <p class="text-center label-default" style="color: #000;">
+                Created by <a href="mailto:dexter.brock@gmail.com" target="_blank" style="color: #000; text-decoration: underline;">Dexter Brock</a>
+            </p>
         </div>
     </footer>
     <!-- facebook dev library -->

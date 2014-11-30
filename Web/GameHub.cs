@@ -167,7 +167,7 @@ namespace WizardGame
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
 
             // broadcast trump set
-            Clients.Group(groupNameId).trumpUpdated(player.PlayerId, player.Name, suit);
+            Clients.Group(groupNameId).trumpUpdated(player.PlayerId, player.Name, gameState.TrumpCard);
 
             // broadcast game data
             Clients.Group(groupNameId).receiveGameData(game);
