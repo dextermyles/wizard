@@ -634,7 +634,7 @@
                             // check that player can follow suit
                             for(var i = 0; i < currentPlayer.Cards.length; i++) {
                                 if(currentPlayer.Cards[i].Suit == suitToFollow) {
-                                    alert('You have to follow suit! Picked: ' + cardSuit + ' - should be: ' + suitToFollow);
+                                    alert('You have to follow suit! Picked: ' + getSuitName(cardSuit) + ' - must be: ' + getSuitName(suitToFollow));
 
                                     return;
                                 }
@@ -717,55 +717,80 @@
             var currentIndex = dealerIndex + 1;
             var cardIndex = 0;
 
+            console.log('dealer position: left:' + dealerPosition.left + 'px; top: ' +  dealerPosition.top + 'px;');
+
             if(currentIndex > lastGameState.Players.length -1)
                 currentIndex = 0;
 
             logMessage("-- deal " + numCardsToDeal + " cards --");
 
+            // switch flag
+            isDealing = true;
+
+            // cardindex used to track animation card index since it triggers slowly
+            var cardIndex = 0;
+            var dealtCardIndex = 0;
+
+            // loop through num cards to deal
             for(var x = 0; x < numCardsToDeal; x++) {
-                // switch flag
-                isDealing = true;
+                // spawn cards at dealer location
+                $("body").append("<img id='deal-card-" + x + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
+                
+                // delay card deal
+                setTimeout(function() {
+                    // reset to zero
+                    if(currentIndex > lastGameState.Players.length - 1)
+                        currentIndex = 0;
 
-                // get target div
-                console.log("#position-" + (currentIndex + 1));
+                    // get 
+                    var divIndex = currentIndex + 1;
 
-                var $targetDiv = $("#position-" + (currentIndex + 1));
-                var targetPosition = $targetDiv.offset();
+                    // vars
+                    var $targetDiv = $("#position-" + (divIndex));
+                    var targetPosition = $targetDiv.offset();
 
-                console.log("target position for card to deal:");
-                console.log(targetPosition);
+                    // get target div
+                    console.log("#position-" + (divIndex));
+                    console.log('animate: left: ' + targetPosition.left + 'px; top: ' + targetPosition.top + 'px');
+                    console.log("animating card to: " + $targetDiv.children(".player-name").html());
 
-                // increment index
-                currentIndex++;
-
-                // reset to zero
-                if(currentIndex > lastGameState.Players.length)
-                    currentIndex = 0;
-
-                // animate card from dealer to target player
-                $("body").append("<img id='deal-card-" + x + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />").animate({
-                    left: targetPosition.left + 'px',
-                    top: targetPosition.top + 'px'
-                }, 250, function() {
-                    // if is last card to deal
-                    if(isLastCard) {
-                        // switch flag
-                        isDealing = false;
+                    // animate deal
+                    $("#deal-card-" + dealtCardIndex).animate({
+                        left: targetPosition.left + 'px',
+                        top: targetPosition.top + 'px'
+                    }, 1000, function() {
+                        // remove card
+                        var animatedCard = $("#deal-card-" + cardIndex);
 
                         // remove card
-                        //$(".deal-card").remove();
+                        animatedCard.fadeOut("slow").remove();
 
-                        // start turn
-                        startTurn();
-                    }
+                        // if is last card to deal
+                        if(cardIndex == (numCardsToDeal - 1)) {
+                            // animate trump card
+                            var trumpCard = lastGameState.TrumpCard;
+                            var trumpFileName = getCardImagePath(trumpCard);
 
-                    // increment card index
-                    cardIndex++;
-                }); 
+                            $(".trump-card").children("img").attr("src", trumpFileName);
 
-                if(x == (numCardsToDeal - 1))
-                    isLastCard = true;
-            }
+                            // switch flag
+                            isDealing = false;
+
+                            // start turn
+                            startTurn();
+                        }
+
+                        // increment card index
+                        cardIndex++;
+                    }); 
+
+                    // increment dealtCard index
+                    dealtCardIndex++;
+
+                    // increment index
+                    currentIndex++;
+                }, 500); 
+            } // for: numCards
         };
     </script>
 </asp:Content>
@@ -837,11 +862,20 @@
                 </tr>
             </table>
         </div>
-        <style type="text/css">
-                
-            </style>
         <hr />
-        <div class="player-cards well well-sm"></div>
+        <div class="card-holder" style="min-width: 500px;">
+            <div class="player-cards alert alert-success col-xs-9" style="height: 114px;">
+                <a class="card">
+                    <img src="Assets/Cards/deck_cover.png" alt="" />
+                </a>
+            </div>
+            <div class="trump-card alert alert-danger col-xs-offset-3 text-center" style="margin-left: 5px; height: 114px;">
+                <a class="card trump-card">
+                    <img src="Assets/Cards/deck_cover.png" alt="trump card" />
+                </a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
         <hr />
     </div>
     <div class="container">
