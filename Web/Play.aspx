@@ -101,7 +101,17 @@
         // connected players
         var totalPlayers = 0;
 
+        // keep alive interval
         var keepAliveInterval = 0;
+
+        // is first hand
+        var isFirstHand = true;
+
+        // is deal animation in progress
+        var isDealing = false;
+
+        // player just connected
+        var pageJustLoaded = true;
 
         currentPlayer.PlayerId = '<%= PlayerData.PlayerId %>';
         currentPlayer.Name = '<%= PlayerData.Name %>';
@@ -207,7 +217,10 @@
         };
 
         // roundEnded
-        hub.client.roundEnded = function(dealerPlayerName, firstPlayerName, trumpCard) {
+        hub.client.roundEnded = function(dealerPlayerName, firstPlayerName, roundNumber, trumpCard) {
+            // update first hand flag
+            isFirstHand = false;
+
             logMessage("-- round ended --");
 
             var $cardsPlayed = $(".cards-played");
@@ -215,7 +228,7 @@
             // clear cards played
             $cardsPlayed.html('');
 
-            appendChatMessage("Server", "Round has ended. " + dealerPlayerName + " is now dealing!");
+            appendChatMessage("Server", "Round #" + roundNumber + " has begin. " + dealerPlayerName + " is now dealing!");
 
             // announce trump
             if(trumpCard != null) {
@@ -235,6 +248,10 @@
             }
             
             appendChatMessage("Server", firstPlayerName + " is first to act!");
+
+            // animate card deal
+            dealCards(roundNumber);
+
         };
 
         // gameEnded
@@ -303,18 +320,22 @@
         };
 
         function showToolTip(target, message) {
-            // configure tooltip
-            target.tooltip({
-                title: message
-            });
-
-            // show tool tip
-            target.tooltip('show');
-
-            // destroy it after delay
+            // delay tool tip by half second
             setTimeout(function() {
-                target.tooltip('destroy');
-            }, 3000);
+                // configure tooltip
+                target.tooltip({
+                    title: message,
+                    placement: 'top'
+                });
+
+                // show tool tip
+                target.tooltip('show');
+
+                // destroy it after delay
+                setTimeout(function() {
+                    target.tooltip('destroy');
+                }, 3000);
+            }, 500);
         };
 
         function updatePlayerList(players) {
@@ -350,6 +371,10 @@
             var dealerPositionIndex = lastGameState.DealerPositionIndex;
             var playerTurnIndex = lastGameState.PlayerTurnIndex;
             var i = 0;
+            var numPlayers = 0;
+            var $playerDiv;
+            var player;
+
 
             // update local variables
             playerList = players;
@@ -359,41 +384,58 @@
 
             // update UI
             for(i = 0; i < players.length; i++) {
-                // update names
-                var $playerDiv = $("#position-" + (i+1));
-                var player = players[i];
+                // num players
+                numPlayers++;
+
+                // player container
+                $playerDiv = $("#position-" + (i+1));
+
+                // player object
+                player = players[i];
 
                 // update player name
-                $playerDiv.children("span").html(player.Name + " (" + player.Score + " points)");
+                $playerDiv.children(".player-name").html(player.Name);
+                $playerDiv.children(".player-score").html(player.Score + " points");
 
                 // remove labels
-                $playerDiv.children("span").removeClass("label-danger");
-                $playerDiv.children("span").removeClass("label-info");
+                $playerDiv.children(".player-name").removeClass("label-danger");
+                $playerDiv.children(".player-name").removeClass("label-info");
 
-                // remove borders
+                // default border
                 $(".profile-pic").css("border", "1px solid #000");
-
-                // add special label for dealer
-                if(player.IsDealer) {
-                    $playerDiv.children("span").addClass("label-danger");
-                }
-                else {
-                    $playerDiv.children("span").addClass("label-info");
-                }
 
                 // add special label for players turn
                 if(player.IsTurn) {
-                    // apply border to profile pic
-                    $playerDiv.children(".profile-pic").css("border", "1px solid #ff0000");
-
-                    // server msg
-                    appendChatMessage("Server", player.Name + "'s turn");
+                    // change background of player name when its their turn
+                    $playerDiv.children(".player-name").addClass("label-danger");
 
                     // only show tool tip for other players
                     if(currentPlayer.PlayerId != player.PlayerId) {
-                        // show tool tip
-                        showToolTip($playerDiv, "My turn!");
+                        var message = '';
+
+                        // construct announcement message
+                        if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                            message = player.Name + "'s turn to bid"; 
+                        }
+                        else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
+                            message = player.Name + "'s turn to play a card";
+                        }
+                        else if(lastGameState.Status == gameStateStatus.SelectTrump) {
+                            message = player.Name + "'s turn to choose trump";
+                        }
+                        else {
+                            message = player.Name + "'s turn!";
+                        }
+
+                        // announce via tool tip
+                        showToolTip($playerDiv, message);
+
+                        // announce to chat window
+                        appendChatMessage("Server", message);
                     }
+                }
+                else {
+                    $playerDiv.children(".player-name").addClass("label-info");
                 }
 
                 // get player data for current user
@@ -405,6 +447,13 @@
                     console.log(currentPlayer);
                 }
             } 
+
+            // update un-used player containers
+            for(i = numPlayers; i < 6; i++) {
+                $playerDiv = $("#position-" + (i + 1)); 
+                $playerDiv.children(".player-name").html('Empty seat');
+                $playerDiv.css('opacity', '0.15');
+            };
 
             // update trump
             if(lastGameState.TrumpCard != null) {
@@ -458,31 +507,24 @@
                 $playerCards.append("<a class='card' onclick='verifySelectedCard(this);' suit='" + card.Suit + "' value='" + card.Value + "'><img src=\"" + imageFileName + "\" class=\"img-rounded\" /></a>");
             }
 
-            // check if current player turn
-            if(currentPlayer.IsTurn) {
-
-                if(status == gameStateStatus.SelectTrump) {
-                    // select trump
-                    selectTrump();
-                }
-
-                if(status == gameStateStatus.BiddingInProgress) {
-                    // select bid
-                    selectBid(round); 
-                }
-
-                if(status == gameStateStatus.RoundInProgress) {
-                    // select card to play
-                    selectCard();
-                }
+            // check if first hand
+            if(pageJustLoaded) {
+                // show deal animation
+                dealCards(lastGameState.Round);
             }
+
+            // turn off flag
+            pageJustLoaded = false;
         };
 
         // select bid
         function selectBid(round) {
             // validate
-            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.BiddingInProgress)
-                return;
+            if(!currentPlayer.IsTurn) {
+                logMessage("-- you must wait your turn --");
+
+                return false;
+            }
 
             // reset bid value
             $("#txtPlayerBid").val('0');
@@ -495,7 +537,7 @@
 
             // add new button based on round #
             for(var i = 0; i <= round; i++) {
-                $playerBid.append("<a onclick=\"updateBidField(this);\" class=\"btn btn-lg btn-default\">" + i + "</a>&nbsp;");
+                $playerBid.append("<a onclick=\"verifyBid(" + i + ");\" class=\"btn btn-lg btn-default\">" + i + "</a>&nbsp;");
             }
 
             // show bid box
@@ -505,17 +547,22 @@
         // select card to play
         function selectCard() {
             // validate
-            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.RoundInProgress)
-                return;
+            if(!currentPlayer.IsTurn) {
+                logMessage("-- you must wait your turn --");
+
+                return false;
+            }
 
             // first to act
             if(lastGameState.CardsPlayed == null) {
                 $(".first-bid-info").show();
                 $(".modal-cards-played").hide();
+                $(".regular-bid-info").hide();
             }
             else {
                 $(".first-bid-info").hide();
                 $(".modal-cards-played").show();
+                $(".regular-bid-info").show();
             }
 
             // show select card box
@@ -530,16 +577,15 @@
             $("#txtPlayerBid").val(bidValue);
         };
 
-        function verifyBid() {
-            if(currentPlayer.IsTurn == false)
-                return;
+        function verifyBid(bidValue) {
+            // validate
+            if(!currentPlayer.IsTurn) {
+                logMessage("-- you must wait your turn --");
 
-            if(lastGameState.Status != gameStateStatus.BiddingInProgress)
-                return;
+                return false;
+            }
 
-            var bidValue = parseInt($("#txtPlayerBid").val());
-
-            if(bidValue != NaN) {
+            if(bidValue != null && bidValue != NaN) {
                 $('#selectBidModal').modal('hide');
 
                 if(isConnected) {
@@ -555,11 +601,11 @@
 
         function verifySelectedCard(selectedCard) {
             // validate
-            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.RoundInProgress)
+            if(!currentPlayer.IsTurn) {
+                logMessage("-- you must wait your turn --");
+
                 return;
-
-
-            console.log(currentPlayer);
+            }
 
             var $card = $(selectedCard);
             var cardSuit = parseInt($card.attr("suit"));
@@ -625,8 +671,9 @@
 
         function verifySelectedTrump(suitId) {
             // validate
-            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.SelectTrump)
-                return;
+            if(!currentPlayer.IsTurn) {
+                return false;
+            }
 
             // hide select trump modal
             $('#selectTrumpModal').modal('hide');
@@ -635,16 +682,96 @@
                 hub.server.setTrump(gameId, currentPlayer.PlayerId, suitId, groupNameId);
             }
         };
+
+        function startTurn() {
+            // log
+            logMessage("-- start turn: " + currentPlayer.IsTurn + " --");
+
+            // check if current player turn
+            if(currentPlayer.IsTurn) {
+                // select trump
+                if(lastGameState.Status == gameStateStatus.SelectTrump) {
+                    // select trump
+                    selectTrump();
+                }
+                // enter bid
+                if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                    // select bid
+                    selectBid(lastGameState.Round); 
+                }
+                // play card
+                if(lastGameState.Status == gameStateStatus.RoundInProgress) {
+                    // select card to play
+                    selectCard();
+                }
+            }
+        };
+
+        var isLastCard = false;
+
+        function dealCards(roundNumber) {
+            var dealerIndex = lastGameState.DealerPositionIndex;
+            var $dealerDiv = $("#position-" + (dealerIndex + 1));
+            var dealerPosition = $dealerDiv.offset();
+            var numCardsToDeal = parseInt((roundNumber * lastGameState.Players.length));
+            var currentIndex = dealerIndex + 1;
+            var cardIndex = 0;
+
+            if(currentIndex > lastGameState.Players.length -1)
+                currentIndex = 0;
+
+            logMessage("-- deal " + numCardsToDeal + " cards --");
+
+            for(var x = 0; x < numCardsToDeal; x++) {
+                // switch flag
+                isDealing = true;
+
+                // get target div
+                console.log("#position-" + (currentIndex + 1));
+
+                var $targetDiv = $("#position-" + (currentIndex + 1));
+                var targetPosition = $targetDiv.offset();
+
+                console.log("target position for card to deal:");
+                console.log(targetPosition);
+
+                // increment index
+                currentIndex++;
+
+                // reset to zero
+                if(currentIndex > lastGameState.Players.length)
+                    currentIndex = 0;
+
+                // animate card from dealer to target player
+                $("body").append("<img id='deal-card-" + x + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />").animate({
+                    left: targetPosition.left + 'px',
+                    top: targetPosition.top + 'px'
+                }, 250, function() {
+                    // if is last card to deal
+                    if(isLastCard) {
+                        // switch flag
+                        isDealing = false;
+
+                        // remove card
+                        //$(".deal-card").remove();
+
+                        // start turn
+                        startTurn();
+                    }
+
+                    // increment card index
+                    cardIndex++;
+                }); 
+
+                if(x == (numCardsToDeal - 1))
+                    isLastCard = true;
+            }
+        };
     </script>
-    <style type="text/css">
-        .auto-style2 {
-            height: 20px;
-        }
-    </style>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h1 class="page-header">Round: <span class="round-number">0</span>
+        <h1 class="game-info">Round: <span class="round-number">0</span>
             <span class="pull-right">Trump:
                 <span class="trump label label-danger" style="top:0px;">Loading</span>
             </span>
@@ -652,17 +779,19 @@
         <div class="game-board">
             <table class="game-board-table">
                 <tr>
-                    <td></td>
+                    <td>&nbsp;</td>
                     <td>
                         <div id="position-1" class="player-container">
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; left: -22px;" />
-                            <span class="label label-info">Player 1</span>
+                            <div class="label-info player-name">Player 1</div>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <div class="player-score">0 points</div>
                         </div>
                     </td>
                     <td>
                         <div id="position-2" class="player-container">
-                            <span class="label label-info">Player 2</span>
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; right: -22px;" />
+                            <div class="label-info player-name">Player 2</div>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <div class="player-score">0 points</div>
                         </div>
                     </td>
                     <td></td>
@@ -670,8 +799,9 @@
                 <tr>
                     <td>
                         <div id="position-6" class="player-container">
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; left: -22px;" />
-                            <span class="label label-info">Player 6</span>
+                            <div class="label-info player-name">Player 6</div>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <div class="player-score">0 points</div>
                         </div>
                     </td>
                     <td colspan="2">
@@ -681,8 +811,9 @@
                     </td>
                     <td>
                         <div id="position-3" class="player-container">
-                            <span class="label label-info">Player 3</span>
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; right: -22px;" />
+                            <div class="label-info player-name">Player 3</div>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <div class="player-score">0 points</div>
                         </div>
                     </td>
                 </tr>
@@ -690,14 +821,16 @@
                     <td>&nbsp;</td>
                     <td>
                         <div id="position-4" class="player-container">
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; left: -22px;" />
-                            <span class="label label-info">Player 4</span>
+                            <div class="label-info player-name">Player 4</div>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <div class="player-score">0 points</div>
                         </div>
                     </td>
                     <td>
                         <div id="position-5" class="player-container">
-                            <span class="label label-info">Player 5</span>
-                            <img data-src="holder.js/64x64" class="img-circle profile-pic" style="position: relative; right: -22px;" />
+                            <div class="label-info player-name">Player 5</div>
+                            <img data-src="holder.js/64x64" class="img-circle profile-pic" />
+                            <div class="player-score">0 points</div>
                         </div>
                     </td>
                     <td>&nbsp;</td>
@@ -755,28 +888,23 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="selectBidModalLabel">Enter your bid
-                            <span class="pull-right">Trump:
-                                <span class="trump label label-danger">Loading</span>
-                            </span>
-                    </h4>
+                    <h4 class="modal-title" id="selectBidModalLabel">Enter your bid</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="alert alert-info first-bid-info">
+                        <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your turn to bid!</strong></p>
+                        <p>Select the amount of Tricks you intend to win. Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>.</p>
+                    </div>
                     <div class="form-group">
                         <label>Your cards:</label>
                         <div class="player-cards well well-sm"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Your bid:</label>
-                        <input type="text" id="txtPlayerBid" class="form-control bid-box" readonly />
+                    <div>
+                        <label>Select your bid:</label>
+                        <div class="player-bid">
+                            <!-- placeholder for buttons -->
+                        </div>
                     </div>
-                    <hr />
-                    <div class="player-bid">
-                        <!-- placeholder for buttons -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="verifyBid(); return false;">Enter my bid</button>
                 </div>
             </div>
         </div>
@@ -785,17 +913,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="selectCardModalLabel">Play a card
-                            <span class="pull-right">Trump:
-                                <span class="trump label label-danger">Loading</span>
-                            </span>
-                    </h4>
+                    <h4 class="modal-title" id="selectCardModalLabel">Play a card</h4>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info first-bid-info">
-                        <span class="glyphicon glyphicon-info-sign"></span>
-                        <strong>Your are first to act!</strong>
-                        Other players will have to try and follow suit.
+                        <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your are first to act!</strong></p>
+                        <p>Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>. Other players have to try and follow suit with the card you lead with.</p>
+                    </div>
+                    <div class="alert alert-info regular-bid-info">
+                        <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your turn to play a card!</strong></p>
+                        <p>Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>. You have to follow suit with the first card led. If you can't follow suit, you may play any card.</p>
                     </div>
                     <div class="form-group modal-cards-played">
                         <label>Cards played:</label>

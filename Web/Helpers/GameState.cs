@@ -29,7 +29,20 @@ namespace WizardGame.Helpers
             Deck = new Deck();
         }
 
+
         public void ClearTurnFlags()
+        {
+            if (Players != null && Players.Length > 0)
+            {
+                for (int i = 0; i < Players.Length; i++)
+                {
+                    Players[i].IsTurn = false;
+                    Players[i].IsLastToAct = false;
+                }
+            }
+        }
+
+        public void ClearAllFlags()
         {
             if (Players != null && Players.Length > 0)
             {
@@ -65,12 +78,13 @@ namespace WizardGame.Helpers
                     // add score card entry
                     scoreCard.AddPlayerScore(player.PlayerId, Round, player.Bid, player.TricksTaken);
 
-                    int score = scoreCard.PlayerScores().Where(p => p.PlayerId == player.PlayerId).Sum(c => c.Score);
+                    // add scores from each round to calculate total
+                    int total_score = scoreCard.PlayerScores().Where(p => p.PlayerId == player.PlayerId).Sum(c => c.Score);
 
                     // clear entries
                     player.Bid = 0;
                     player.TricksTaken = 0;
-                    player.Score = score;
+                    player.Score = total_score;
                 }
             }
         }
@@ -199,7 +213,7 @@ namespace WizardGame.Helpers
             Deck = new Deck();
 
             // clear turn flags
-            ClearTurnFlags();
+            ClearAllFlags();
 
             // clear existing bids
             ClearBidsAndTricks();
@@ -347,6 +361,13 @@ namespace WizardGame.Helpers
             {
                 Status = GameStateStatus.SelectTrump;
             }
+        }
+
+        public Player GetPointLeader()
+        {
+            Player pointLeader = Players.OrderByDescending(p => p.Score).FirstOrDefault();
+
+            return pointLeader;
         }
     }
 

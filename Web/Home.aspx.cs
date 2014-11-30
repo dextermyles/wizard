@@ -124,7 +124,7 @@ namespace WizardGame
         protected void btnNewPlayer_Click(object sender, EventArgs e)
         {
             // new player
-            Player player = wizWS.UpdatePlayer(0, PlayerName.Text, PlayerPhoto.FileName, UserSession.UserId);
+            Player player = wizWS.UpdatePlayer(0, PlayerName.Text.Trim(), PlayerPhoto.FileName, UserSession.UserId);
 
             // validate
             if(player != null && player.PlayerId > 0) 

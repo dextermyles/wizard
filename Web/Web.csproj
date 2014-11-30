@@ -110,6 +110,7 @@
     <Content Include="Assets\Cards\clubs_7.png" />
     <Content Include="Assets\Cards\clubs_8.png" />
     <Content Include="Assets\Cards\clubs_9.png" />
+    <Content Include="Assets\Cards\deck_cover.png" />
     <Content Include="Assets\Cards\diamonds_10.png" />
     <Content Include="Assets\Cards\diamonds_11.png" />
     <Content Include="Assets\Cards\diamonds_12.png" />

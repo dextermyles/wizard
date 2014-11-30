@@ -242,17 +242,17 @@ namespace WizardGame
                 // broadcast trick winner
                 Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard.ToString());
 
-                // set turn flag
-                playerWinner.IsTurn = true;
-
-                // unset old last to act flag
-                gameState.Players[gameState.LastToActIndex].IsLastToAct = false;
+                // clear turn flags (IsTurn + IsLastToAct)
+                gameState.ClearTurnFlags();
 
                 // get last to act index
                 int winningPlayerIndex = Array.IndexOf(gameState.Players, playerWinner);
 
                 // update current player index
                 gameState.PlayerTurnIndex = winningPlayerIndex;
+
+                // set turn flag
+                gameState.Players[gameState.PlayerTurnIndex].IsTurn = true;
 
                 // update last to act index
                 gameState.LastToActIndex = winningPlayerIndex - 1;
@@ -270,6 +270,8 @@ namespace WizardGame
                 gameState.Status = GameStateStatus.RoundInProgress;
             }
 
+            DateTime? dateGameEnded = null;
+
             // check if round ended
             if (gameState.HasRoundEnded())
             {
@@ -282,19 +284,39 @@ namespace WizardGame
                 // announce end of round
                 Player dealer = gameState.Players[gameState.DealerPositionIndex];
                 Player first_to_act = gameState.Players[gameState.PlayerTurnIndex];
+                Player last_to_act = gameState.Players[gameState.LastToActIndex];
 
-                // annouce end of round + trump
-                Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.TrumpCard);
+                // announce round ended event
+                Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.Round, gameState.TrumpCard);
 
                 if (!canStartNextRound)
                 {
+                    // get point leader
+                    Player pointLeader = gameState.GetPointLeader();
+
                     // broadcast game has ended
-                    Clients.Group(groupNameId).gameEnded();
+                    Clients.Group(groupNameId).gameEnded(pointLeader.PlayerId, pointLeader.Name);
+
+                    // loop through players
+                    for(int i = 0; i < gameState.Players.Length; i++ ){
+                        Player currentPlayer = gameState.Players[i];
+
+                        int won = 0;
+
+                        if(currentPlayer.PlayerId == pointLeader.PlayerId)
+                            won = 1;
+
+                        // update game history table
+                        wizWS.UpdateGameHistory(0, game.GameId, currentPlayer.PlayerId, currentPlayer.Score, won);
+                    }
+                    
+                    // get date
+                    dateGameEnded = DateTime.Now;
                 }
             }
 
             // save game state in db
-            game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+            game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
 
             // broadcast game data
             Clients.Group(groupNameId).receiveGameData(game);

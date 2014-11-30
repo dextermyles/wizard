@@ -18,7 +18,7 @@ namespace WizardGame.Helpers
         public bool IsDealer = false;
         public bool IsTurn = false;
         public bool IsLastToAct = false;
-
+        public bool Won = false;
         public Card[] Cards = null;
         public Card LastCardPlayed = null;
         public string ConnectionId = string.Empty;
@@ -47,8 +47,8 @@ namespace WizardGame.Helpers
             // add card to list
             cardList.Add(_card);
 
-            // update cards
-            Cards = cardList.ToArray();
+            // update cards and sort by suit
+            Cards = cardList.OrderBy(c => c.Suit).ThenBy(c => c.Value).ToArray();
 
             // clear list
             cardList = null;

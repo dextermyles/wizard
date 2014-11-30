@@ -19,7 +19,6 @@ body {
 }
 
 .label {
-    display: inline;
     padding: .2em .6em .2em;
     font-size: 75%;
     font-weight: 700;
@@ -32,14 +31,16 @@ body {
 }
 
 .trump {
-    
+    border-radius: 10px;
+    padding: 5px;
+    color: #fff;
 }
 
 .game-board {
+    min-width: 500px;
     background-image: url('/assets/table/table-default.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    max-width: 940px;
     margin: 0 auto;
 }
 
@@ -53,6 +54,12 @@ body {
     text-align: center;
 }
 
+.deal-card {
+    position:absolute;
+    width: 64px;
+    height: 90px;
+}
+
 .bid-box {
     width: 40px;
     text-align: center;
@@ -60,26 +67,31 @@ body {
     font-size: 18px;
 }
 
+.player-name {
+    border-radius: 10px 10px 0px 0px;
+    border: 1px solid #000;
+    color: #000;
+    font-weight: bold;
+    font-family: Arial;
+}
+
+.player-score {
+    font-weight: bold;
+    background:#fff;
+    border-radius: 0px 0 10px 10px;
+    border: 1px solid #000;
+    min-height: 22px;
+}
+
 .player-cards {
     text-align: center;
 }
 
 .player-container {
-    border: 1px solid #000;
+    margin: 0 auto;
     background: #000;
-    margin: 0px 1px;
-    opacity: 0.9;
     border-radius: 10px;
-    width: 230px;
-}
-
-.player-container span {
-    position:relative;
-    top: -20px;
-    width: 105px;
-    display: inline-block;
-    height: 15px;
-    line-height: 1;
+    width: 120px;
 }
 
 .player-container img {
