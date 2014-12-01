@@ -944,9 +944,9 @@
         </div>
         <hr />
         <div class="card-holder" style="min-width: 500px;">
-            <div class="player-cards alert alert-success col-xs-9" style="height: 126px;">
+            <div class="player-cards alert alert-success col-xs-9" style="min-height: 126px;">
             </div>
-            <div class="trump-card-container alert alert-danger col-xs-offset-3 text-center" style="margin-left: 5px; height: 126px;">
+            <div class="trump-card-container alert alert-danger col-xs-offset-3 text-center" style="min-height: 126px;">
                 <a class="card trump-card">
                     <img src="Assets/Cards/deck_cover.png" alt="trump card" />
                 </a>
