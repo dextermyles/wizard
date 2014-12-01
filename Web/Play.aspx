@@ -664,8 +664,14 @@
             if(pageJustLoaded) {
                 // delay start game
                 setTimeout(function() {
-                    // start turn
-                    dealCards(lastGameState.Round);
+                    if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                        // start turn
+                        startTurn();
+                    }
+                    else {
+                        // deal cards
+                        dealCards(lastGameState.Round);
+                    }
                 }, 2000);
             }
 
