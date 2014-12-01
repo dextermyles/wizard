@@ -1041,7 +1041,7 @@
                         <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your turn to play a card!</strong></p>
                         <p>Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>. You have to follow suit with the first card led. If you can't follow suit, you may play any card.</p>
                     </div>
-                    <div class="form-group modal-cards-played">
+                    <div class="modal-cards-played">
                         <label>Cards played:</label>
                         <div class="cards-played well well-sm"></div>
                     </div>
