@@ -136,11 +136,8 @@ namespace WizardGame
             // update player last active date
             wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
 
-            // broadcast game data
-            Clients.Group(groupNameId).receiveGameData(game);
-
             // broadcast enterBid event
-            Clients.Group(groupNameId).receiveBid(player.PlayerId, player.Name, bid);
+            Clients.Group(groupNameId).receiveBid(player, bid, game);
         }
 
         public void SetTrump(int gameId, int playerId, Suit suit, string groupNameId)
@@ -270,14 +267,10 @@ namespace WizardGame
 
                 // update game status
                 gameState.Status = GameStateStatus.RoundInProgress;
-
-                // broadcast trick winner
-                //Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard.ToString());
             }
 
             DateTime? dateGameEnded = null;
             bool IsRoundOver = gameState.HasRoundEnded();
-            bool IsGameOver = false;
 
             // check if round ended
             if (IsRoundOver)
@@ -288,21 +281,8 @@ namespace WizardGame
                 // start next round
                 bool canStartNextRound = gameState.StartNextRound();
 
-                /*
-                // get player data
-                Player dealer = gameState.Players[gameState.DealerPositionIndex];
-                Player first_to_act = gameState.Players[gameState.PlayerTurnIndex];
-                Player last_to_act = gameState.Players[gameState.LastToActIndex];
-
-                // announce round ended event
-                Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.Round, gameState.TrumpCard);
-                */
-
                 if (!canStartNextRound)
                 {
-                    // game ended flag
-                    IsGameOver = true;
-
                     // get point leader
                     Player pointLeader = gameState.GetPointLeader();
 
@@ -332,9 +312,6 @@ namespace WizardGame
 
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
-
-            // broadcast game data
-            //Clients.Group(groupNameId).receiveGameData(game);
 
             // broadcast game data
             Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, game);

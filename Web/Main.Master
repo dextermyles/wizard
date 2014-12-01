@@ -11,7 +11,7 @@
     <link rel="stylesheet" media="all" href="Content/theme.css" />
     <!-- scripts -->
     <script type="text/javascript" src="Scripts/holder.js"></script>
-    <script type="text/javascript" src="Scripts/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="Scripts/jquery-ui-1.11.2.min.js"></script>
     <script type="text/javascript" src="Scripts/jquery.signalR-2.1.2.min.js"></script>
     <script type="text/javascript" src="/signalr/hubs"></script>
