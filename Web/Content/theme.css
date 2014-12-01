@@ -37,9 +37,15 @@ body {
     color: #fff;
 }
 
+.game-info {
+    margin: 0px;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
 .game-board {
     min-width: 500px;
-    background-image: url('/assets/table/table-default.png');
+    background-image: url('/assets/table/table-official.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     margin: 0 auto;
@@ -55,6 +61,9 @@ body {
     text-align: center;
 }
 
+.cards-played-container {
+    height: 94px; 
+}
 .deal-card {
     position:absolute;
     width: 64px;
@@ -92,7 +101,7 @@ body {
     margin: 0 auto;
     background: #000;
     border-radius: 10px;
-    width: 140px;
+    width: 150px;
 }
 
 .player-container img {
@@ -113,7 +122,7 @@ body {
 
 .card img {
     max-height: 90px;
-     border: 1px solid #000;
+    border: 1px solid #000;
 }
 
 .footer > .container {

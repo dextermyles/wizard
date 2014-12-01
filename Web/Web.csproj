@@ -153,6 +153,7 @@
     <Content Include="Assets\Cards\spades_9.png" />
     <Content Include="Assets\Cards\wizard.png" />
     <Content Include="Assets\Table\table-default.png" />
+    <Content Include="Assets\Table\table-official.png" />
     <Content Include="Auto\Cron.aspx" />
     <Content Include="clear_game_data.sql" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -245,7 +246,7 @@
     <Compile Include="Auto\Cron.aspx.designer.cs">
       <DependentUpon>Cron.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ConnectionState.cs" />
+    <Compile Include="Helpers\ConnectionState.cs" />
     <Compile Include="GameHub.cs" />
     <Compile Include="GameLobbyHub.cs" />
     <Compile Include="Global.asax.cs">

@@ -266,6 +266,156 @@
             dealCards(roundNumber);
         };
 
+        // cardPlayed
+        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, gameData) {
+
+            console.log("-- card played | isTurnEnded: " + isTurnEnded + " | isRoundOver: " + isRoundOver);
+
+            // animate card played
+            var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
+            var playerPosition = $playerDiv.offset();
+            var cardPlayedFilename = getCardImagePath(_card);
+
+            // get game board position
+            var $cardsPlayedDiv = $(".cards-played-container");
+            var targetLeft = ($cardsPlayedDiv.offset().left + ($cardsPlayedDiv.width() / 2));
+            var targetTop = ($cardsPlayedDiv.offset().top);
+
+            console.log("card played: ");
+            console.log(_card);
+            console.log("by player:");
+            console.log(_player);
+
+            // spawn card
+            $("body").append("<a id='card-played' class='deal-card' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;'><img src='" + cardPlayedFilename + "' class='img-rounded card'  />");  
+            
+            console.log("spawned played card");
+            console.log("animating played card to: left: " + targetLeft + " top: " + targetTop);
+
+            // animate to card pile + remove card
+            $("#card-played")
+                .animate({
+                    left: targetLeft + 'px',
+                    top: targetTop + 'px',
+                    opacity: 0.5
+                }, 
+                500, 
+                function() {
+                    // save html
+                    var cardHtml = $("#card-played").html();
+
+                    // fade/remove played card
+                    $("#card-played").remove();
+
+                    // append new card to pile
+                    $(".cards-played").append(cardHtml);
+
+                    console.log("animation complete | isRoundOver: " + isRoundOver + " | isTurnEnded: " + isTurnEnded);
+
+                    // round ended
+                    if(isRoundOver) {
+                        // winner player div
+                        var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
+                        var playerWinnerPosition = $playerWinnerDiv.offset();
+
+                        // animate card pile to winner
+                        $cardsPlayedDiv.children(".card").each(function(index) {
+                            // card data
+                            var $card = $(this);
+
+                            // get card position
+                            var cardPosition = {
+                                left: $card.offset().left,
+                                top: $card.offset().top
+                            };
+
+                            console.log(cardPosition);
+
+                            // update card css
+                            $card.css({
+                                position: 'absolute',
+                                left: cardPosition.left + 'px',
+                                top: cardPosition.top + 'px'
+                            });
+
+                            $card.animate({
+                                left: playerWinnerPosition.left + 'px',
+                                top: playerWinnerPosition.top + 'px'
+                            }, 1000, function() {
+                                $(this).remove();
+                            });
+                        });
+
+                        // show tool tip
+                        showToolTip($playerWinnerDiv, "I won the trick!");
+
+                        // delay card deal
+                        setTimeout(function() {
+                            // update game data
+                            processGameData(gameData);
+
+                            // deal cards
+                            dealCards(lastGameState.Round);
+                        }, 1500);   
+                    }
+                    else if(isTurnEnded) {
+                        // winner player div
+                        var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
+                        var playerWinnerPosition = $playerWinnerDiv.offset();
+
+                        // animate card pile to winner
+                        $cardsPlayedDiv.children(".card").each(function(index) {
+                            // card data
+                            var $card = $(this);
+
+                            // get card position
+                            var cardPosition = {
+                                left: $card.offset().left,
+                                top: $card.offset().top
+                            };
+
+                            console.log(cardPosition);
+
+                            // update card css
+                            $card.css({
+                                position: 'absolute',
+                                left: cardPosition.left + 'px',
+                                top: cardPosition.top + 'px'
+                            });
+
+                            $card.animate({
+                                left: playerWinnerPosition.left + 'px',
+                                top: playerWinnerPosition.top + 'px'
+                            }, 1000, function() {
+                                $(this).remove();
+                            });
+                        });
+
+                        // show tool tip
+                        showToolTip($playerWinnerDiv, "I won the trick!"); 
+
+                        // delay card deal
+                        setTimeout(function() {
+                            // update game data
+                            processGameData(gameData);
+
+                            // winning player leads next card
+                            startTurn();
+                        }, 1250); 
+                    }
+                    else {
+                        // update game data
+                        processGameData(gameData);
+
+                        // delay turn start
+                        setTimeout(function() {
+                            // announce next players turn to act
+                            startTurn();
+                        }, 1250);
+                    }
+                });
+        };
+
         // gameEnded
         hub.client.gameEnded = function() {
             appendChatMessage("Server", "Game has ended");
@@ -387,7 +537,6 @@
             var $playerDiv;
             var player;
 
-
             // update local variables
             playerList = players;
 
@@ -483,6 +632,8 @@
                 } 
             }
             
+            console.log("clearing cards played");
+
             // draw cards played in middle
             var $cardsPlayed = $(".cards-played");
 
@@ -508,6 +659,8 @@
             // clear existing cards
             $playerCards.html('');
 
+            console.log("clearing player cards in hand");
+
             for(i = 0; i < currentPlayer.Cards.length; i++) {
                 var card = currentPlayer.Cards[i];
 
@@ -516,7 +669,12 @@
                 var ownerPlayerId = card.OwnerPlayerId;
                 var imageFileName = getCardImagePath(card);
 
-                $playerCards.append("<a class='card' onclick='verifySelectedCard(this);' suit='" + card.Suit + "' value='" + card.Value + "'><img src=\"" + imageFileName + "\" class=\"img-rounded\" /></a>");
+                var style = "";
+
+                if(i > 0)
+                    style = "style='margin-left: -30px'";
+
+                $playerCards.append("<a class='card' onclick='verifySelectedCard(this);' suit='" + card.Suit + "' value='" + card.Value + "' " + style + "><img src=\"" + imageFileName + "\" class=\"img-rounded\" /></a>");
             }
 
             // check if first hand
@@ -629,6 +787,12 @@
                 return false;
             }
 
+            if(lastGameState.Status != gameStateStatus.BiddingInProgress) {
+                logMessage("-- you cant play a card right now --");
+
+                return;
+            }
+
             if(bidValue != null && bidValue != NaN) {
                 $('#selectBidModal').modal('hide');
 
@@ -647,6 +811,12 @@
             // validate
             if(!currentPlayer.IsTurn) {
                 logMessage("-- you must wait your turn --");
+
+                return;
+            }
+
+            if(lastGameState.Status != gameStateStatus.RoundInProgress) {
+                logMessage("-- you cant play a card right now --");
 
                 return;
             }
@@ -688,7 +858,6 @@
                 }
             }
             
-
             $('#selectCardModal').modal('hide');
 
             logMessage("-- selected card: " + cardValue + " of " + getSuitName(cardSuit) + " (" + cardSuit + ")");
@@ -706,8 +875,16 @@
 
         function selectTrump() {
             // validate
-            if(currentPlayer.IsTurn == false && lastGameState.Status != gameStateStatus.SelectTrump)
+            if(!currentPlayer.IsTurn)
+                logMessage("-- you must wait your turn --");
+
+            return;
+
+            if(lastGameState.Status != gameStateStatus.SelectTrump) {
+                logMessage("-- you cant select trump right now --");
+
                 return;
+            }
 
             // show select trump modal
             $('#selectTrumpModal').modal('show');
@@ -751,111 +928,6 @@
             }
         };
 
-        var isLastCard = false;
-
-        function dealCards(roundNumber) {
-            var dealerIndex = lastGameState.DealerPositionIndex;
-            var $dealerDiv = $("#position-" + (dealerIndex + 1));
-            var dealerPosition = $dealerDiv.offset();
-            var numCardsToDeal = parseInt((roundNumber * lastGameState.Players.length));
-            var currentIndex = dealerIndex + 1;
-            var cardIndex = 0;
-
-            console.log('dealer position: left:' + dealerPosition.left + 'px; top: ' +  dealerPosition.top + 'px;');
-
-            if(currentIndex > lastGameState.Players.length -1)
-                currentIndex = 0;
-
-            logMessage("-- deal " + numCardsToDeal + " cards --");
-
-            // switch flag
-            isDealing = true;
-
-            // cardindex used to track animation card index since it triggers slowly
-            var cardIndex = 0;
-            var dealtCardIndex = 0;
-
-            // loop through num cards to deal
-            for(var x = 0; x < numCardsToDeal; x++) {
-                // spawn cards at dealer location
-                $("body").append("<img id='deal-card-" + x + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
-                
-                // delay card deal
-                setTimeout(function() {
-                    // reset to zero
-                    if(currentIndex > lastGameState.Players.length - 1)
-                        currentIndex = 0;
-
-                    // get 
-                    var divIndex = currentIndex + 1;
-
-                    // vars
-                    var $targetDiv = $("#position-" + (divIndex));
-                    var targetPosition = $targetDiv.offset();
-
-                    // get target div
-                    console.log("#position-" + (divIndex));
-                    console.log('animate: left: ' + targetPosition.left + 'px; top: ' + targetPosition.top + 'px');
-                    console.log("animating card to: " + $targetDiv.children(".player-name").html());
-
-                    // animate deal
-                    $("#deal-card-" + dealtCardIndex).animate({
-                        left: targetPosition.left + 'px',
-                        top: targetPosition.top + 'px'
-                    }, 1000, function() {
-                        // remove card
-                        var animatedCard = $("#deal-card-" + cardIndex);
-
-                        // remove card
-                        animatedCard.fadeOut("slow").remove();
-
-                        // if is last card to deal
-                        if(cardIndex == (numCardsToDeal - 1)) {
-                            // animate trump card
-                            var trumpCard = lastGameState.TrumpCard;
-                            var trumpFileName = getCardImagePath(trumpCard);
-
-                            // flip final card for trump
-                            $("body").append("<img id='deal-card-trump' src='" + trumpFileName + "' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
-                            
-                            // trump div
-                            var $trumpDiv = $(".trump-card img");
-
-                            // trump position
-                            var trumpPosition = $trumpDiv.offset();
-
-                            // animate to trump card container
-                            $("#deal-card-trump").animate({
-                                left: trumpPosition.left + 'px',
-                                top: trumpPosition.top + 'px'
-                            }, 1000, function() {
-                                // fade/remove dealt card
-                                $("#deal-card-trump").fadeOut("slow").remove();
-
-                                // update trump card
-                                updateTrumpCardGraphic(trumpCard);
-                            });
-
-                            // switch flag
-                            isDealing = false;
-
-                            // start turn
-                            startTurn();
-                        }
-
-                        // increment card index
-                        cardIndex++;
-                    }); 
-
-                    // increment dealtCard index
-                    dealtCardIndex++;
-
-                    // increment index
-                    currentIndex++;
-                }, 500); 
-            } // for: numCards
-        };
-
         function updateTrumpCardGraphic(_trumpCard) {
             // update trump card
             var trumpFileName = getCardImagePath(_trumpCard);
@@ -872,13 +944,111 @@
                 }
             }
         }
+
+        // num cards to deal
+        var numCardsToDeal = 0;
+        var dealtCardIndex = 0;
+        var targetPlayerIndex = 0;
+
+        function dealCards() {
+            console.log("dealing cards");
+
+            // update dealing flag
+            isDealing = true;
+
+            // reset indexes
+            dealtCardIndex = 0;
+            targetPlayerIndex = lastGameState.DealerPositionIndex + 1;
+
+            // get num remaining cards to deal
+            numCardsToDeal = (lastGameState.Round * lastGameState.Players.length);
+
+            // deal card every 1/4th second
+            dealRemainingCards();
+        };
+
+        function dealRemainingCards() {
+            // dealer data
+            var dealerIndex = lastGameState.DealerPositionIndex;
+            var $dealerDiv = $("#position-" + (dealerIndex + 1));
+            var dealerPosition = $dealerDiv.offset();
+
+            // offset position
+            dealerPosition.left = (dealerPosition.left + ($dealerDiv.width() / 2));
+            dealerPosition.top = (dealerPosition.top - 20);
+
+            // validate
+            if(numCardsToDeal < 0)
+                numCardsToDeal = 0;
+
+            console.log('num cards left to deal: ' + numCardsToDeal);
+            
+            // no cards left to deal - flip trump card and animate
+            if(numCardsToDeal == 0) {
+                // trump card data
+                var $trumpDiv = $(".trump-card img");
+                var trumpPosition = $trumpDiv.offset();
+                var trumpCard = lastGameState.TrumpCard;
+                var trumpFileName = getCardImagePath(trumpCard);
+
+                // spawn trump card at dealer position
+                $("body").append("<img id='deal-card-trump' src='" + trumpFileName + "' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
+
+                // animate trump card
+                $("#deal-card-trump")
+                    .animate({
+                        left: trumpPosition.left + 'px',
+                        top: trumpPosition.top + 'px',
+                    }, 1000, function() {
+                        // update trump card
+                        updateTrumpCardGraphic(trumpCard);
+
+                        // remove dealt cards
+                        $(".deal-card").remove();
+
+                        // disable dealing flag
+                        isDealing = false;
+
+                        // start turn
+                        startTurn();
+                    });
+
+                return;
+            }
+
+            // validate target player index
+            if(targetPlayerIndex > (lastGameState.Players.length - 1))
+                targetPlayerIndex = 0;
+
+            // target player data
+            var $targetPlayerDiv = $("#position-" + (targetPlayerIndex + 1));
+            var targetPosition = $targetPlayerDiv.offset();
+
+            // spawn card at dealer location
+            $("body").append("<img id='deal-card-" + dealtCardIndex + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
+                 
+            // animate dealt card
+            $("#deal-card-" + dealtCardIndex)
+                .animate({
+                    left: targetPosition.left + 'px',
+                    top: targetPosition.top + 'px'
+                }, 250, function() {
+                    // amimation comete - deal next card
+                    dealRemainingCards();
+                });
+
+            // indexes
+            targetPlayerIndex++;
+            dealtCardIndex++;
+            numCardsToDeal--;
+        };       
     </script>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <h1 class="game-info">Round: <span class="round-number">0</span>
             <span class="pull-right">Trump:
-                <span class="trump label label-danger" style="top:0px;">Loading</span>
+                <span class="trump label label-danger" style="top: 0px;">Loading</span>
             </span>
         </h1>
         <div class="game-board">
@@ -910,7 +1080,7 @@
                         </div>
                     </td>
                     <td colspan="2">
-                        <div class="cards-played">
+                        <div class="cards-played cards-played-container">
                             <!-- place holder for cards played -->
                         </div>
                     </td>
@@ -942,19 +1112,18 @@
                 </tr>
             </table>
         </div>
-        <hr />
-        <div class="card-holder" style="min-width: 500px;">
-            <div class="player-cards alert alert-success col-xs-9" style="min-height: 126px;">
+        <div class="card-holder" style="min-width: 500px; margin-top: 10px;">
+            <div class="player-cards well well-sm col-xs-9" style="min-height: 126px;">
             </div>
-            <div class="trump-card-container alert alert-danger col-xs-offset-3 text-center" style="min-height: 126px;">
+            <div class="trump-card-container well well-sm col-xs-offset-2 text-center" style="min-height: 126px;">
                 <a class="card trump-card">
-                    <img src="Assets/Cards/deck_cover.png" alt="trump card" />
+                    <img src="Assets/Cards/deck_cover.png" class="img-rounded" alt="trump card" />
                 </a>
             </div>
         </div>
         <div class="clearfix"></div>
-        <hr />
     </div>
+    <hr />
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">Chat window</div>
@@ -995,6 +1164,7 @@
             </div>
         </div>
     </div>
+    <hr />
     <div class="modal" id="selectBidModal" tabindex="-1" role="dialog" aria-labelledby="selectBidModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1003,7 +1173,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info first-bid-info">
-                        <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your turn to bid!</strong></p>
+                        <p><span class="glyphicon glyphicon-info-sign"></span><strong>Your turn to bid!</strong></p>
                         <p>Select the amount of Tricks <span class="text-danger">you intend to win</span>. Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>.</p>
                     </div>
                     <div class="form-group">
@@ -1034,11 +1204,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info first-bid-info">
-                        <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your are first to act!</strong></p>
+                        <p><span class="glyphicon glyphicon-info-sign"></span><strong>Your are first to act!</strong></p>
                         <p>Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>. Other players have to try and follow suit with the card you lead with.</p>
                     </div>
                     <div class="alert alert-info regular-bid-info">
-                        <p><span class="glyphicon glyphicon-info-sign"></span> <strong>Your turn to play a card!</strong></p>
+                        <p><span class="glyphicon glyphicon-info-sign"></span><strong>Your turn to play a card!</strong></p>
                         <p>Trump is currently <span class="trump" style="padding: 0; color: #f00; font-weight: bold; font-size: 14px;"></span>. You have to follow suit with the first card led. If you can't follow suit, you may play any card.</p>
                     </div>
                     <div class="modal-cards-played">

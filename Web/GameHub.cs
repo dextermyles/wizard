@@ -187,16 +187,21 @@ namespace WizardGame
             // get player data
             Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
 
+            // winning player (if round is over)
+            Player playerWinner = null;
+
             // play card
             gameState.PlayCard(player.PlayerId, card);
 
             // check if turns ended
-            if(gameState.Status == GameStateStatus.TurnEnded)
+            bool IsTurnEnded = (gameState.Status == GameStateStatus.TurnEnded);
+
+            if (IsTurnEnded)
             {
                 // get highest card in pile
                 Card highestCard = null;
 
-                // if no trump determined (last round)
+                // if no trump determined (first non fluff led determines suit)
                 if (gameState.TrumpCard == null)
                 {
                     gameState.TrumpCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
@@ -220,27 +225,24 @@ namespace WizardGame
 
                         if (trumpCards.Count > 0)
                             highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
-                    }
 
-                    // no trump cards, first card played is trump
-                    if (highestCard == null)
-                    {
-                        Card trumpCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
+                        // no trump cards (fluff was likely led, first non fluff card led is new suit)
+                        if (highestCard == null)
+                        {
+                            Card trumpCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
 
-                        var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == trumpCard.Suit).ToList();
+                            trumpCards = gameState.CardsPlayed.Where(c => c.Suit == trumpCard.Suit).ToList();
 
-                        highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
-                    }
+                            highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
+                        }
+                    }  
                 }
 
                 // get winning player
-                Player playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
+                playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
 
                 // incrememnt num of tricks taken
                 playerWinner.TricksTaken++;
-
-                // broadcast trick winner
-                Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard.ToString());
 
                 // clear turn flags (IsTurn + IsLastToAct)
                 gameState.ClearTurnFlags();
@@ -268,12 +270,17 @@ namespace WizardGame
 
                 // update game status
                 gameState.Status = GameStateStatus.RoundInProgress;
+
+                // broadcast trick winner
+                //Clients.Group(groupNameId).playerWonTrick(playerWinner.PlayerId, playerWinner.Name, highestCard.ToString());
             }
 
             DateTime? dateGameEnded = null;
+            bool IsRoundOver = gameState.HasRoundEnded();
+            bool IsGameOver = false;
 
             // check if round ended
-            if (gameState.HasRoundEnded())
+            if (IsRoundOver)
             {
                 // update score cards
                 gameState.AddScoreEntries();
@@ -281,23 +288,28 @@ namespace WizardGame
                 // start next round
                 bool canStartNextRound = gameState.StartNextRound();
 
-                // announce end of round
+                /*
+                // get player data
                 Player dealer = gameState.Players[gameState.DealerPositionIndex];
                 Player first_to_act = gameState.Players[gameState.PlayerTurnIndex];
                 Player last_to_act = gameState.Players[gameState.LastToActIndex];
 
                 // announce round ended event
                 Clients.Group(groupNameId).roundEnded(dealer.Name, first_to_act.Name, gameState.Round, gameState.TrumpCard);
+                */
 
                 if (!canStartNextRound)
                 {
+                    // game ended flag
+                    IsGameOver = true;
+
                     // get point leader
                     Player pointLeader = gameState.GetPointLeader();
 
                     // broadcast game has ended
                     Clients.Group(groupNameId).gameEnded(pointLeader.PlayerId, pointLeader.Name);
 
-                    // loop through players
+                    // update game history
                     for(int i = 0; i < gameState.Players.Length; i++ ){
                         Player currentPlayer = gameState.Players[i];
 
@@ -305,6 +317,9 @@ namespace WizardGame
 
                         if(currentPlayer.PlayerId == pointLeader.PlayerId)
                             won = 1;
+
+                        // update won flag
+                        currentPlayer.Won = (won == 1);
 
                         // update game history table
                         wizWS.UpdateGameHistory(0, game.GameId, currentPlayer.PlayerId, currentPlayer.Score, won);
@@ -319,7 +334,10 @@ namespace WizardGame
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
 
             // broadcast game data
-            Clients.Group(groupNameId).receiveGameData(game);
+            //Clients.Group(groupNameId).receiveGameData(game);
+
+            // broadcast game data
+            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, game);
         }
 
         public void SendChatMessage(string playerName, string message, string groupNameId)
