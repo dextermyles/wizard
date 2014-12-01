@@ -803,7 +803,7 @@ namespace WizardGame.Services
             {
                 Data.SessionTableAdapters.SessionTableAdapter adapter = new Data.SessionTableAdapters.SessionTableAdapter();
 
-                Data.Session.SessionDataTable dtSession = adapter.Login(username, password, ipAddress);
+                Data.Session.SessionDataTable dtSession = adapter.Login(username.ToLower().Trim(), password, ipAddress);
 
                 if (dtSession != null && dtSession.Rows.Count > 0)
                 {

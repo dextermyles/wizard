@@ -27,7 +27,7 @@ namespace WizardGame
             string strPassword = txtPassword.Value;
 
             // create new user
-            var createResult = wizWS.NewUser(strUsername.Trim(), strPassword.Trim(), strEmailAddress.Trim(), true);
+            var createResult = wizWS.NewUser(strUsername.ToLower().Trim(), strPassword.Trim(), strEmailAddress.ToLower().Trim(), true);
 
             // validate
             if (createResult != null && createResult.Result)

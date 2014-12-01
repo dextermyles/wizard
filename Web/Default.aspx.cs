@@ -59,7 +59,7 @@ namespace WizardGame
             bool remember = cbRemember.Checked;
 
             // perform login
-            var session = wizWS.Login(username, password, Helpers.Functions.GetUserIPAddress());
+            var session = wizWS.Login(username.ToLower().Trim(), password, Helpers.Functions.GetUserIPAddress());
 
             // validate session
             ValidateSession(session, remember);
