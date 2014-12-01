@@ -786,10 +786,12 @@
 
         function selectTrump() {
             // validate
-            if(!currentPlayer.IsTurn)
+            if(!currentPlayer.IsTurn) {
                 logMessage("-- you must wait your turn --");
 
-            return;
+                return;
+            }
+                
 
             if(lastGameState.Status != gameStateStatus.SelectTrump) {
                 logMessage("-- you cant select trump right now --");
