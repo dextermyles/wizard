@@ -223,12 +223,33 @@
         };
 
         // trumpUpdated
-        hub.client.trumpUpdated = function trumpUpdated(playerId, playerName, newTrumpCard) {
+        hub.client.trumpUpdated = function trumpUpdated(_player, newTrumpCard, gameData) {
+            // validate game data
+            if(gameData.GameStateData == lastGameState)
+                return;
+
+            // update last game state
+            lastGameState = gameData.GameStateData;
+
             // broadcast to chat
-            appendChatMessage("Server", playerName + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
+            appendChatMessage("Server", _player.Name + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
 
             // update trump graphic
             updateTrumpCardGraphic(newTrumpCard);
+
+            var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
+
+            // show tool tip
+            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(newTrumpCard.Suit));
+
+            // delay start
+            setTimeout(function() {
+                // update game data
+                processGameData(gameData);
+
+                // start turn
+                startTurn();
+            }, 2000);
         };
 
         // cardPlayed
