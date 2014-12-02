@@ -298,13 +298,13 @@
                 500, 
                 function() {
                     // save html
-                    var $cardPlayed = $("#card-played");
+                    var cardPlayedHtml = $("#card-played").get(0);
 
                     // append new card to pile
-                    $(".cards-played").append($cardPlayed.get(0));
+                    $(".cards-played").append(cardPlayedHtml);
 
-                    // fade/remove played card
-                    $cardPlayed.remove();
+                    // remove initial spawned card
+                    $("#card-played").remove();
 
                     console.log("animation complete | isRoundOver: " + isRoundOver + " | isTurnEnded: " + isTurnEnded);
 
@@ -333,6 +333,8 @@
                                 left: cardPosition.left + 'px',
                                 top: cardPosition.top + 'px'
                             });
+
+                            console.log("animating card: " + $card + " to winner");
 
                             $card.animate({
                                 left: playerWinnerPosition.left + 'px',
