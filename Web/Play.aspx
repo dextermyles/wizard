@@ -308,40 +308,43 @@
 
                     console.log("animation complete | isRoundOver: " + isRoundOver + " | isTurnEnded: " + isTurnEnded);
 
-                    // winner player div
-                    var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
-                    var playerWinnerPosition = $playerWinnerDiv.offset();
+                    // animate pile
+                    if(isTurnEnded) {
+                        // winner player div
+                        var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
+                        var playerWinnerPosition = $playerWinnerDiv.offset();
 
-                    // animate card pile to winner
-                    $(".cards-played-container .card").each(function(index) {
-                        // card data
-                        var $card = $(this);
+                        // animate card pile to winner
+                        $(".cards-played-container .card").each(function(index) {
+                            // card data
+                            var $card = $(this);
 
-                        // get card position
-                        var cardPosition = {
-                            left: $card.offset().left,
-                            top: $card.offset().top
-                        };
+                            // get card position
+                            var cardPosition = {
+                                left: $card.offset().left,
+                                top: $card.offset().top
+                            };
 
-                        console.log(cardPosition);
+                            console.log(cardPosition);
 
-                        // update card css
-                        $card.css({
-                            position: 'absolute',
-                            left: cardPosition.left + 'px',
-                            top: cardPosition.top + 'px'
+                            // update card css
+                            $card.css({
+                                position: 'absolute',
+                                left: cardPosition.left + 'px',
+                                top: cardPosition.top + 'px'
+                            });
+
+                            $card.animate({
+                                left: playerWinnerPosition.left + 'px',
+                                top: playerWinnerPosition.top + 'px'
+                            }, 1000, function() {
+                                $(this).remove();
+                            });
                         });
 
-                        $card.animate({
-                            left: playerWinnerPosition.left + 'px',
-                            top: playerWinnerPosition.top + 'px'
-                        }, 1000, function() {
-                            $(this).remove();
-                        });
-                    });
-
-                    // show tool tip
-                    showToolTip($playerWinnerDiv, "I won the trick!");
+                        // show tool tip
+                        showToolTip($playerWinnerDiv, "I won the trick!");
+                    }
 
                     // round ended
                     if(isRoundOver) {
