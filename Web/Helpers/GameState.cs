@@ -10,6 +10,7 @@ namespace WizardGame.Helpers
     {
         public int GameId = 0;
         public int Round = 0;
+        public int Turn = 0;
         public int DealerPositionIndex = 0;
         public int PlayerTurnIndex = 0;
         public int LastToActIndex = 0;
@@ -19,6 +20,7 @@ namespace WizardGame.Helpers
         public Deck Deck = null;
         public ScoreCard scoreCard = null;
         public Card TrumpCard = null;
+        public Suit SuitToFollow = Suit.None;
 
         public GameState()
         {
@@ -29,6 +31,12 @@ namespace WizardGame.Helpers
             Deck = new Deck();
         }
 
+        public PlayerScore[] GetPlayerScoreByRound(int round)
+        {
+            return scoreCard.GetPlayerScoreList().
+                Where(ps => ps.Round == round).
+                ToArray();
+        }
 
         public void ClearTurnFlags()
         {
@@ -120,7 +128,7 @@ namespace WizardGame.Helpers
                 player.IsTurn = false;
 
                 // get cards played list
-                List<Card> cardsPlayList = (CardsPlayed == null) ? 
+                List<Card> cardsPlayedList = (CardsPlayed == null) ? 
                     new List<Card>() : CardsPlayed.ToList();
 
                 // if first card, set trump if not set
@@ -132,15 +140,23 @@ namespace WizardGame.Helpers
                 }
                 
                 // add card to played pile
-                cardsPlayList.Add(card);
+                cardsPlayedList.Add(card);
 
                 // replace array
-                CardsPlayed = cardsPlayList.ToArray();
+                CardsPlayed = cardsPlayedList.ToArray();
 
                 // check if last player
                 if (PlayerTurnIndex == LastToActIndex)
                 {
+                    // update status
                     Status = GameStateStatus.TurnEnded;
+
+                    // increment turn #
+                    Turn++;
+
+                    // validate turn #
+                    if (Turn > Round)
+                        Turn = Round;
                 }
                 else
                 {
@@ -155,7 +171,7 @@ namespace WizardGame.Helpers
                 }
 
                 // clear list
-                cardsPlayList = null;
+                cardsPlayedList = null;
             }
         }
 
@@ -208,6 +224,9 @@ namespace WizardGame.Helpers
 
             // increment rounds
             Round++;
+
+            // set turn #
+            Turn = 1;
 
             // new deck
             Deck = new Deck();
@@ -281,6 +300,12 @@ namespace WizardGame.Helpers
                 {
                     Status = GameStateStatus.SelectTrump;
                 }
+
+                SuitToFollow = TrumpCard.Suit;
+            }
+            else
+            {
+                SuitToFollow = Suit.None;
             }
 
             return true;
@@ -324,6 +349,9 @@ namespace WizardGame.Helpers
             // set round #
             Round = 1;
 
+            // set turn #
+            Turn = 1;
+
             // set game status
             Status = GameStateStatus.DealInProgress;
 
@@ -352,6 +380,9 @@ namespace WizardGame.Helpers
 
             // update trump card
             TrumpCard = Deck.TakeTopCard();
+
+            // update suit to follow
+            SuitToFollow = TrumpCard.Suit;
                 
             // set game status
             Status = GameStateStatus.BiddingInProgress;
@@ -379,6 +410,7 @@ namespace WizardGame.Helpers
         Setup = 3,
         Finished = 4,
         TurnEnded = 5,
-        SelectTrump = 6
+        SelectTrump = 6,
+        RoundEnded = 7
     }
 }

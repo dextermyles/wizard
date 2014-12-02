@@ -69,6 +69,11 @@ namespace WizardGame.Helpers
             return score;
         }
 
+        public List<PlayerScore> GetPlayerScoreList()
+        {
+            return playerScores;
+        }
+
         public PlayerScore[] PlayerScores()
         {
             return playerScores.ToArray();

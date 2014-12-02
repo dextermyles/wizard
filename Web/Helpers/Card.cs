@@ -76,6 +76,7 @@ namespace WizardGame.Helpers
 
     public enum Suit
     {
+        None = -1,
         Spades = 0,
         Hearts = 1,
         Clubs = 2,

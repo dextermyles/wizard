@@ -57,7 +57,7 @@ namespace WizardGame
                             wizWS.UpdateGamePlayers(game.GameId, player.PlayerId, connectionId, ConnectionState.DISCONNECTED);
 
                             // broadcast player timed out
-                            Clients.Group(game.GroupNameId).playerTimedOut(player.PlayerId, player.Name);
+                            Clients.Group(game.GroupNameId).playerTimedOut(player);
                         }
                     }
                 }
@@ -100,6 +100,7 @@ namespace WizardGame
 
                 // get game data
                 Game game = wizWS.GetGameById(gameId);
+                game.EventId = Guid.NewGuid().ToString();
 
                 // validate
                 if (game != null && game.GameId > 0)
@@ -132,6 +133,7 @@ namespace WizardGame
 
             // save data in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+            game.EventId = Guid.NewGuid().ToString();
 
             // update player last active date
             wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
@@ -155,13 +157,14 @@ namespace WizardGame
             Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
 
             // set trump suit
-            gameState.TrumpCard.Suit = suit;
+            gameState.SuitToFollow = suit;
 
             // update game state status to bidding
             gameState.Status = GameStateStatus.BiddingInProgress;
 
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
+            game.EventId = Guid.NewGuid().ToString();
 
             // broadcast trump set
             Clients.Group(groupNameId).trumpUpdated(player, gameState.TrumpCard, game);
@@ -266,14 +269,22 @@ namespace WizardGame
                 gameState.Status = GameStateStatus.RoundInProgress;
             }
 
+            // check if round ended
+            if (gameState.HasRoundEnded())
+                gameState.Status = GameStateStatus.RoundEnded;
+
             DateTime? dateGameEnded = null;
-            bool IsRoundOver = gameState.HasRoundEnded();
+            bool IsRoundOver = (gameState.Status == GameStateStatus.RoundEnded);
+            PlayerScore[] roundScoreHistory = null;
 
             // check if round ended
             if (IsRoundOver)
             {
                 // update score cards
                 gameState.AddScoreEntries();
+
+                // save score history
+                roundScoreHistory = gameState.GetPlayerScoreByRound(gameState.Round);
 
                 // start next round
                 bool canStartNextRound = gameState.StartNextRound();
@@ -309,9 +320,10 @@ namespace WizardGame
 
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
+            game.EventId = Guid.NewGuid().ToString();
 
             // broadcast game data
-            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, game);
+            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, roundScoreHistory, game);
         }
 
         public void SendChatMessage(string playerName, string message, string groupNameId)

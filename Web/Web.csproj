@@ -101,6 +101,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Cards\clubs_0.png" />
     <Content Include="Assets\Cards\clubs_10.png" />
     <Content Include="Assets\Cards\clubs_11.png" />
     <Content Include="Assets\Cards\clubs_12.png" />
@@ -115,6 +116,7 @@
     <Content Include="Assets\Cards\clubs_8.png" />
     <Content Include="Assets\Cards\clubs_9.png" />
     <Content Include="Assets\Cards\deck_cover.png" />
+    <Content Include="Assets\Cards\diamonds_0.png" />
     <Content Include="Assets\Cards\diamonds_10.png" />
     <Content Include="Assets\Cards\diamonds_11.png" />
     <Content Include="Assets\Cards\diamonds_12.png" />
@@ -129,6 +131,7 @@
     <Content Include="Assets\Cards\diamonds_8.png" />
     <Content Include="Assets\Cards\diamonds_9.png" />
     <Content Include="Assets\Cards\fluff.png" />
+    <Content Include="Assets\Cards\hearts_0.png" />
     <Content Include="Assets\Cards\hearts_10.png" />
     <Content Include="Assets\Cards\hearts_11.png" />
     <Content Include="Assets\Cards\hearts_12.png" />
@@ -142,6 +145,7 @@
     <Content Include="Assets\Cards\hearts_7.png" />
     <Content Include="Assets\Cards\hearts_8.png" />
     <Content Include="Assets\Cards\hearts_9.png" />
+    <Content Include="Assets\Cards\spades_0.png" />
     <Content Include="Assets\Cards\spades_10.png" />
     <Content Include="Assets\Cards\spades_11.png" />
     <Content Include="Assets\Cards\spades_12.png" />
@@ -381,6 +385,9 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

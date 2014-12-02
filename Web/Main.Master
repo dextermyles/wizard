@@ -76,7 +76,7 @@
     </form>
     <footer class="footer hidden-xs">
         <div class="container">
-            <textarea id="logwindow" class="text-muted" style="width:100%; height: 54px; background-color: transparent; border: none; resize: none;" readonly></textarea>
+            <textarea id="logwindow" class="text-muted" style="width:100%; height: 54px; background-color: transparent; border: none; resize: none; display: none;" readonly></textarea>
             <p class="text-center" style="color: #000;">
                 Created by <a href="mailto:dexter.brock@gmail.com" target="_blank" style="color: #000; text-decoration: underline;">Dexter Brock</a>
             </p>

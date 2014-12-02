@@ -14,5 +14,6 @@ namespace WizardGame.Helpers
         public DateTime? DateCompleted = null;
         public GameState GameStateData = null;
         public string GroupNameId = string.Empty;
+        public string EventId = string.Empty;
     }
 }

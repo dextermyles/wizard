@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Text;
-using WizardGame.Services;
 using WizardGame.Helpers;
+using WizardGame.Services;
+using CloudinaryDotNet;
 
 namespace WizardGame
 {
@@ -123,8 +126,68 @@ namespace WizardGame
 
         protected void btnNewPlayer_Click(object sender, EventArgs e)
         {
+            // photo file name
+            string photoUrl = string.Empty;
+
+            // use facebook photo
+            string strTxtFacebookPhotoUrl = txtFacebookPhotoUrl.Value;
+            bool useFacebookPhoto = cbUseFacebookPhoto.Checked;
+
+            if (useFacebookPhoto && !string.IsNullOrEmpty(strTxtFacebookPhotoUrl))
+            {
+                photoUrl = strTxtFacebookPhotoUrl;
+            }
+            // use uploaded photo
+            else
+            {
+                // validate content type
+                string[] validContentTypes = { "image/jpeg", "image/gif", "image/bmp", "image/png" };
+                bool isValidFile = false;
+
+                foreach (string contentType in validContentTypes)
+                {
+                    if (contentType.Contains(PlayerPhoto.PostedFile.ContentType))
+                    {
+                        // valid content type
+                        isValidFile = true;
+                        
+                        // break
+                        break;
+                    }
+                }
+
+                // valid upload image
+                if (isValidFile)
+                {
+                    // get upload paths
+                    string uploadPath = Server.MapPath("~/Uploads/");
+                    string fullUploadPath = uploadPath + Path.GetFileName(PlayerPhoto.FileName);
+
+                    // save file in upload dir
+                    PlayerPhoto.SaveAs(fullUploadPath);
+
+                    // send to cloudinary
+                    string cloudinaryUrl = ConfigurationManager.AppSettings.Get("CLOUDINARY_URL");
+
+                    Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
+
+                    CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams() {
+                        File = new CloudinaryDotNet.Actions.FileDescription(fullUploadPath)
+                    };
+
+                    CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams);
+
+                    string image_url = cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
+
+                    if (!string.IsNullOrEmpty(image_url))
+                    {
+                        photoUrl = image_url;
+                    }
+                }
+            }
+
             // new player
-            Player player = wizWS.UpdatePlayer(0, PlayerName.Text.Trim(), PlayerPhoto.FileName, UserSession.UserId);
+            Player player = wizWS.UpdatePlayer(0, PlayerName.Text.Trim(), photoUrl, UserSession.UserId);
 
             // validate
             if(player != null && player.PlayerId > 0) 

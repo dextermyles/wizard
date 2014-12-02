@@ -1,4 +1,2 @@
 wizard
 ======
-
-Wizard score card

@@ -54,11 +54,13 @@ namespace WizardGame.Helpers
             cardList = null;
         }
 
-        public void PlayCard(Card _card)
+        public Card PlayCard(Card _card)
         {
             // validation
             if (Cards == null)
-                return;
+                return null; ;
+
+            Card returnCard = null;
 
             // card list
             List<Card> cardList = Cards.ToList();
@@ -72,7 +74,11 @@ namespace WizardGame.Helpers
                 Card card = Cards[i];
 
                 if (card.Value == _card.Value && card.Suit == _card.Suit)
+                {
+                    returnCard = card;
+
                     cardList.Remove(card);
+                }    
             }
 
             // get array from list
@@ -80,6 +86,9 @@ namespace WizardGame.Helpers
 
             // clear list
             cardList = null;
+
+            // return played card
+            return returnCard;
         }
     }
 }
