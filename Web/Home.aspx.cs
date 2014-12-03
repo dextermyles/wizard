@@ -110,7 +110,17 @@ namespace WizardGame
                     html.AppendLine("<td>" + gameLobby.Name.Trim() + "</td>");
                     html.AppendLine("<td style='text-align:center;'>" + hostName + "</td>");
                     html.AppendLine("<td style='text-align:center;'>" + gameLobby.NumPlayersInLobby + " / " + gameLobby.MaxPlayers + "</td>");
-                    html.AppendLine("<td style='text-align:center;'><a href='GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "' class='label label-info'>Join</a></td>");
+
+                    // show join link if player record exists
+                    if (UserPlayers.Length > 0)
+                    {
+                        html.AppendLine("<td style='text-align:center;'><a href='GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "' class='label label-info'>Join</a></td>");
+                    }
+                    else
+                    {
+                        html.AppendLine("<td style='text-align:center;'><a class='label label-danger' onclick='alert(\"You must create a player before joining a game!\");'>Join</a></td>");
+                    }
+                    
                     html.AppendLine("</tr>");
                 }
             }
@@ -161,20 +171,25 @@ namespace WizardGame
                 {
                     // get upload paths
                     string uploadPath = Server.MapPath("~/Uploads/");
-                    string fullUploadPath = uploadPath + Path.GetFileName(PlayerPhoto.FileName);
+                    string fileName = Path.GetFileName(PlayerPhoto.FileName);
 
-                    // save file in upload dir
-                    PlayerPhoto.SaveAs(fullUploadPath);
+                    // get upload bytes
+                    var uploadBytes = PlayerPhoto.FileBytes;
+
+                    // convert bytes to stream
+                    Stream uploadStream = new MemoryStream(uploadBytes);
 
                     // send to cloudinary
                     string cloudinaryUrl = ConfigurationManager.AppSettings.Get("CLOUDINARY_URL");
 
                     Cloudinary cloudinary = new Cloudinary(cloudinaryUrl);
 
-                    CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams() {
-                        File = new CloudinaryDotNet.Actions.FileDescription(fullUploadPath)
+                    CloudinaryDotNet.Actions.ImageUploadParams uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams()
+                    {
+                        File = new CloudinaryDotNet.Actions.FileDescription(fileName, uploadStream)
                     };
 
+                    // upload results
                     CloudinaryDotNet.Actions.ImageUploadResult uploadResult = cloudinary.Upload(uploadParams);
 
                     string image_url = cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));

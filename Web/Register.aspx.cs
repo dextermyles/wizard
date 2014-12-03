@@ -22,12 +22,46 @@ namespace WizardGame
         protected void btnRegister_Click(object sender, EventArgs e)
         {
             // get post vars
-            string strUsername = txtUsername.Value;
-            string strEmailAddress = txtEmailAddress.Value;
-            string strPassword = txtPassword.Value;
+            string strUsername = Functions.CleanInput(txtUsername.Value);
+            string strEmailAddress = Functions.CleanInput(txtEmailAddress.Value);
+            string strPassword = Functions.CleanInput(txtPassword.Value);
+
+            // validate username
+            if (strUsername != txtUsername.Value)
+            {
+                // display error
+                MessageBox.Visible = true;
+                MessageBoxText.InnerHtml = "<strong>Error</strong>: Username contains invalid characters. They have been removed.";
+
+                txtUsername.Value = strUsername;
+
+                return;
+            }
+
+            // validate email
+            if (strEmailAddress != txtEmailAddress.Value)
+            {
+                // display error
+                MessageBox.Visible = true;
+                MessageBoxText.InnerHtml = "<strong>Error</strong>: Email contains invalid characters. They have been removed.";
+
+                txtEmailAddress.Value = strEmailAddress;
+
+                return;
+            }
+
+            // validate password
+            if (strPassword != txtPassword.Value)
+            {
+                // display error
+                MessageBox.Visible = true;
+                MessageBoxText.InnerHtml = "<strong>Error</strong>: Password contains invalid characters.";
+
+                return;
+            }
 
             // create new user
-            var createResult = wizWS.NewUser(strUsername.ToLower().Trim(), strPassword.Trim(), strEmailAddress.ToLower().Trim(), true);
+            var createResult = wizWS.NewUser(strUsername, strPassword, strEmailAddress, true);
 
             // validate
             if (createResult != null && createResult.Result)

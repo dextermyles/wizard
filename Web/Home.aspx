@@ -25,7 +25,7 @@
                     <% if (UserPlayers != null && UserPlayers.Length == 0)
                        { %>
                     <li class="list-group-item">
-                        <button class="btn btn-lg btn-default btn-block" data-toggle="modal" data-target="#newPlayerModal" onclick="return false;">
+                        <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#newPlayerModal" onclick="return false;">
                             Create your Player
                         </button>
                     </li>
@@ -35,11 +35,13 @@
                             Host Game
                         </a>
                     </li>
+                    <!--
                     <li class="list-group-item">
                         <a class="btn btn-lg btn-default btn-block" href="AvailableGames.aspx">
                             Join Game
                         </a>
                     </li>
+                    -->
                 </ul>
             </div>
         </div>
@@ -106,6 +108,7 @@
                         <label for="recipient-name" class="control-label">Name</label>
                         <asp:TextBox ID="PlayerName" CssClass="form-control" runat="server" />
                     </div>
+                    <!--
                     <div class="form-group">
                         <label for="message-text" class="control-label">Voice pack</label>
                         <asp:DropDownList ID="VoicePackList" runat="server" CssClass="form-control">
@@ -116,6 +119,7 @@
                             <asp:ListItem Text="Tony" Value="tony"></asp:ListItem>
                         </asp:DropDownList>
                     </div>
+                    -->
                     <div class="form-group">
                         <label for="message-text" class="control-label">Photo</label>
                         <asp:FileUpload ID="PlayerPhoto" CssClass="form-control" runat="server" />

@@ -87,12 +87,12 @@ namespace WizardGame
                 if (gp != null && gp.GamePlayersId > 0)
                 {
                     // call playerJoinedLobby on client
-                    Clients.Group(groupNameId).playerReconnected(playerId, player.Name, connectionId);
+                    Clients.Group(groupNameId).playerReconnected(player);
                 }
                 else
                 {
                     // call playerJoinedLobby on client
-                    Clients.Group(groupNameId).playerJoinedGame(playerId, player.Name, connectionId);
+                    Clients.Group(groupNameId).playerJoinedGame(player);
                 }
 
                 // add player to game lobby

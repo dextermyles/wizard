@@ -4,11 +4,28 @@ using System.Linq;
 using System.Web;
 using WizardGame.Services;
 using WizardGame.Helpers;
+using System.Text.RegularExpressions;
 
 namespace WizardGame.Helpers
 {
     public static class Functions
     {
+        public static string CleanInput(string strIn)
+        {
+            // Replace invalid characters with empty strings. 
+            try
+            {
+                return Regex.Replace(strIn, @"[^\w\.@-]", "",
+                                     RegexOptions.None, TimeSpan.FromSeconds(1.5));
+            }
+            // If we timeout when replacing invalid characters,  
+            // we should return Empty. 
+            catch (RegexMatchTimeoutException)
+            {
+                return String.Empty;
+            }
+        }
+
         public static Session GetSessionFromCookie()
         {
             // session

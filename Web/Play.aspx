@@ -2,6 +2,10 @@
 
 <asp:Content ID="ContentHead" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
+        // playertracker
+        var numPlayersConnected = 0;
+        var numPlayersExpected = parseInt('<%= Players.Length %>');
+
         // current player object
         var currentPlayer = new function () {
             this.PlayerId = 0,
@@ -182,10 +186,21 @@
          *******************************************/
 
         // playerJoinedLobby
-        hub.client.playerJoinedGame = function (playerId, playerName, playerConnectionId) {
+        hub.client.playerJoinedGame = function (_player) {
             // chat message player joined
-            appendChatMessage(playerName, "Joined the game lobby.")
+            appendChatMessage(_player.Name, "Joined the game lobby.")
         };
+
+        // player reconnected
+        hub.client.playerReconnected = function playerReconnected(_player) {
+        };
+
+        hub.client.playerTimedOut = function playerTimedOut(_player) {
+            // broadcast
+            appendChatMessage("Server", _player.Name + " timed out.");
+        };
+
+        
 
         // receiveChatMessage
         hub.client.receiveChatMessage = function receiveChatMessage(playerName, message) {
@@ -205,10 +220,7 @@
             processGameData(gameData);
         };
 
-        hub.client.playerTimedOut = function playerTimedOut(_player) {
-            // broadcast
-            appendChatMessage("Server", _player.Name + " timed out.");
-        };
+        
 
         // receiveBid
         hub.client.receiveBid = function receiveBid(_player, bid, gameData) {
@@ -261,11 +273,40 @@
         };
 
         // cardPlayed
-        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, scoreHistory, gameData) {
+        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, scoreHistoryArray, gameData) {
             // update last game state
             lastGameState = gameData.GameStateData;
 
             console.log("-- card played | isTurnEnded: " + isTurnEnded + " | isRoundOver: " + isRoundOver);
+
+            if(scoreHistoryArray != null)
+            {
+                console.log("score history:");
+                console.log(scoreHistoryArray);
+
+                // show point animations
+                for(var x = 0; x < scoreHistoryArray.length; x++) {
+                    // get score data
+                    var scoreHistory = scoreHistoryArray[x];
+                    var playerScore = scoreHistory.Score;
+
+                    // get player div
+                    var $playerDiv = getPlayerDivByPlayerId(scoreHistory.PlayerId);
+
+                    // html
+                    var score_html = "<label class='score-reporter label label-info'>" + playerScore + "</label>";
+
+                    // append html to player-score
+                    $playerDiv.find(".player-score").append(score_html);
+                }
+
+                // animate
+                $(".score-reporter").animate({
+                    top: "-=60px"
+                }, 3000, function() {
+                    $(this).remove();
+                });
+            }
 
             // animate card played
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
@@ -566,26 +607,32 @@
                 }
 
                 // update player name
-                $playerDiv.find(".player-name").html(player.Name);
+                var playerName = player.Name;
 
-                if(player.IsDealer) {
-                    $playerDiv.find(".player-name").prepend("<span class='glyphicon glyphicon-home'></span> ");
-                }
+                if(playerName.length > 12)
+                    playerName = playerName.substring(0,11);
 
-                $playerDiv.find(".player-score").html(player.Score + " points");
-                $playerDiv.find(".tricks-bid").html(player.Bid);
-                $playerDiv.find(".tricks-taken").html(player.TricksTaken);
+                $playerDiv.find(".player-name").html(playerName);
 
                 // update profile pic
                 if(player.PictureURL != null && (player.PictureURL.indexOf("http") > -1)) {
                     $playerDiv.find(".profile-pic").attr("src", player.PictureURL);
                 }
 
-                // remove labels
-                $playerDiv.find(".player-name").removeClass("active");
+                // update stats
+                $playerDiv.find(".player-score").html(player.Score + " points");
+                $playerDiv.find(".tricks-bid").html(player.Bid);
+                $playerDiv.find(".tricks-taken").html(player.TricksTaken);
+
+                // remove any existing classes
+                $playerDiv.find(".player-name").removeClass("active dealer");
+
+                if(player.IsDealer) {
+                    $playerDiv.find(".player-name").addClass("dealer");
+                }
 
                 // add special label for players turn
-                if(player.IsTurn && (currentPlayer.PlayerId != player.PlayerId)) {
+                if(player.IsTurn) {
                     // change background of player name when its their turn
                     $playerDiv.find(".player-name").addClass("active");
 
@@ -607,8 +654,11 @@
                             message = player.Name + "'s turn!";
                         }
 
-                        // announce via tool tip
-                        showToolTip($playerDiv, message);
+                        // only show tool tip for other players (not current player)
+                        if(player.PlayerId != currentPlayer.PlayerId) {
+                            // announce via tool tip
+                            showToolTip($playerDiv, message);
+                        }
 
                         // announce to chat window
                         appendChatMessage("Server", message);
@@ -707,12 +757,13 @@
             // player names
             for(var i = 0; i < lastGameState.Players.length; i ++) {
                 var is_player_class = '';
-
-                if(currentPlayer.PlayerId == lastGameState.Players[i].PlayerId) {
+                var player = lastGameState.Players[i];
+                
+                if(currentPlayer.PlayerId == player.PlayerId) {
                     is_player_class = 'info';
                 }
 
-                playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + lastGameState.Players[i].Name + " (" + lastGameState.Players[i].Score + ")</th>";
+                playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
             }
             
             playerBidsHtml += "</tr>";
@@ -737,6 +788,8 @@
             return playerBidsHtml;
         }
 
+        var isSelectingBid = false;
+
         // select bid
         function selectBid(round) {
             // validate
@@ -745,6 +798,13 @@
 
                 return false;
             }
+
+            // check if window open already
+            if(isSelectingBid)
+                return;
+
+            // update flag
+            isSelectingBid = true;
 
             console.log("selecting bid");
 
@@ -774,6 +834,8 @@
             $('#selectBidModal').modal('show');
         };
 
+        var isSelectingCard = false;
+
         // select card to play
         function selectCard() {
             // validate
@@ -782,6 +844,13 @@
 
                 return false;
             }
+
+            // check if already selecting card
+            if(isSelectingCard)
+                return;
+
+            // update flag
+            isSelectingCard = true;
 
             console.log("selecting card to play");
 
@@ -808,6 +877,8 @@
             $('#selectCardModal').modal('show');
         };
 
+        var isSelectingTrump = false;
+
         function selectTrump() {
             // validate
             if(!currentPlayer.IsTurn) {
@@ -822,6 +893,13 @@
 
                 return;
             }
+
+            // check if already selecting trump
+            if(isSelectingTrump)
+                return;
+
+            // update trump
+            isSelectingTrump = true;
 
             // show select trump modal
             $('#selectTrumpModal').modal('show');
@@ -842,8 +920,13 @@
             }
 
             if(bidValue != null && bidValue != NaN) {
+                // hide modal
                 $('#selectBidModal').modal('hide');
 
+                // update flag
+                isSelectingBid = false;
+
+                // send msg to server
                 if(isConnected) {
                     logMessage("-- enter bid --");
 
@@ -906,10 +989,15 @@
                 }
             }
             
+            // hide modal
             $('#selectCardModal').modal('hide');
+
+            // update flag
+            isSelectingCard = false;
 
             logMessage("-- selected card: " + cardValue + " of " + getSuitName(cardSuit) + " (" + cardSuit + ")");
 
+            // send data to server
             var cardObject = {
                 OwnerPlayerId: currentPlayer.PlayerId,
                 Suit: cardSuit,
@@ -928,9 +1016,15 @@
                 return;
             }
 
-            if(!game)
+            if(!lastGameState.Status == gameStateStatus.SelectTrump) {
+                return;
+            }
+
             // hide select trump modal
             $('#selectTrumpModal').modal('hide');
+
+            // update flag
+            isSelectingTrump = false;
 
             if(isConnected) {
                 hub.server.setTrump(gameId, currentPlayer.PlayerId, suitId, groupNameId);
