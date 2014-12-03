@@ -398,15 +398,15 @@
 
                     // animate pile if we have a winner
                     if(_playerWinner != null) {
+                        // winner player div
+                        var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
+                        var playerWinnerPosition = $playerWinnerDiv.offset();
+
                         // show tool tip
                         showToolTip($playerWinnerDiv, "I won the trick!");
 
                         // delay card pile animation
                         setTimeout(function() {
-                            // winner player div
-                            var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
-                            var playerWinnerPosition = $playerWinnerDiv.offset();
-
                             // animate card pile to winner
                             $(".cards-played-container .card").each(function(index) {
                                 // card data
@@ -794,7 +794,10 @@
                 updateEmptySeats(numPlayers);
 
                 // deal cards
-                dealCards(lastGameState.Round);
+                drawPlayerCards();
+
+                // start turn
+                startTurn();
             }
         };
 
