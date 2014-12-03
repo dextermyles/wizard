@@ -255,6 +255,12 @@
         hub.client.receiveGameData = function receiveGameData(gameData, isReconnect) {
             // update game data
             processGameData(gameData); 
+
+            // player reconnect
+            if(isReconnect) {
+                // deal cards
+                dealCards(lastGameState.Round);
+            }    
         };
 
         // receiveBid
@@ -340,7 +346,7 @@
                     var score_html = "<label class='score-reporter'>" + playerScore + " points</label>";
 
                     // append html to player-score
-                    $playerDiv.find(".player-score").append(score_html);
+                    $playerDiv.find(".player-name").append(score_html);
                 }
 
                 // animate
@@ -392,7 +398,11 @@
                     $cardsPlayedDiv.append(cardPlayedHtml);
 
                     // update css
-                    $("#card-played").css("position", "inherit");
+                    $("#card-played").css({
+                        'position': 'inherit'
+                    });
+
+                    console.log('#card-played css updated!');
 
                     // animate pile if we have a winner
                     if(_playerWinner != null) {
@@ -449,6 +459,9 @@
                         setTimeout(function() {
                             // update game data
                             processGameData(gameData);
+
+                            // draw cards played
+                            drawCardsPlayed();
 
                             // update player cards
                             drawPlayerCards();
@@ -780,9 +793,6 @@
                 }  
             } 
 
-            // update cards played on table
-            drawCardsPlayed();
-
             // update trump
             updateTrump();
             
@@ -791,11 +801,17 @@
                 // update flag
                 pageJustLoaded = false;
 
+                // update cards played on table
+                drawCardsPlayed();
+
+                // update player cards
+                drawPlayerCards();
+
                 // update empty seats
                 updateEmptySeats(numPlayers);
 
-                // deal cards
-                dealCards(lastGameState.Round);
+                // start turn
+                startTurn();
             }
         };
 
@@ -1054,7 +1070,7 @@
         
         function verifySelectedTrump(suitId) {
             // validate
-            if(!currentPlayer.IsTurn) {
+            if(!currentPlayer.IsDealer) {
                 return;
             }
 
@@ -1322,7 +1338,7 @@
                 }        
                 
                 if(i > 0) {
-                    style = "style='margin-left: -45px'";
+                    style = "style='margin-left: -60px'";
                 }
 
                 if(is_playable) {
@@ -1339,6 +1355,9 @@
                 // if player cant follow suit, all cards are playable
                 $playerCards.find("a").removeClass("unplayable");
             }
+
+            // remove onclick attr
+            $("card-holder .player-cards").removeAttr("onclick");
         }
     </script>
     <!--[if gte IE 9]>
