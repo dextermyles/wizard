@@ -50,6 +50,9 @@ namespace WizardGame
 
                             // remove player from game lobby
                             wizWS.DeletePlayerFromGame(player.PlayerId, game.GameId, string.Empty);
+
+                            // broadcast player timed out
+                            Clients.Group(game.GroupNameId).playerQuit(player);
                         }
                         else
                         {

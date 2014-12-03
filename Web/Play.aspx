@@ -3,7 +3,7 @@
 <asp:Content ID="ContentHead" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         // playertracker
-        var numPlayersConnected = 0;
+        var numPlayersConnected = parseInt('<%= Players.Length %>');
         var numPlayersExpected = parseInt('<%= Players.Length %>');
 
         // current player object
@@ -189,18 +189,52 @@
         hub.client.playerJoinedGame = function (_player) {
             // chat message player joined
             appendChatMessage(_player.Name, "Joined the game lobby.")
+
+            // increment num players connected
+            numPlayersConnected++;
+
+            // validate
+            if(numPlayersConnected > numPlayersExpected)
+                numPlayersConnected = numPlayersExpected;
         };
 
         // player reconnected
         hub.client.playerReconnected = function playerReconnected(_player) {
+            // increment num players connected
+            numPlayersConnected++;
+
+            // validate
+            if(numPlayersConnected > numPlayersExpected)
+                numPlayersConnected = numPlayersExpected;
+
+            if(numPlayersConnected == numPlayersExpected)
+            {
+                // resume game
+            }
+
+            // broadcast
+            appendChatMessage("Server", _player.Name + " reconnected.");
+        };
+
+        hub.client.playerQuit = function playerQuit(_player) {
+            // decrease num players
+            numPlayersConnected--;
+
+            // pause game
+
+            // broadcast
+            appendChatMessage("Server", _player.Name + " quit the game.");
         };
 
         hub.client.playerTimedOut = function playerTimedOut(_player) {
+            // decrease num players
+            numPlayersConnected--;
+
             // broadcast
             appendChatMessage("Server", _player.Name + " timed out.");
-        };
 
-        
+            // pause game
+        };
 
         // receiveChatMessage
         hub.client.receiveChatMessage = function receiveChatMessage(playerName, message) {
@@ -219,8 +253,6 @@
             // update game data
             processGameData(gameData);
         };
-
-        
 
         // receiveBid
         hub.client.receiveBid = function receiveBid(_player, bid, gameData) {
@@ -294,7 +326,7 @@
                     var $playerDiv = getPlayerDivByPlayerId(scoreHistory.PlayerId);
 
                     // html
-                    var score_html = "<label class='score-reporter label label-info'>" + playerScore + "</label>";
+                    var score_html = "<label class='score-reporter'>" + playerScore + "</label>";
 
                     // append html to player-score
                     $playerDiv.find(".player-score").append(score_html);
@@ -302,7 +334,7 @@
 
                 // animate
                 $(".score-reporter").animate({
-                    top: "-=60px"
+                    top: "-=30px"
                 }, 3000, function() {
                     $(this).remove();
                 });
@@ -671,6 +703,7 @@
                 $playerDiv = $("#position-" + (i + 1)); 
                 $playerDiv.find(".player-name").html('Empty seat');
                 $playerDiv.css('opacity', '0.15');
+                $playerDiv.children().css('opacity', '0.15');
             };
 
             // update trump
@@ -1101,11 +1134,11 @@
             // dealer data
             var dealerIndex = lastGameState.DealerPositionIndex;
             var $dealerDiv = $("#position-" + (dealerIndex + 1));
-            var dealerPosition = $dealerDiv.offset();
+            var dealerPosition = $dealerDiv.find(".player-profile-image").offset();
 
             // offset position
-            dealerPosition.left = (dealerPosition.left + ($dealerDiv.width() / 2));
-            dealerPosition.top = (dealerPosition.top - 20);
+            dealerPosition.left = (dealerPosition.left);
+            dealerPosition.top = (dealerPosition.top);
 
             // validate
             if(numCardsToDeal < 0)
@@ -1129,7 +1162,7 @@
                     .animate({
                         left: trumpPosition.left + 'px',
                         top: trumpPosition.top + 'px',
-                    }, 1000, function() {
+                    }, 250, function() {
                         // update trump card
                         updateTrumpCardGraphic(trumpCard);
 
@@ -1166,7 +1199,7 @@
                 .animate({
                     left: targetPosition.left + 'px',
                     top: targetPosition.top + 'px'
-                }, 250, function() {
+                }, 100, function() {
                     // amimation comete - deal next card
                     dealRemainingCards();
                 });
@@ -1449,6 +1482,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="waiting-for-players-message" style="display: none;">
+        <span>Waiting for player(s) to reconnect!</span>
     </div>
     <div class="offline-message" style="display: none;">
         <input type="button" id="btnReconnect" onclick="reconnect();" value="Reconnect" class="btn btn-primary btn-block" style="height: 50%;" />
