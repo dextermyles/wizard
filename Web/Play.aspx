@@ -8,10 +8,10 @@
             this.Name = "",
             this.PictureURL = "",
             this.UserId = 0,
-            this.ConnectionId = ""
+            this.ConnectionId = "",
             this.IsTurn = false,
             this.IsDealer = false,
-            this.IsLastToAct = false
+            this.IsLastToAct = false,
             this.Score = 0;
         };
 
@@ -309,7 +309,7 @@
                     console.log("animation complete | isRoundOver: " + isRoundOver + " | isTurnEnded: " + isTurnEnded);
 
                     // animate pile
-                    if(isTurnEnded) {
+                    if(isTurnEnded && _playerWinner != null) {
                         // winner player div
                         var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
                         var playerWinnerPosition = $playerWinnerDiv.offset();
@@ -928,6 +928,7 @@
                 return;
             }
 
+            if(!game)
             // hide select trump modal
             $('#selectTrumpModal').modal('hide');
 
@@ -948,14 +949,17 @@
                     selectTrump();
                 }
                 // enter bid
-                if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
                     // select bid
                     selectBid(lastGameState.Round); 
                 }
                 // play card
-                if(lastGameState.Status == gameStateStatus.RoundInProgress) {
+                else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
                     // select card to play
                     selectCard();
+                }
+                else {
+                    console.log("-- wait your turn");
                 }
             }
         };
