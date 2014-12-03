@@ -253,11 +253,6 @@
 
         // receiveGameData
         hub.client.receiveGameData = function receiveGameData(gameData, isReconnect) {
-            // player reconnected
-            if(isReconnect != null && isReconnect) {
-                pageJustLoaded = true;
-            }
-
             // update game data
             processGameData(gameData); 
         };
@@ -352,7 +347,7 @@
                 $(".score-reporter").animate({
                     'top': "-=30px",
                     'background-color': "#ff0000",
-                    'opacity': '0.5'
+                    'opacity': '0'
                 }, 3000, function() {
                     $(this).remove();
                 });
@@ -800,10 +795,7 @@
                 updateEmptySeats(numPlayers);
 
                 // deal cards
-                drawPlayerCards();
-
-                // start turn
-                startTurn();
+                dealCards(lastGameState.Round);
             }
         };
 
@@ -1013,6 +1005,7 @@
 
             var suitToFollow = lastGameState.SuitToFollow;
             var $card = $(selectedCard);
+            var cardId = $card.attr("id");   
             var cardSuit = parseInt($card.attr("suit"));
             var cardValue = parseInt($card.attr("value"));
 
@@ -1047,6 +1040,7 @@
 
             // send data to server
             var cardObject = {
+                Id: cardId,
                 OwnerPlayerId: currentPlayer.PlayerId,
                 Suit: cardSuit,
                 Value: cardValue

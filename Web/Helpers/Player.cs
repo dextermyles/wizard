@@ -73,7 +73,7 @@ namespace WizardGame.Helpers
             {
                 Card card = Cards[i];
 
-                if (card.Value == _card.Value && card.Suit == _card.Suit)
+                if (card.Id == _card.Id)
                 {
                     returnCard = card;
 

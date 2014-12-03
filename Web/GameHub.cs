@@ -194,7 +194,15 @@ namespace WizardGame
             Player playerWinner = null;
 
             // play card
-            gameState.PlayCard(player.PlayerId, card);
+            bool cardPlayedResult = gameState.PlayCard(player.PlayerId, card);
+
+            if (!cardPlayedResult)
+            {
+                // broadcast game data
+                Clients.Caller.receiveGameData(game, false);
+
+                return;
+            }
 
             // check if turns ended
             bool IsTurnEnded = (gameState.Status == GameStateStatus.TurnEnded);

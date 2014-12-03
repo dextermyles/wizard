@@ -113,7 +113,7 @@ namespace WizardGame.Helpers
             return true;
         }
 
-        public void PlayCard(int playerId, Card card)
+        public bool PlayCard(int playerId, Card card)
         {
             // get player object
             Player player = Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
@@ -122,7 +122,10 @@ namespace WizardGame.Helpers
             if (player != null && player.PlayerId > 0)
             {
                 // play card
-                player.PlayCard(card);
+                Card playedCard = player.PlayCard(card);
+
+                if(playedCard == null)
+                    return false;
 
                 // update turn flag
                 player.IsTurn = false;
@@ -172,6 +175,8 @@ namespace WizardGame.Helpers
                 // clear list
                 cardsPlayedList = null;
             }
+
+            return true;
         }
 
         public void EnterBid(int playerId, int bid)
