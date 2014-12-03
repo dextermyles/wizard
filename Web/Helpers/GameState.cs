@@ -132,7 +132,8 @@ namespace WizardGame.Helpers
                     new List<Card>() : CardsPlayed.ToList();
 
                 // if first card played, update suit to follow
-                if (card.Suit != Suit.Fluff && (SuitToFollow == Suit.None || cardsPlayedList.Count == 0))
+                if ((card.Suit != Suit.Fluff  || card.Suit != Suit.Wizard)
+                    && (SuitToFollow == Suit.None || cardsPlayedList.Count == 0))
                 {
                     SuitToFollow = card.Suit;
                 }

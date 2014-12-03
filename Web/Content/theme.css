@@ -121,7 +121,7 @@ body {
 }
 
     .player-container > .player-details {
-        width: 96px;
+        width: 95px;
         position: absolute;
         color: #fff;
     }
@@ -132,17 +132,16 @@ body {
         border-left: 1px solid #7E7E7E;
     }
 
-    .player-container > .player-profile-image .profile-pic {
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-        border-left: 1px solid #000;
-    }
+        .player-container > .player-profile-image .profile-pic {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border-left: 1px solid #000;
+        }
 
     .player-container > .player-details .player-name {
-        background-color:#222;
+        background-color: #222;
         border-top-left-radius: 10px;
         border-bottom: 1px solid #000;
-
         color: #fff;
         font-weight: bold;
         font-size: 14px;
@@ -150,29 +149,44 @@ body {
         overflow: hidden;
     }
 
-    .player-container > .player-details .player-name.active {
-        background-color:#0f0 !important;
-        border-top-left-radius: 10px;
-        border-bottom: 1px solid #000;
-        color: #000 !important;
+        .player-container > .player-details .player-name.active {
+            background-color: #0f0 !important;
+            border-top-left-radius: 10px;
+            border-bottom: 1px solid #000;
+            color: #000 !important;
+        }
+
+        .player-container > .player-details .player-name.dealer {
+            background-color: #007aff;
+            border-top-left-radius: 10px;
+            border-bottom: 1px solid #000;
+            color: #000 !important;
+        }
+
+.score-reporter {
+    border-radius: 2px;
+    position: absolute;
+    z-index: 1000;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #fff200;
+    color: #000;
+}
+
+.player-cards a.unplayable { }
+    .player-cards a img {
+        position: relative;
     }
 
-    .player-container > .player-details .player-name.dealer {
-        background-color:#007aff;
-        border-top-left-radius: 10px;
-        border-bottom: 1px solid #000;
-        color: #000 !important;
+    .player-cards a.unplayable {
+        position: relative;
     }
 
-    .score-reporter {
-        border-radius: 2px;
-        position: absolute;
-        z-index: 1000;
-        padding: 4px 10px;
-        font-size: 14px;
-        font-weight: bold;
-        background-color: #fff200;
-        color: #000;
+    .player-cards a.unplayable img {
+        opacity: 0.25;
+        border: 1px solid #818181;
+        margin-bottom: -10px;
     }
 
 .well {

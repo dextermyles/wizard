@@ -320,6 +320,9 @@
             // update game state
             updateGameState(gameData.GameStateData);
 
+            // update player cards
+            drawPlayerCards();
+
             // if score history passed
             if(scoreHistoryArray != null)
             {
@@ -344,8 +347,9 @@
 
                 // animate
                 $(".score-reporter").animate({
-                    top: "-=30px",
-                    color: "#ff0000"
+                    'top': "-=30px",
+                    'background-color': "#ff0000",
+                    'opacity': '0.5'
                 }, 3000, function() {
                     $(this).remove();
                 });
@@ -367,7 +371,9 @@
             console.log(_player);
 
             // spawn card
-            $("body").append("<img id='card-played' src='" + cardPlayedFilename + "' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;' class='card' />");  
+            var cardPlayedHtml = "<a><img id='card-played' src='" + cardPlayedFilename + "' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;' class='card' /></a>";
+            
+            $("body").append(cardPlayedHtml);  
             
             console.log("spawned played card");
             console.log("animating played card to: left: " + targetLeft + " top: " + targetTop);
@@ -381,87 +387,77 @@
                 }, 
                 500, 
                 function() {
-                    // save html
-                    var cardPlayedHtml = $("#card-played").get(0);
-
-                    // append new card to pile
-                    $(".cards-played").append(cardPlayedHtml);
-
                     // remove initial spawned card
                     $("#card-played").remove();
 
-                    console.log("animation complete | isRoundOver: " + isRoundOver + " | isTurnEnded: " + isTurnEnded);
+                    // append card played to container
+                    $cardsPlayedDiv.append(cardPlayedHtml);
 
-                    // animate pile
-                    if(isTurnEnded && _playerWinner != null) {
-                        // winner player div
-                        var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
-                        var playerWinnerPosition = $playerWinnerDiv.offset();
+                    // update css
+                    $("#card-played").css("position", "inherit");
 
-                        // animate card pile to winner
-                        $(".cards-played-container .card").each(function(index) {
-                            // card data
-                            var $card = $(this);
-
-                            // get card position
-                            var cardPosition = {
-                                left: $card.offset().left,
-                                top: $card.offset().top
-                            };
-
-                            console.log(cardPosition);
-
-                            // update card css
-                            $card.css({
-                                position: 'absolute',
-                                left: cardPosition.left + 'px',
-                                top: cardPosition.top + 'px'
-                            });
-
-                            console.log("animating card: " + $card + " to winner");
-
-                            $card.animate({
-                                left: playerWinnerPosition.left + 'px',
-                                top: playerWinnerPosition.top + 'px'
-                            }, 1000, function() {
-                                $(this).remove();
-                            });
-                        });
-
+                    // animate pile if we have a winner
+                    if(_playerWinner != null) {
                         // show tool tip
                         showToolTip($playerWinnerDiv, "I won the trick!");
+
+                        // delay card pile animation
+                        setTimeout(function() {
+                            // winner player div
+                            var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
+                            var playerWinnerPosition = $playerWinnerDiv.offset();
+
+                            // animate card pile to winner
+                            $(".cards-played-container .card").each(function(index) {
+                                // card data
+                                var $card = $(this);
+
+                                // get card position
+                                var cardPosition = {
+                                    left: $card.offset().left,
+                                    top: $card.offset().top
+                                };
+
+                                // update card css
+                                $card.css({
+                                    position: 'absolute',
+                                    left: cardPosition.left + 'px',
+                                    top: cardPosition.top + 'px'
+                                });
+
+                                $card.animate({
+                                    left: playerWinnerPosition.left + 'px',
+                                    top: playerWinnerPosition.top + 'px'
+                                }, 1000, function() {
+                                    $(this).remove();
+                                });
+                            });
+                        }, 1000); 
                     }
 
                     // round ended
                     if(isRoundOver) {
-                        // delay card deal
+                        // delay turn start
                         setTimeout(function() {
                             // update game data
                             processGameData(gameData);
 
                             // deal cards
-                            dealCards(lastGameState.Round);
-                        }, 2000);   
+                            dealCards(lastGameState.Round); 
+                        }, 1500); 
                     }
-                    else if(isTurnEnded) {
-                        // delay card deal
+                    else {
+                        // delay turn start
                         setTimeout(function() {
                             // update game data
                             processGameData(gameData);
 
-                            // winning player leads next card
-                            startTurn();
-                        }, 2000); 
-                    }
-                    else {
-                        // update game data
-                        processGameData(gameData);
+                            // update player cards
+                            drawPlayerCards();
 
-                        // delay turn start
-                        setTimeout(function() {
                             // announce next players turn to act
                             startTurn();
-                        }, 2000);
+                        }, 1500);
                     }
                 });
         };
@@ -936,13 +932,12 @@
 
         function selectTrump() {
             // validate
-            if(!currentPlayer.IsTurn) {
-                logMessage("-- you must wait your turn --");
+            if(!currentPlayer.IsDealer) {
+                logMessage("-- only the dealer can choose trump --");
 
                 return;
             }
                 
-
             if(lastGameState.Status != gameStateStatus.SelectTrump) {
                 logMessage("-- you cant select trump right now --");
 
@@ -1016,8 +1011,6 @@
             if(cardSuit != suit.Fluff && cardSuit != suit.Wizard) {
                 // not first to act
                 if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
-                    var suitToFollow = null;
-
                     // if wizard is led, then allow any card to be played
                     if(lastGameState.CardsPlayed[0].Suit != suit.Wizard) {
                         // alert player to follow suit
@@ -1081,26 +1074,23 @@
             // log
             logMessage("-- start turn: " + currentPlayer.IsTurn + " --");
 
-            // check if current player turn
-            if(currentPlayer.IsTurn) {
+            // select trump
+            if(lastGameState.Status == gameStateStatus.SelectTrump) {
                 // select trump
-                if(lastGameState.Status == gameStateStatus.SelectTrump) {
-                    // select trump
-                    selectTrump();
-                }
-                // enter bid
-                else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
-                    // select bid
-                    selectBid(lastGameState.Round); 
-                }
-                // play card
-                else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
-                    // select card to play
-                    selectCard();
-                }
-                else {
-                    console.log("-- wait your turn");
-                }
+                selectTrump();
+            }
+            // enter bid
+            else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                // select bid
+                selectBid(lastGameState.Round); 
+            }
+            // play card
+            else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
+                // select card to play
+                selectCard();
+            }
+            else {
+                console.log("-- cant start turn - game state unknown: " + lastGameState.Status);
             }
         };
 
@@ -1188,8 +1178,11 @@
                         // draw player cards
                         drawPlayerCards();
 
-                        // start turn
-                        startTurn();
+                        // delay turn start
+                        setTimeout(function() {
+                            // start turn
+                            startTurn();
+                        }, 2000);
                     });
 
                 return;
@@ -1235,8 +1228,35 @@
 
             console.log("clearing player cards in hand");
 
+            // is player able to follow suit
+            var canPlayerFollowSuit = false;
+            var player;
+            var i;
+            var card;
+
+            // player is not first to act - check if we can follow suit
+            if(lastGameState.SuitToFollow != suit.None 
+                && lastGameState.CardsPlayed != null 
+                && lastGameState.CardsPlayed.length > 0) {
+                // loop through player cards
+                for(i = 0; i < currentPlayer.Cards.length; i++) {
+                    if(lastGameState.SuitToFollow != null) {
+                        // card ref
+                        card = currentPlayer.Cards[i];
+                    
+                        // check if card can follow suit
+                        if(card.Suit == lastGameState.SuitToFollow){
+                            canPlayerFollowSuit = true;
+
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // loop through cards
             for(i = 0; i < currentPlayer.Cards.length; i++) {
-                var card = currentPlayer.Cards[i];
+                card = currentPlayer.Cards[i];
 
                 var suitName = getSuitName(card.Suit);
                 var value = card.Value;
@@ -1245,8 +1265,7 @@
 
                 var style = "";
 
-                if(i > 0)
-                    style = "style='margin-left: -45px'";
+                
 
                 var fullCardName = "";
                 var cardValueName = "";
@@ -1279,30 +1298,43 @@
 
                 var suitToFollow = lastGameState.SuitToFollow;
                 var is_not_playable_class = '';
-                var is_playable = true;
+                var is_playable = false;
 
-                // not first to act
-                if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0)
-                {
-                    // not player fluff or wizard
-                    if(card.Suit != suit.Fluff && card.suit != suit.Wizard) {
-                        // not playable
-                        if(card.Suit != suitToFollow) {
-                            is_playable = false;
-                        }
+                // player is able to follow suit from previous check
+                if(canPlayerFollowSuit) {
+                    // wizards and fluffs are playable
+                    if(card.Suit == suit.Wizard || card.Suit == suit.Fluff) {
+                        is_playable = true;
                     }
+                    else {
+                        // found playable card
+                        if(card.Suit == lastGameState.SuitToFollow) {
+                            is_playable = true;
+                        }
+                    }  
                 }
-               
+                else {
+                    // player cant follow suit - card is playable
+                    is_playable = true;
+                }        
+                
+                if(i > 0) {
+                    style = "style='margin-left: -45px'";
+                }
+
                 if(is_playable) {
                     // card is playable
                     $playerCards.append("<a onclick='verifySelectedCard(this);' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "' " + style + " title='" + fullCardName + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
                 }
-                else
-                {
+                else {
                     // card is not playable
-                    $playerCards.append("<a title='" + fullCardName + "' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
+                    $playerCards.append("<a title='" + fullCardName + "' class='unplayable'" + style + "><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
                 }
-                
+            }
+
+            if(!canPlayerFollowSuit) {
+                // if player cant follow suit, all cards are playable
+                $playerCards.find("a").removeClass("unplayable");
             }
         }
     </script>
