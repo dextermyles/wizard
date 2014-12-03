@@ -132,7 +132,7 @@
             isConnected = true;
 
             // tell server we are joining the lobby
-            joinGame(currentPlayer.PlayerId, groupNameId);
+            joinGame(currentPlayer.PlayerId, groupNameId, false);
 
             // append chat message
             appendChatMessage("Server", "Connected to game lobby!");
@@ -158,7 +158,7 @@
             appendChatMessage("Server", "Reconnected to game lobby.");
 
             // tell server we are joining the lobby
-            joinGame(currentPlayer.PlayerId, groupNameId);
+            joinGame(currentPlayer.PlayerId, groupNameId, true);
 
             // hide offline message
             $(".offline-message").fadeOut("fast");
@@ -252,11 +252,14 @@
         };
 
         // receiveGameData
-        hub.client.receiveGameData = function receiveGameData(gameData) {
-            console.log(gameData);
+        hub.client.receiveGameData = function receiveGameData(gameData, isReconnect) {
+            // player reconnected
+            if(isReconnect != null && isReconnect) {
+                pageJustLoaded = true;
+            }
 
             // update game data
-            processGameData(gameData);
+            processGameData(gameData); 
         };
 
         // receiveBid
@@ -432,7 +435,7 @@
                                     $(this).remove();
                                 });
                             });
-                        }, 1000); 
+                        }, 500); 
                     }
 
                     // round ended
@@ -486,9 +489,9 @@
             $.connection.hub.start().done(onConnectionInit);
         };
 
-        function joinGame(playerId, groupNameId) {
+        function joinGame(playerId, groupNameId, reconnected) {
             // call joinGameLobby on server
-            hub.server.joinGame(playerId, gameId, groupNameId)
+            hub.server.joinGame(playerId, gameId, groupNameId, reconnected)
                 .done(function () {
                     logMessage("-- joinGame executed on server --");
                 })
@@ -642,20 +645,23 @@
 
         function updateTrump() {
             // update trump
-            if(lastGameState.SuitToFollow != null) {
+            if(lastGameState.TrumpCard != null) {
                 // determine trump
-                if(lastGameState.SuitToFollow == suit.Fluff) {
+                if(lastGameState.TrumpCard.Suit == suit.Fluff) {
                     $(".trump").html("None");
                 }
-                else if(lastGameState.SuitToFollow == suit.Wizard) {
+                else if(lastGameState.TrumpCard.Suit == suit.Wizard) {
                     // update trump value
                     $(".trump").html("Being chosen");
                 }
                 else {
                     // update trump value
-                    $(".trump").html(getSuitName(lastGameState.SuitToFollow));
+                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit));
                 } 
             }
+
+            // update trump graphic
+            updateTrumpCardGraphic(lastGameState.TrumpCard);
         };
 
         function updateEmptySeats(numPlayers) {

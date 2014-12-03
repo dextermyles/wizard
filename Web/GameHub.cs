@@ -69,7 +69,7 @@ namespace WizardGame
             return base.OnDisconnected(stopCalled);
         }
 
-        public async Task JoinGame(int playerId, int gameId, string groupNameId)
+        public async Task JoinGame(int playerId, int gameId, string groupNameId, bool reconnected)
         {
             // get connectionId
             string connectionId = Context.ConnectionId;
@@ -109,7 +109,7 @@ namespace WizardGame
                 if (game != null && game.GameId > 0)
                 {
                     // send game data
-                    Clients.Caller.receiveGameData(game);
+                    Clients.Caller.receiveGameData(game, reconnected);
                 } 
             }
         }
