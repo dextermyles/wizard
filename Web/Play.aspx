@@ -33,6 +33,7 @@
 
         // card suits
         var suit = {
+            None: -1,
             Spades: 0,
             Hearts: 1,
             Clubs: 2,
@@ -44,6 +45,8 @@
         // get suit name by value/id
         function getSuitName(suitId) {
             switch(suitId) {
+                case suit.None:
+                    return "None";
                 case suit.Spades:
                     return "Spades";
                 case suit.Hearts:
@@ -250,14 +253,18 @@
 
         // receiveGameData
         hub.client.receiveGameData = function receiveGameData(gameData) {
+            console.log(gameData);
+
             // update game data
             processGameData(gameData);
         };
 
         // receiveBid
         hub.client.receiveBid = function receiveBid(_player, bid, gameData) {
-            // update last game state
-            lastGameState = gameData.GameStateData;
+            console.log(gameData);
+
+            // update game state
+            updateGameState(gameData.GameStateData);
 
             // get player div
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
@@ -280,8 +287,10 @@
 
         // trumpUpdated
         hub.client.trumpUpdated = function trumpUpdated(_player, newTrumpCard, gameData) {
-            // update last game state
-            lastGameState = gameData.GameStateData;
+            console.log(gameData);
+
+            // update game state
+            updateGameState(gameData.GameStateData);
 
             // broadcast to chat
             appendChatMessage("Server", _player.Name + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
@@ -306,11 +315,12 @@
 
         // cardPlayed
         hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, scoreHistoryArray, gameData) {
-            // update last game state
-            lastGameState = gameData.GameStateData;
+            console.log(gameData);
 
-            console.log("-- card played | isTurnEnded: " + isTurnEnded + " | isRoundOver: " + isRoundOver);
+            // update game state
+            updateGameState(gameData.GameStateData);
 
+            // if score history passed
             if(scoreHistoryArray != null)
             {
                 console.log("score history:");
@@ -326,7 +336,7 @@
                     var $playerDiv = getPlayerDivByPlayerId(scoreHistory.PlayerId);
 
                     // html
-                    var score_html = "<label class='score-reporter'>" + playerScore + "</label>";
+                    var score_html = "<label class='score-reporter'>" + playerScore + " points</label>";
 
                     // append html to player-score
                     $playerDiv.find(".player-score").append(score_html);
@@ -334,7 +344,8 @@
 
                 // animate
                 $(".score-reporter").animate({
-                    top: "-=30px"
+                    top: "-=30px",
+                    color: "#ff0000"
                 }, 3000, function() {
                     $(this).remove();
                 });
@@ -536,6 +547,9 @@
         };
 
         function showToolTip(target, message) {
+            // destroy any existing tooltips
+            target.tooltip('destroy');
+
             // configure tooltip
             target.tooltip({
                 title: message,
@@ -582,6 +596,85 @@
             return score_total;
         }
 
+        function updateGameState(gameState) {
+            // update game state
+            lastGameState = gameState;
+
+            // players ref
+            var players = lastGameState.Players;
+
+            // update current Player
+            if(lastGameState != null) {
+                // update UI
+                for(i = 0; i < players.length; i++) {
+                    // player container
+                    $playerDiv = $("#position-" + (i+1));
+
+                    // player object
+                    var player = players[i];
+
+                    // update currentPlayer object
+                    if(player.PlayerId == currentPlayer.PlayerId) {
+                        // update current player object
+                        currentPlayer = player;
+                    }
+                }
+            }
+        }
+
+        function drawCardsPlayed() {
+            if(lastGameState != null) {
+                // draw cards played in middle
+                var $cardsPlayed = $(".cards-played");
+
+                // clear cards on table
+                $cardsPlayed.html('');
+
+                if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
+                    for(i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                        var card = lastGameState.CardsPlayed[i];
+                        var suitName = getSuitName(card.Suit);
+                        var value = card.Value;
+                        var ownerPlayerId = card.OwnerPlayerId;
+                        var imageFileName = getCardImagePath(card);
+
+                        $cardsPlayed.append("<a id=\"" + card.Id + "\" suit=\"" + card.Suit + "\" value=\"" + card.Value + "\"><img src=\"" + imageFileName + "\" class='card' /></a>");
+                    }
+                }
+            }
+        };
+
+        function updateTrump() {
+            // update trump
+            if(lastGameState.SuitToFollow != null) {
+                // determine trump
+                if(lastGameState.SuitToFollow == suit.Fluff) {
+                    $(".trump").html("None");
+                }
+                else if(lastGameState.SuitToFollow == suit.Wizard) {
+                    // update trump value
+                    $(".trump").html("Being chosen");
+                }
+                else {
+                    // update trump value
+                    $(".trump").html(getSuitName(lastGameState.SuitToFollow));
+                } 
+            }
+        };
+
+        function updateEmptySeats(numPlayers) {
+            if(numPlayers == null || isNaN(numPlayers))
+                numPlayers = 0;
+
+            // update un-used player containers
+            for(i = numPlayers; i < 6; i++) {
+                $playerDiv = $("#position-" + (i + 1)); 
+                $playerDiv.find(".player-name").html('Empty seat');
+                $playerDiv.css('opacity', '0.15');
+                $playerDiv.children().css('opacity', '0.15');
+            };
+        };
+
         function processGameData(gameData) {
             // log old state
             if(lastGameState != null) {
@@ -590,8 +683,8 @@
                 console.log(lastGameState);
             }
 
-            // update game data
-            lastGameState = gameData.GameStateData;
+            // update game state
+            updateGameState(gameData.GameStateData);
 
             console.log("---------------");
             console.log("new game state:");
@@ -607,8 +700,6 @@
             var lastToActIndex = lastGameState.LastToActIndex;
             var i = 0;
             var numPlayers = 0;
-            var $playerDiv;
-            var player;
 
             // update local variables
             playerList = players;
@@ -627,16 +718,10 @@
                 numPlayers++;
 
                 // player container
-                $playerDiv = $("#position-" + (i+1));
+                var $playerDiv = $("#position-" + (i+1));
 
                 // player object
-                player = players[i];
-
-                // update currentPlayer object
-                if(player.PlayerId == currentPlayer.PlayerId) {
-                    // update current player object
-                    currentPlayer = player;
-                }
+                var player = players[i];
 
                 // update player name
                 var playerName = player.Name;
@@ -698,86 +783,23 @@
                 }  
             } 
 
-            // update un-used player containers
-            for(i = numPlayers; i < 6; i++) {
-                $playerDiv = $("#position-" + (i + 1)); 
-                $playerDiv.find(".player-name").html('Empty seat');
-                $playerDiv.css('opacity', '0.15');
-                $playerDiv.children().css('opacity', '0.15');
-            };
+            // update cards played on table
+            drawCardsPlayed();
 
             // update trump
-            if(lastGameState.TrumpCard != null) {
-                // determine trump
-                if(lastGameState.TrumpCard.Suit == suit.Fluff) {
-                    $(".trump").html("None");
-                }
-                else if(lastGameState.TrumpCard.Suit == suit.Wizard) {
-                    // update trump value
-                    $(".trump").html("Being chosen");
-                }
-                else {
-                    // update trump value
-                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit));
-                } 
-            }
+            updateTrump();
             
-            console.log("clearing cards played");
-
-            // draw cards played in middle
-            var $cardsPlayed = $(".cards-played");
-
-            // clear cards on table
-            $cardsPlayed.html('');
-
-            if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
-                for(i = 0; i < lastGameState.CardsPlayed.length; i++) {
-                    var card = lastGameState.CardsPlayed[i];
-
-                    var suitName = getSuitName(card.Suit);
-                    var value = card.Value;
-                    var ownerPlayerId = card.OwnerPlayerId;
-                    var imageFileName = getCardImagePath(card);
-
-                    $cardsPlayed.append("<a><img src=\"" + imageFileName + "\" class='card' /></a>");
-                }
-            }
-
-            // draw player cards
-            var $playerCards = $(".player-cards");
-
-            // clear existing cards
-            $playerCards.html('');
-
-            console.log("clearing player cards in hand");
-
-            for(i = 0; i < currentPlayer.Cards.length; i++) {
-                var card = currentPlayer.Cards[i];
-
-                var suitName = getSuitName(card.Suit);
-                var value = card.Value;
-                var ownerPlayerId = card.OwnerPlayerId;
-                var imageFileName = getCardImagePath(card);
-
-                var style = "";
-
-                if(i > 0)
-                    style = "style='margin-left: -40px'";
-
-                $playerCards.append("<a onclick='verifySelectedCard(this);' suit='" + card.Suit + "' value='" + card.Value + "' " + style + "><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
-            }
-
             // check if first hand
             if(pageJustLoaded) {
-                // delay start game
-                setTimeout(function() {
-                    // deal cards
-                    dealCards(lastGameState.Round);
-                }, 2000);
-            }
+                // update flag
+                pageJustLoaded = false;
 
-            // turn off flag
-            pageJustLoaded = false;
+                // update empty seats
+                updateEmptySeats(numPlayers);
+
+                // deal cards
+                dealCards(lastGameState.Round);
+            }
         };
 
         function drawPlayerBidsHtml() {
@@ -985,28 +1007,19 @@
                 return;
             }
 
+            var suitToFollow = lastGameState.SuitToFollow;
             var $card = $(selectedCard);
             var cardSuit = parseInt($card.attr("suit"));
             var cardValue = parseInt($card.attr("value"));
 
-            // check that player is following suit (except when playing fluff or wizard)
+            // not player fluff or wizard
             if(cardSuit != suit.Fluff && cardSuit != suit.Wizard) {
+                // not first to act
                 if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
                     var suitToFollow = null;
 
                     // if wizard is led, then allow any card to be played
                     if(lastGameState.CardsPlayed[0].Suit != suit.Wizard) {
-                        // loop through cards played
-                        for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
-                            // get suit to follow from first non fluff card
-                            if(lastGameState.CardsPlayed[i].Suit != suit.Fluff) {
-                                // get suit from first played card
-                                suitToFollow = lastGameState.CardsPlayed[i].Suit;
-
-                                break;
-                            }
-                        }
-
                         // alert player to follow suit
                         if(suitToFollow != null && cardSuit != suitToFollow) {
                             // check that player can follow suit
@@ -1172,6 +1185,9 @@
                         // disable dealing flag
                         isDealing = false;
 
+                        // draw player cards
+                        drawPlayerCards();
+
                         // start turn
                         startTurn();
                     });
@@ -1208,7 +1224,87 @@
             targetPlayerIndex++;
             dealtCardIndex++;
             numCardsToDeal--;
-        };       
+        };  
+        
+        function drawPlayerCards() {
+            // draw player cards
+            var $playerCards = $(".player-cards");
+
+            // clear existing cards
+            $playerCards.html('');
+
+            console.log("clearing player cards in hand");
+
+            for(i = 0; i < currentPlayer.Cards.length; i++) {
+                var card = currentPlayer.Cards[i];
+
+                var suitName = getSuitName(card.Suit);
+                var value = card.Value;
+                var ownerPlayerId = card.OwnerPlayerId;
+                var imageFileName = getCardImagePath(card);
+
+                var style = "";
+
+                if(i > 0)
+                    style = "style='margin-left: -45px'";
+
+                var fullCardName = "";
+                var cardValueName = "";
+
+                if(card.Value == 11) {
+                    cardValueName = "Jack";
+                }
+                else if(card.Value == 12) {
+                    cardValueName = "Queen";
+                }
+                else if(card.Value == 13) {
+                    cardValueName = "King";
+                }
+                else if(card.Value == 14) {
+                    cardValueName = "Ace";
+                }
+                else {
+                    cardValueName = card.Value;
+                }
+
+                if(card.Suit == suit.Wizard) {
+                    fullCardName = "Wizard";
+                }
+                else if(card.Suit == suit.Fluff) {
+                    fullCardName = "Fluff";
+                }
+                else {
+                    fullCardName = cardValueName + " of " + getSuitName(card.Suit);
+                }
+
+                var suitToFollow = lastGameState.SuitToFollow;
+                var is_not_playable_class = '';
+                var is_playable = true;
+
+                // not first to act
+                if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0)
+                {
+                    // not player fluff or wizard
+                    if(card.Suit != suit.Fluff && card.suit != suit.Wizard) {
+                        // not playable
+                        if(card.Suit != suitToFollow) {
+                            is_playable = false;
+                        }
+                    }
+                }
+               
+                if(is_playable) {
+                    // card is playable
+                    $playerCards.append("<a onclick='verifySelectedCard(this);' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "' " + style + " title='" + fullCardName + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
+                }
+                else
+                {
+                    // card is not playable
+                    $playerCards.append("<a title='" + fullCardName + "' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
+                }
+                
+            }
+        }
     </script>
     <!--[if gte IE 9]>
       <style type="text/css">

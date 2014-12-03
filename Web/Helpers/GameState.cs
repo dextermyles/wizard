@@ -131,14 +131,12 @@ namespace WizardGame.Helpers
                 List<Card> cardsPlayedList = (CardsPlayed == null) ? 
                     new List<Card>() : CardsPlayed.ToList();
 
-                // if first card, set trump if not set
-                if (TrumpCard == null)
+                // if first card played, update suit to follow
+                if (card.Suit != Suit.Fluff && (SuitToFollow == Suit.None || cardsPlayedList.Count == 0))
                 {
-                    // set trump if card is not fluff or wizard
-                    if (card.Suit != Suit.Fluff && card.Suit != Suit.Wizard)
-                        TrumpCard = card;
+                    SuitToFollow = card.Suit;
                 }
-                
+                    
                 // add card to played pile
                 cardsPlayedList.Add(card);
 

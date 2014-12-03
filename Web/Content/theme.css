@@ -168,10 +168,11 @@ body {
         border-radius: 2px;
         position: absolute;
         z-index: 1000;
-        padding: 10px 2px;
+        padding: 4px 10px;
         font-size: 14px;
         font-weight: bold;
-        background-color: #00ffef;
+        background-color: #fff200;
+        color: #000;
     }
 
 .well {

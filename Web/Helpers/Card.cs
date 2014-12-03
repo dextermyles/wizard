@@ -7,11 +7,17 @@ namespace WizardGame.Helpers
 {
     public class Card
     {
+        public string Id = string.Empty; // card id
         public Suit Suit = 0;
         public int Value = 0; // 11=JACK,12=QUEEN,13=KING,14=ACE
         public int OwnerPlayerId = 0;
 
         private string image = string.Empty;
+
+        public Card()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
 
         public string GetImagePath()
         {

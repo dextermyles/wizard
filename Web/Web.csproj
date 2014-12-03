@@ -162,7 +162,7 @@
     <Content Include="Assets\Cards\wizard.png" />
     <Content Include="Assets\Table\table-default.png" />
     <Content Include="Assets\Table\table-official.png" />
-    <Content Include="Auto\Cron.aspx" />
+    <Content Include="CronJobs\Cron.aspx" />
     <Content Include="clear_game_data.sql" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -248,11 +248,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Language.resx</DependentUpon>
     </Compile>
-    <Compile Include="Auto\Cron.aspx.cs">
+    <Compile Include="CronJobs\Cron.aspx.cs">
       <DependentUpon>Cron.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Auto\Cron.aspx.designer.cs">
+    <Compile Include="CronJobs\Cron.aspx.designer.cs">
       <DependentUpon>Cron.aspx</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ConnectionState.cs" />
