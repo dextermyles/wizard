@@ -882,17 +882,14 @@
             // generate table html
             var scores_html = "<tr>";
 
-            scores_html += "<th>&nbsp;</th>";
-
-            for(var i = 0; i < lastGameState.Players.left; i++) {
+            for(var i = 0; i < lastGameState.Players.length; i++) {
                 scores_html += "<th>" + lastGameState.Players[i].Name + "</th>";
             }
 
             scores_html += "</tr>";
             scores_html += "<tr>";
-            scores_html += "<td>Score</td>";
 
-            for(var i = 0; i < lastGameState.Players.left; i++) {
+            for(var i = 0; i < lastGameState.Players.length; i++) {
                 scores_html += "<td>" + lastGameState.Players[i].Score + "</td>";
             }
 
@@ -1772,13 +1769,18 @@
                     <h4 class="modal-title" id="gameEndedModalLabel">Game has ended!</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="text-center" style="font-size: 14px;">
+                    <div class="form-group">
                         <h2 style="margin-top: 0px;">Congratulations!</h2>
                         <span class="winner-name">Player</span>
                         won the game with <span class="winner-points">0</span> points!
                     </div>
-                    <table class="final-scores-table">
-                    </table>
+                    <div class="panel panel-default" style="margin-bottom: 0px;">
+                        <div class="panel-heading">
+                            <strong>Final scores</strong>
+                        </div>
+                        <table class="table table-responsive final-scores-table"></table>
+                    </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-lg btn-primary btn-block" onclick="window.location='Home.aspx';">
