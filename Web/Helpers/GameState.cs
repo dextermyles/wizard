@@ -86,12 +86,23 @@ namespace WizardGame.Helpers
                     // add score card entry
                     scoreCard.AddPlayerScore(player.PlayerId, Round, player.Bid, player.TricksTaken);
 
+                    int total_score = 0;
+
                     // add scores from each round to calculate total
-                    int total_score = scoreCard.PlayerScores().Where(p => p.PlayerId == player.PlayerId).Sum(c => c.Score);
+                    for (int x = 0; x < scoreCard.PlayerScores().Length; x++)
+                    {
+                        var playerScore = scoreCard.PlayerScores()[x];
+
+                        if (playerScore.PlayerId == player.PlayerId)
+                        {
+                            total_score += playerScore.Score;
+                        }
+                    }
 
                     // clear entries
                     player.Bid = 0;
                     player.TricksTaken = 0;
+                    player.Score = total_score;
                     player.Score = total_score;
                 }
             }
