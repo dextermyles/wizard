@@ -97,8 +97,9 @@ namespace WizardGame
             StringBuilder html = new StringBuilder();
             GameLobby[] gameLobbies = wizWS.ListAllGameLobbies(false);
 
-            if (gameLobbies != null && gameLobbies.Length > 0)
+            if (gameLobbies != null)
             {
+                // loop through game lobbies
                 for (int i = 0; i < gameLobbies.Length; i++)
                 {
                     GameLobby gameLobby = gameLobbies[i];
@@ -114,11 +115,11 @@ namespace WizardGame
                     // show join link if player record exists
                     if (UserPlayers.Length > 0)
                     {
-                        html.AppendLine("<td style='text-align:center;'><a href='GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "' class='label label-info'>Join</a></td>");
+                        html.AppendLine("<td style='text-align:center;'><a href='GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "' class='btn btn-sm btn-success'>Join</a></td>");
                     }
                     else
                     {
-                        html.AppendLine("<td style='text-align:center;'><a class='label label-danger' onclick='alert(\"You must create a player before joining a game!\");'>Join</a></td>");
+                        html.AppendLine("<td style='text-align:center;'><a class='btn btn-sm btn-danger' onclick='alert(\"You must create a player before joining a game!\");'>Join</a></td>");
                     }
                     
                     html.AppendLine("</tr>");

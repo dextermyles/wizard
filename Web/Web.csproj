@@ -263,6 +263,7 @@
     </Compile>
     <Compile Include="Helpers\Deck.cs" />
     <Compile Include="Helpers\GameLobby.cs" />
+    <Compile Include="Helpers\GameLobbyDetail.cs" />
     <Compile Include="Helpers\GameLobbyPlayers.cs" />
     <Compile Include="Helpers\GamePlayers.cs" />
     <Compile Include="Helpers\GameState.cs" />
@@ -273,6 +274,7 @@
     <Compile Include="Home.aspx.designer.cs">
       <DependentUpon>Home.aspx</DependentUpon>
     </Compile>
+    <Compile Include="HomeHub.cs" />
     <Compile Include="HostGame.aspx.cs">
       <DependentUpon>HostGame.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
