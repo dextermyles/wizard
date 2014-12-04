@@ -164,14 +164,18 @@ body {
         }
 
 .score-reporter {
+    font-family:Tahoma;
+    width: 64px;
     border-radius: 2px;
     position: absolute;
     z-index: 1000;
     padding: 4px 10px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
-    background-color: #fff200;
-    color: #000;
+    background-color: #007aff;
+    border:1px solid #032b56;
+    color: #032b56;
+    display: inline-block;
 }
 
 .player-cards a.unplayable { }

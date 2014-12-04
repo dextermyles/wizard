@@ -65,19 +65,22 @@
         };
 
         // get card image path
-        function getCardImagePath(card) {
-            if(card == null)
-                return "";
+        function getCardImagePath(_suit, _value) {
+            if(_suit == null)
+                return "deck_cover.png";
 
-            var suitName = getSuitName(card.Suit);
-            var value = card.Value;
-            var imageFileName = suitName.toLowerCase() + "_" + value + ".png";
+            var suitName = getSuitName(_suit);
+            var value = _value;
+            var imageFileName = '';
 
-            if(card.Suit == suit.Wizard)
+            if(_suit == suit.Wizard)
                 imageFileName = "wizard.png";
-
-            if(card.Suit == suit.Fluff)
+            else if(_suit == suit.Fluff)
                 imageFileName = "fluff.png";
+            else
+                imageFileName  = suitName.toLowerCase() + "_" + value + ".png";
+                
+
 
             return "/Assets/Cards/" + imageFileName;
         };
@@ -253,8 +256,10 @@
 
         // receiveGameData
         hub.client.receiveGameData = function receiveGameData(gameData, isReconnect) {
+            console.log('is reconnet: ' + isReconnect);
+
             // update game data
-            processGameData(gameData); 
+            processGameData(gameData);    
         };
 
         // receiveBid
@@ -291,15 +296,15 @@
             updateGameState(gameData.GameStateData);
 
             // broadcast to chat
-            appendChatMessage("Server", _player.Name + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
+            appendChatMessage("Server", _player.Name + " has made " + getSuitName(lastGameState.SuitToFollow) + " trump!");
 
-            // update trump graphic
-            updateTrumpCardGraphic(newTrumpCard);
+            // update trump
+            updateTrump();
 
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
 
             // show tool tip
-            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(newTrumpCard.Suit));
+            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(lastGameState.SuitToFollow));
 
             // delay start
             setTimeout(function() {
@@ -312,7 +317,7 @@
         };
 
         // cardPlayed
-        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, scoreHistoryArray, gameData) {
+        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData) {
             console.log(gameData);
 
             // update game state
@@ -322,41 +327,48 @@
             drawPlayerCards();
 
             // if score history passed
-            if(scoreHistoryArray != null)
+            if(previousRoundScoreArray != null)
             {
                 console.log("score history:");
-                console.log(scoreHistoryArray);
+                console.log(previousRoundScoreArray);
 
-                // show point animations
-                for(var x = 0; x < scoreHistoryArray.length; x++) {
-                    // get score data
-                    var scoreHistory = scoreHistoryArray[x];
-                    var playerScore = scoreHistory.Score;
+                // previous run score
+                var previousRoundScore = 0;
+
+                // update total scores
+                for(var i = 0; i < previousRoundScoreArray.length;i++) {
+                    // player ref
+                    var playerScore = previousRoundScoreArray[i];
+
+                    console.log('previous round scores: ');
+                    console.log(playerScore);
 
                     // get player div
-                    var $playerDiv = getPlayerDivByPlayerId(scoreHistory.PlayerId);
+                    $playerDiv = getPlayerDivByPlayerId(playerScore.PlayerId);
 
-                    // html
-                    var score_html = "<label class='score-reporter'>" + playerScore + " points</label>";
+                    // append prev round score
+                    $playerDiv.find(".player-score").append("<span class='score-reporter'>" + playerScore.Score + "</span>");
+                    
+                    // update css
+                    $playerDiv.find(".score-reporter").css({
+                        'position':'absolute'
+                    });
 
-                    // append html to player-score
-                    $playerDiv.find(".player-score").append(score_html);
+                    // animate and remove last round score
+                    $playerDiv.find(".score-reporter").animate({
+                        'top':'-=30px',
+                        'opacity':'0.8',
+                        'color':'#fff'
+                    }, 3000, function() {
+                        $(this).remove()
+                    });
                 }
-
-                // animate
-                $(".score-reporter").animate({
-                    'top': "-=30px",
-                    'background-color': "#ff0000",
-                    'opacity': '0'
-                }, 3000, function() {
-                    $(this).remove();
-                });
             }
 
             // animate card played
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
             var playerPosition = $playerDiv.offset();
-            var cardPlayedFilename = getCardImagePath(_card);
+            var cardPlayedFilename = getCardImagePath(_card.Suit, _card.Value);
 
             // get game board position
             var $cardsPlayedDiv = $(".cards-played-container");
@@ -392,7 +404,11 @@
                     $cardsPlayedDiv.append(cardPlayedHtml);
 
                     // update css
-                    $("#card-played").css("position", "inherit");
+                    $("#card-played").css({
+                        'position': 'inherit'
+                    });
+
+                    console.log('#card-played css updated!');
 
                     // animate pile if we have a winner
                     if(_playerWinner != null) {
@@ -450,6 +466,9 @@
                             // update game data
                             processGameData(gameData);
 
+                            // draw cards played
+                            drawCardsPlayed();
+
                             // update player cards
                             drawPlayerCards();
 
@@ -461,8 +480,13 @@
         };
 
         // gameEnded
-        hub.client.gameEnded = function() {
-            appendChatMessage("Server", "Game has ended");
+        hub.client.gameEnded = function (_player) {
+            // broadcast win
+            appendChatMessage("Server", "Game has ended. " + _player.Name + " won!");
+
+            // update modal values
+            $(".winner-points").html(_player.Score);
+            $(".winner-name").html(_player.Name);
         };
 
         /*******************************************
@@ -567,6 +591,25 @@
             console.log(players);
         };
 
+        function getPlayerById(_playerId) {
+            if(lastGameState == null)
+                return null;
+
+            var player = null;
+
+            for(var y = 0; y < lastGameState.Players.length;y++) {
+                current_player = lastGameState.Players[y];
+
+                if(current_player.PlayerId == _playerId) {
+                    player = current_player;
+
+                    break;
+                }
+            }
+
+            return player;
+        };
+
         function getListOfPlayersInGame() {
             if (isConnected) {
                 hub.server.listPlayersInGame(gameId, groupNameId);
@@ -630,7 +673,7 @@
                         var suitName = getSuitName(card.Suit);
                         var value = card.Value;
                         var ownerPlayerId = card.OwnerPlayerId;
-                        var imageFileName = getCardImagePath(card);
+                        var imageFileName = getCardImagePath(card.Suit, card.Value);
 
                         $cardsPlayed.append("<a id=\"" + card.Id + "\" suit=\"" + card.Suit + "\" value=\"" + card.Value + "\"><img src=\"" + imageFileName + "\" class='card' /></a>");
                     }
@@ -651,12 +694,18 @@
                 }
                 else {
                     // update trump value
-                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit));
+                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit)); 
                 } 
-            }
 
-            // update trump graphic
-            updateTrumpCardGraphic(lastGameState.TrumpCard);
+                // update trump graphic
+                updateTrumpCardGraphic(lastGameState.TrumpCard.Suit, lastGameState.TrumpCard.Value);
+            }
+            else {
+                updateTrumpCardGraphic(lastGameState.SuitToFollow, 0);
+
+                // update trump value
+                $(".trump").html(getSuitName(lastGameState.SuitToFollow)); 
+            }    
         };
 
         function updateEmptySeats(numPlayers) {
@@ -695,19 +744,38 @@
             var dealerPositionIndex = lastGameState.DealerPositionIndex;
             var playerTurnIndex = lastGameState.PlayerTurnIndex;
             var lastToActIndex = lastGameState.LastToActIndex;
+            var dateGameEnded = lastGameState.DateGameEnded;
             var i = 0;
             var numPlayers = 0;
 
             // update local variables
             playerList = players;
 
-            // upodate round #
-            $(".round-number").html(round);
-
             // update total rounds
             var total_rounds = (60 / players.length);
 
-            $(".total-rounds").html(total_rounds);
+            // upodate round #
+            $(".round-info").html("Round: " + round + " of " + total_rounds);
+
+            var total_bids = getTotalBids();
+            var over_under = "";
+            var bid_diff = Math.abs(total_bids - round);
+
+            if(total_bids > round)
+                over_under = "overbid";
+            else if(total_bids < round)
+                over_under = "underbid";
+            else
+                over_under = "even";
+
+            var bid_desc = "Bidding: We are " + over_under;
+
+            if(total_bids > round || total_bids < round) {
+                bid_desc += " by " + bid_diff; 
+            }
+
+            // update bid info
+            $(".bid-info").html("- " + bid_desc);
 
             // update UI
             for(i = 0; i < players.length; i++) {
@@ -780,9 +848,6 @@
                 }  
             } 
 
-            // update cards played on table
-            drawCardsPlayed();
-
             // update trump
             updateTrump();
             
@@ -791,13 +856,48 @@
                 // update flag
                 pageJustLoaded = false;
 
+                // update cards played on table
+                drawCardsPlayed();
+
+                // update player cards
+                drawPlayerCards();
+
                 // update empty seats
                 updateEmptySeats(numPlayers);
 
-                // deal cards
-                dealCards(lastGameState.Round);
+                // start turn
+                startTurn();
+            }
+
+            if(dateGameEnded != null) {
+                // show modal
+                $("#gameEndedModal").modal('show');
+
+                // update final scores
+                drawFinalScores();
             }
         };
+
+        function drawFinalScores() {
+            // generate table html
+            var scores_html = "<tr>";
+
+            for(var i = 0; i < lastGameState.Players.length; i++) {
+                scores_html += "<th>" + lastGameState.Players[i].Name + "</th>";
+            }
+
+            scores_html += "</tr>";
+            scores_html += "<tr>";
+
+            for(var i = 0; i < lastGameState.Players.length; i++) {
+                scores_html += "<td>" + lastGameState.Players[i].Score + "</td>";
+            }
+
+            scores_html += "</tr>";
+
+            // update table html
+            $(".final-scores-table").html(scores_html);
+        }
 
         function drawPlayerBidsHtml() {
             // draw player bids
@@ -855,6 +955,9 @@
             if(isSelectingBid)
                 return;
 
+            // play audio
+            $(".gameAudio").trigger('play');
+
             // update flag
             isSelectingBid = true;
 
@@ -900,6 +1003,9 @@
             // check if already selecting card
             if(isSelectingCard)
                 return;
+
+            // play audio
+            $(".gameAudio").trigger('play');
 
             // update flag
             isSelectingCard = true;
@@ -948,6 +1054,9 @@
             // check if already selecting trump
             if(isSelectingTrump)
                 return;
+
+            // play audio
+            $(".gameAudio").trigger('play');
 
             // update trump
             isSelectingTrump = true;
@@ -1054,7 +1163,7 @@
         
         function verifySelectedTrump(suitId) {
             // validate
-            if(!currentPlayer.IsTurn) {
+            if(!currentPlayer.IsDealer) {
                 return;
             }
 
@@ -1082,12 +1191,12 @@
                 // select trump
                 selectTrump();
             }
-            // enter bid
+                // enter bid
             else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
                 // select bid
                 selectBid(lastGameState.Round); 
             }
-            // play card
+                // play card
             else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
                 // select card to play
                 selectCard();
@@ -1097,10 +1206,11 @@
             }
         };
 
-        function updateTrumpCardGraphic(_trumpCard) {
-            // update trump card
-            var trumpFileName = getCardImagePath(_trumpCard);
+        function updateTrumpCardGraphic(_suit, _value) {
+            // get file path
+            var trumpFileName = getCardImagePath(_suit, _value);
 
+            // update trump card graphic
             $(".trump-card").children("img").attr("src", trumpFileName);
         };
 
@@ -1139,11 +1249,11 @@
         function dealRemainingCards() {
             // dealer data
             var dealerIndex = lastGameState.DealerPositionIndex;
-            var $dealerDiv = $("#position-" + (dealerIndex + 1));
-            var dealerPosition = $dealerDiv.find(".player-profile-image").offset();
+            var $dealerDiv = $(".cards-played-container");
+            var dealerPosition = $dealerDiv.offset();
 
             // offset position
-            dealerPosition.left = (dealerPosition.left);
+            dealerPosition.left = (dealerPosition.left + ($dealerDiv.width() / 2) - 32);
             dealerPosition.top = (dealerPosition.top);
 
             // validate
@@ -1158,7 +1268,15 @@
                 var $trumpDiv = $(".trump-card img");
                 var trumpPosition = $trumpDiv.offset();
                 var trumpCard = lastGameState.TrumpCard;
-                var trumpFileName = getCardImagePath(trumpCard);
+
+                var trumpFileName = "";
+                
+                if(trumpCard == null) {
+                    trumpFileName = getCardImagePath(lastGameState.SuitToFollow, 0);
+                }
+                else {
+                    trumpFileName = getCardImagePath(trumpCard.Suit, trumpCard.Value);
+                }
 
                 // spawn trump card at dealer position
                 $("body").append("<img id='deal-card-trump' src='" + trumpFileName + "' class='deal-card card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
@@ -1166,15 +1284,22 @@
                 // animate trump card
                 $("#deal-card-trump")
                     .animate({
-                        left: trumpPosition.left + 'px',
-                        top: trumpPosition.top + 'px',
-                    }, 250, function() {
-                        // update trump card
-                        updateTrumpCardGraphic(trumpCard);
+                        'left': trumpPosition.left + 'px',
+                        'top': trumpPosition.top + 'px',
+                        'opacity': '0'
+                    }, 1000, function() {
+                        // remove spawned card
+                        $(this).remove();
 
-                        // remove dealt cards
-                        $(".deal-card").remove();
-
+                        if(trumpCard == null) {
+                            // trump was chosen, use generic suit card
+                            updateTrumpCardGraphic(lastGameState.SuitToFollow, 0);
+                        }
+                        else {
+                            // trump was decided by the turn
+                            updateTrumpCardGraphic(trumpCard.Suit, trumpCard.Value);
+                        }
+                        
                         // disable dealing flag
                         isDealing = false;
 
@@ -1205,13 +1330,33 @@
 
             // spawn card at dealer location
             $("body").append("<img id='deal-card-" + dealtCardIndex + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
-                 
+             
+            // get deal speed based on rounds
+            var animation_speed = (lastGameState.Round > 4) ? 230 : 250;
+
+            // 12 rounds and up, increase deal speed
+            if(lastGameState.Round > 8)
+                animation_speed -= 15;
+
+            // 12 rounds and up, increase deal speed
+            if(lastGameState.Round > 11)
+                animation_speed -= 18;
+
+            // 16 rounds and up, increase deal speed
+            if(lastGameState.Round > 15)
+                animation_speed -= 20;
+
+
             // animate dealt card
             $("#deal-card-" + dealtCardIndex)
                 .animate({
-                    left: targetPosition.left + 'px',
-                    top: targetPosition.top + 'px'
-                }, 100, function() {
+                    'left': targetPosition.left + 'px',
+                    'top': targetPosition.top + 'px',
+                    'opacity':'0.7'
+                }, animation_speed, function() {
+                    // remove card
+                    $(this).remove();
+
                     // amimation comete - deal next card
                     dealRemainingCards();
                 });
@@ -1239,6 +1384,7 @@
 
             // player is not first to act - check if we can follow suit
             if(lastGameState.SuitToFollow != suit.None 
+                && lastGameState.SuitToFollow != suit.Wizard
                 && lastGameState.CardsPlayed != null 
                 && lastGameState.CardsPlayed.length > 0) {
                 // loop through player cards
@@ -1264,12 +1410,9 @@
                 var suitName = getSuitName(card.Suit);
                 var value = card.Value;
                 var ownerPlayerId = card.OwnerPlayerId;
-                var imageFileName = getCardImagePath(card);
+                var imageFileName = getCardImagePath(card.Suit, card.Value);
 
                 var style = "";
-
-                
-
                 var fullCardName = "";
                 var cardValueName = "";
 
@@ -1322,7 +1465,7 @@
                 }        
                 
                 if(i > 0) {
-                    style = "style='margin-left: -45px'";
+                    style = "style='margin-left: -60px'";
                 }
 
                 if(is_playable) {
@@ -1339,6 +1482,9 @@
                 // if player cant follow suit, all cards are playable
                 $playerCards.find("a").removeClass("unplayable");
             }
+
+            // remove onclick attr
+            $("card-holder .player-cards").removeAttr("onclick");
         }
     </script>
     <!--[if gte IE 9]>
@@ -1351,7 +1497,9 @@
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h1 class="game-info">Round: <span class="round-number">0</span> of <span class="total-rounds">0</span>
+        <h1 class="game-info">
+            <span class="round-info"></span>
+            <span class="bid-info"></span>
             <span class="pull-right">Trump:
                 <span class="trump label label-danger" style="top: 0px;">Loading</span>
             </span>
@@ -1614,6 +1762,34 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="gameEndedModal" tabindex="-1" role="dialog" aria-labelledby="gameEndedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="gameEndedModalLabel">Game has ended!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <h2 style="margin-top: 0px;">Congratulations!</h2>
+                        <span class="winner-name">Player</span>
+                        won the game with <span class="winner-points">0</span> points!
+                    </div>
+                    <div class="panel panel-default" style="margin-bottom: 0px;">
+                        <div class="panel-heading">
+                            <strong>Final scores</strong>
+                        </div>
+                        <table class="table table-responsive final-scores-table"></table>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-primary btn-block" onclick="window.location='Home.aspx';">
+                        Exit game
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="waiting-for-players-message" style="display: none;">
         <span>Waiting for player(s) to reconnect!</span>
     </div>
@@ -1634,6 +1810,9 @@
                 height: $(window).height(),
                 width: $(window).width()
             });
+
+            // load game audio
+            $(".gameAudio").trigger('load');
         });
 
         // update offline message size when window resizes
@@ -1645,4 +1824,7 @@
             });
         });
     </script>
+    <audio class="gameAudio" controls preload="auto">
+        <source src="Assets/Sounds/beep.mp3" type="audio/mpeg">
+    </audio>
 </asp:Content>

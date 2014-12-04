@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Auto.aspx.cs" Inherits="WizardGame.CronJobs.Auto" %>

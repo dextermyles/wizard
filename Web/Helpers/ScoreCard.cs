@@ -7,20 +7,24 @@ namespace WizardGame.Helpers
 {
     public class ScoreCard
     {
-        List<PlayerScore> playerScores = null;
+        public PlayerScore[] PlayerScores = null;
 
         public ScoreCard()
         {
-            playerScores = new List<PlayerScore>();
+            
         }
 
         public void AddPlayerScore(int playerId = 0, int round = 0, int bid = 0, int tricks = 0)
         {
+            // new list or get list from existing array
+            List<PlayerScore> scores = (PlayerScores == null) ? 
+                new List<PlayerScore>() : PlayerScores.ToList();
+
             // get score from bid/tricks
             int score = CalculateScore(bid, tricks);
 
             // add score to list
-            playerScores.Add(new PlayerScore
+            scores.Add(new PlayerScore
             {
                 PlayerId = playerId,
                 Round = round,
@@ -28,12 +32,15 @@ namespace WizardGame.Helpers
                 Tricks = tricks,
                 Score = score
             });
+
+            // copy to array
+            PlayerScores = scores.ToArray();
         }
 
         public void UpdatePlayerScore(int playerId = 0, int round = 0, int bid = 0, int tricks = 0)
         {
             // get score record
-            PlayerScore ps = playerScores.Where(p => 
+            PlayerScore ps = PlayerScores.Where(p => 
                 p.PlayerId == playerId && p.Round == round
             ).FirstOrDefault();
 
@@ -67,16 +74,6 @@ namespace WizardGame.Helpers
             }
 
             return score;
-        }
-
-        public List<PlayerScore> GetPlayerScoreList()
-        {
-            return playerScores;
-        }
-
-        public PlayerScore[] PlayerScores()
-        {
-            return playerScores.ToArray();
         }
     }
 

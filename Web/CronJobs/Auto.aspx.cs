@@ -8,7 +8,7 @@ using WizardGame.Services;
 
 namespace WizardGame.CronJobs
 {
-    public partial class Cron : System.Web.UI.Page
+    public partial class Auto : System.Web.UI.Page
     {
         // service
         WizardService wizWS = new WizardService();

@@ -163,7 +163,7 @@ namespace WizardGame
             gameState.SuitToFollow = suit;
 
             // set trump card
-            gameState.TrumpCard.Suit = suit;
+            gameState.TrumpCard = null;
 
             // update game state status to bidding
             gameState.Status = GameStateStatus.BiddingInProgress;
@@ -226,11 +226,15 @@ namespace WizardGame
                     // no wizard, get highest trump card
                     if (highestCard == null)
                     {
-                        var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
+                        // look for highest trump card
+                        if (gameState.TrumpCard != null)
+                        {
+                            var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
 
-                        if (trumpCards.Count > 0)
-                            highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
-
+                            if (trumpCards.Count > 0)
+                                highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
+                        }
+                        
                         // no trump cards (fluff was likely led, first non fluff card led is new suit)
                         if (highestCard == null)
                         {
@@ -271,6 +275,9 @@ namespace WizardGame
                 // erase cards played
                 gameState.CardsPlayed = null;
 
+                // reset suit to follow
+                gameState.SuitToFollow = Suit.None;
+
                 // update game status
                 gameState.Status = GameStateStatus.RoundInProgress;
             }
@@ -289,6 +296,8 @@ namespace WizardGame
                 // update score cards
                 gameState.AddScoreEntries();
 
+                PlayerScore[] playerScores = gameState.PlayerScores;
+
                 // save score history
                 roundScoreHistory = gameState.GetPlayerScoreByRound(gameState.Round);
 
@@ -301,7 +310,7 @@ namespace WizardGame
                     Player pointLeader = gameState.GetPointLeader();
 
                     // broadcast game has ended
-                    Clients.Group(groupNameId).gameEnded(pointLeader.PlayerId, pointLeader.Name);
+                    Clients.Group(groupNameId).gameEnded(pointLeader);
 
                     // update game history
                     for(int i = 0; i < gameState.Players.Length; i++ ){

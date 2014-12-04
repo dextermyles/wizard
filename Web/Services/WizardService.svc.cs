@@ -356,6 +356,47 @@ namespace WizardGame.Services
             return handHistory;
         }
 
+        public Game GetLatestGameByPlayerId(int playerId)
+        {
+            Game game = new Game();
+
+            try
+            {
+                Data.GameTableAdapters.GameTableAdapter adapter = new Data.GameTableAdapters.GameTableAdapter();
+                Data.Game.GameDataTable dtGame = adapter.GetLatestGameByPlayerId(playerId);
+
+                if (dtGame != null && dtGame.Rows.Count > 0)
+                {
+                    Data.Game.GameRow row = (Data.Game.GameRow)dtGame.Rows[0];
+
+                    game.GameId = row.GameId;
+
+                    if (!row.IsDateCompletedNull())
+                        game.DateCompleted = row.DateCompleted;
+
+                    if (!row.IsDateCreatedNull())
+                        game.DateCreated = row.DateCreated;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        game.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsGameStateDataNull())
+                        game.GameStateData = JsonConvert.DeserializeObject<GameState>(row.GameStateData);
+
+                    if (!row.IsGroupNameIdNull())
+                        game.GroupNameId = row.GroupNameId;
+
+                    game.GameLobbyId = row.GameLobbyId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return game;
+        }
+
         public Player GetPlayerByConnectionId(string connectionId)
         {
             Player player = new Player();
@@ -1639,7 +1680,5 @@ namespace WizardGame.Services
 
             return gamePlayers;
         }
-
-       
     }
 }

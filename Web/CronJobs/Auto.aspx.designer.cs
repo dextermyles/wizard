@@ -7,9 +7,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WizardGame.Auto {
+namespace WizardGame.CronJobs {
     
     
-    public partial class CronJobs {
+    public partial class Auto {
     }
 }

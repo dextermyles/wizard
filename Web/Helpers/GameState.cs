@@ -21,6 +21,7 @@ namespace WizardGame.Helpers
         public ScoreCard scoreCard = null;
         public Card TrumpCard = null;
         public Suit SuitToFollow = Suit.None;
+        public PlayerScore[] PlayerScores;
 
         public GameState()
         {
@@ -33,7 +34,10 @@ namespace WizardGame.Helpers
 
         public PlayerScore[] GetPlayerScoreByRound(int round)
         {
-            return scoreCard.GetPlayerScoreList().
+            if (scoreCard.PlayerScores == null)
+                return null;
+
+            return scoreCard.PlayerScores.
                 Where(ps => ps.Round == round).
                 ToArray();
         }
@@ -86,14 +90,27 @@ namespace WizardGame.Helpers
                     // add score card entry
                     scoreCard.AddPlayerScore(player.PlayerId, Round, player.Bid, player.TricksTaken);
 
+                    int total_score = 0;
+
                     // add scores from each round to calculate total
-                    int total_score = scoreCard.PlayerScores().Where(p => p.PlayerId == player.PlayerId).Sum(c => c.Score);
+                    for (int x = 0; x < scoreCard.PlayerScores.Length; x++)
+                    {
+                        var playerScore = scoreCard.PlayerScores[x];
+
+                        if (playerScore.PlayerId == player.PlayerId)
+                        {
+                            total_score += playerScore.Score;
+                        }
+                    }
 
                     // clear entries
                     player.Bid = 0;
                     player.TricksTaken = 0;
                     player.Score = total_score;
                 }
+
+                // update player scores
+                PlayerScores = scoreCard.PlayerScores;
             }
         }
 
@@ -134,13 +151,17 @@ namespace WizardGame.Helpers
                 List<Card> cardsPlayedList = (CardsPlayed == null) ? 
                     new List<Card>() : CardsPlayed.ToList();
 
-                // if first card played, update suit to follow
-                if ((card.Suit != Suit.Fluff  && card.Suit != Suit.Wizard)
-                    && (SuitToFollow == Suit.None || cardsPlayedList.Count == 0))
+                // if no suit to follow has been set, next card can potentially be the leading suit
+                if (SuitToFollow == Suit.None)
                 {
-                    SuitToFollow = card.Suit;
+                    if (card.Suit == Suit.Fluff)
+                        SuitToFollow = Suit.None;
+                    else if (card.Suit == Suit.Wizard)
+                        SuitToFollow = Suit.Wizard;
+                    else
+                        SuitToFollow = playedCard.Suit;
                 }
-                    
+                                    
                 // add card to played pile
                 cardsPlayedList.Add(card);
 
@@ -232,6 +253,9 @@ namespace WizardGame.Helpers
             // set turn #
             Turn = 1;
 
+            // set suit to follow
+            SuitToFollow = Suit.None;
+
             // new deck
             Deck = new Deck();
 
@@ -304,12 +328,6 @@ namespace WizardGame.Helpers
                 {
                     Status = GameStateStatus.SelectTrump;
                 }
-
-                SuitToFollow = TrumpCard.Suit;
-            }
-            else
-            {
-                SuitToFollow = Suit.None;
             }
 
             return true;
@@ -356,6 +374,9 @@ namespace WizardGame.Helpers
             // set turn #
             Turn = 1;
 
+            // set suit to follow
+            SuitToFollow = Suit.None;
+
             // set game status
             Status = GameStateStatus.DealInProgress;
 
@@ -384,9 +405,6 @@ namespace WizardGame.Helpers
 
             // update trump card
             TrumpCard = Deck.TakeTopCard();
-
-            // update suit to follow
-            SuitToFollow = TrumpCard.Suit;
                 
             // set game status
             Status = GameStateStatus.BiddingInProgress;
