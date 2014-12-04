@@ -310,7 +310,7 @@ namespace WizardGame
                     Player pointLeader = gameState.GetPointLeader();
 
                     // broadcast game has ended
-                    Clients.Group(groupNameId).gameEnded(pointLeader.PlayerId, pointLeader.Name);
+                    Clients.Group(groupNameId).gameEnded(pointLeader);
 
                     // update game history
                     for(int i = 0; i < gameState.Players.Length; i++ ){

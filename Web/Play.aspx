@@ -480,8 +480,13 @@
         };
 
         // gameEnded
-        hub.client.gameEnded = function() {
-            appendChatMessage("Server", "Game has ended");
+        hub.client.gameEnded = function (_player) {
+            // broadcast win
+            appendChatMessage("Server", "Game has ended. " + _player.Name + " won!");
+
+            // update modal values
+            $(".winner-points").html(_player.Score);
+            $(".winner-name").html(_player.Name);
         };
 
         /*******************************************
@@ -739,6 +744,7 @@
             var dealerPositionIndex = lastGameState.DealerPositionIndex;
             var playerTurnIndex = lastGameState.PlayerTurnIndex;
             var lastToActIndex = lastGameState.LastToActIndex;
+            var dateGameEnded = lastGameState.DateGameEnded;
             var i = 0;
             var numPlayers = 0;
 
@@ -862,7 +868,39 @@
                 // start turn
                 startTurn();
             }
+
+            if(dateGameEnded != null) {
+                // show modal
+                $("#gameEndedModal").modal('show');
+
+                // update final scores
+                drawFinalScores();
+            }
         };
+
+        function drawFinalScores() {
+            // generate table html
+            var scores_html = "<tr>";
+
+            scores_html += "<th>&nbsp;</th>";
+
+            for(var i = 0; i < lastGameState.Players.left; i++) {
+                scores_html += "<th>" + lastGameState.Players[i].Name + "</th>";
+            }
+
+            scores_html += "</tr>";
+            scores_html += "<tr>";
+            scores_html += "<td>Score</td>";
+
+            for(var i = 0; i < lastGameState.Players.left; i++) {
+                scores_html += "<td>" + lastGameState.Players[i].Score + "</td>";
+            }
+
+            scores_html += "</tr>";
+
+            // update table html
+            $(".final-scores-table").html(scores_html);
+        }
 
         function drawPlayerBidsHtml() {
             // draw player bids
@@ -1723,6 +1761,29 @@
                         <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Diamonds);">Diamonds
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="gameEndedModal" tabindex="-1" role="dialog" aria-labelledby="gameEndedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="gameEndedModalLabel">Game has ended!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center" style="font-size: 14px;">
+                        <h2 style="margin-top: 0px;">Congratulations!</h2>
+                        <span class="winner-name">Player</span>
+                        won the game with <span class="winner-points">0</span> points!
+                    </div>
+                    <table class="final-scores-table">
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-primary btn-block" onclick="window.location='Home.aspx';">
+                        Exit game
+                    </button>
                 </div>
             </div>
         </div>
