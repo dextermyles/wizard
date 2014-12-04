@@ -79,8 +79,6 @@
                 imageFileName = "fluff.png";
             else
                 imageFileName  = suitName.toLowerCase() + "_" + value + ".png";
-                
-
 
             return "/Assets/Cards/" + imageFileName;
         };
@@ -426,7 +424,7 @@
 
                             // deal cards
                             dealCards(lastGameState.Round); 
-                        }, 1500); 
+                        }, 3000); 
                     }
                     else {
                         // delay turn start
@@ -1798,10 +1796,10 @@
             });
         });
     </script>
-    <audio class="soundStartTurn" controls preload="auto" style="display: none;">
+    <audio class="soundStartTurn" preload="auto" style="display: none;">
         <source src="Assets/Sounds/beep.mp3" type="audio/mpeg">
     </audio>
-    <audio class="soundCardPlayed" controls preload="auto" style="display: none;">
+    <audio class="soundCardPlayed" preload="auto" style="display: none;" >
         <source src="Assets/Sounds/card-played.mp3" type="audio/mpeg">
     </audio>
 </asp:Content>
