@@ -296,15 +296,15 @@
             updateGameState(gameData.GameStateData);
 
             // broadcast to chat
-            appendChatMessage("Server", _player.Name + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
+            appendChatMessage("Server", _player.Name + " has made " + getSuitName(lastGameState.SuitToFollow) + " trump!");
 
-            // update trump graphic
-            updateTrumpCardGraphic(newTrumpCard);
+            // update trump
+            updateTrump();
 
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
 
             // show tool tip
-            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(newTrumpCard.Suit));
+            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(lastGameState.SuitToFollow));
 
             // delay start
             setTimeout(function() {
@@ -688,7 +688,7 @@
                 }
                 else {
                     // update trump value
-                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit));
+                    $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit)); 
                 } 
 
                 // update trump graphic
@@ -696,9 +696,10 @@
             }
             else {
                 updateTrumpCardGraphic(lastGameState.SuitToFollow, 0);
-            }
 
-            
+                // update trump value
+                $(".trump").html(getSuitName(lastGameState.SuitToFollow)); 
+            }    
         };
 
         function updateEmptySeats(numPlayers) {

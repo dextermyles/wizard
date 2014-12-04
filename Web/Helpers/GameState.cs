@@ -157,7 +157,9 @@ namespace WizardGame.Helpers
                     if (card.Suit == Suit.Fluff)
                         SuitToFollow = Suit.None;
                     else if (card.Suit == Suit.Wizard)
-                        SuitToFollow = Suit.Wizard; 
+                        SuitToFollow = Suit.Wizard;
+                    else
+                        SuitToFollow = playedCard.Suit;
                 }
                                     
                 // add card to played pile

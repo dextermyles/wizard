@@ -11,7 +11,7 @@
         }
 
         <%
-        if (GameInProgress != null)
+        if (GameInProgress != null && GameInProgress.GameId > 0)
         {
         %> 
 

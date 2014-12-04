@@ -163,7 +163,7 @@ namespace WizardGame
             gameState.SuitToFollow = suit;
 
             // set trump card
-            gameState.TrumpCard.Suit = suit;
+            gameState.TrumpCard = null;
 
             // update game state status to bidding
             gameState.Status = GameStateStatus.BiddingInProgress;
@@ -226,11 +226,15 @@ namespace WizardGame
                     // no wizard, get highest trump card
                     if (highestCard == null)
                     {
-                        var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
+                        // look for highest trump card
+                        if (gameState.TrumpCard != null)
+                        {
+                            var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
 
-                        if (trumpCards.Count > 0)
-                            highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
-
+                            if (trumpCards.Count > 0)
+                                highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
+                        }
+                        
                         // no trump cards (fluff was likely led, first non fluff card led is new suit)
                         if (highestCard == null)
                         {
