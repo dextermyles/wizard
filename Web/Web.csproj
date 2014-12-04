@@ -162,7 +162,6 @@
     <Content Include="Assets\Cards\wizard.png" />
     <Content Include="Assets\Table\table-default.png" />
     <Content Include="Assets\Table\table-official.png" />
-    <Content Include="CronJobs\Cron.aspx" />
     <Content Include="clear_game_data.sql" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -202,6 +201,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="CronJobs\Auto.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Home.aspx" />
@@ -248,12 +248,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Language.resx</DependentUpon>
     </Compile>
-    <Compile Include="CronJobs\Cron.aspx.cs">
-      <DependentUpon>Cron.aspx</DependentUpon>
+    <Compile Include="CronJobs\Auto.aspx.cs">
+      <DependentUpon>Auto.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="CronJobs\Cron.aspx.designer.cs">
-      <DependentUpon>Cron.aspx</DependentUpon>
+    <Compile Include="CronJobs\Auto.aspx.designer.cs">
+      <DependentUpon>Auto.aspx</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ConnectionState.cs" />
     <Compile Include="GameHub.cs" />
