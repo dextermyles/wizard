@@ -253,6 +253,9 @@ namespace WizardGame.Helpers
             // set turn #
             Turn = 1;
 
+            // set suit to follow
+            SuitToFollow = Suit.None;
+
             // new deck
             Deck = new Deck();
 
@@ -370,6 +373,9 @@ namespace WizardGame.Helpers
 
             // set turn #
             Turn = 1;
+
+            // set suit to follow
+            SuitToFollow = Suit.None;
 
             // set game status
             Status = GameStateStatus.DealInProgress;

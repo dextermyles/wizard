@@ -357,8 +357,9 @@
                     // animate and remove last round score
                     $playerDiv.find(".score-reporter").animate({
                         'top':'-=30px',
-                        'opacity':'0.8'
-                    }, 1500, function() {
+                        'opacity':'0.8',
+                        'color':'#fff'
+                    }, 3000, function() {
                         $(this).remove()
                     });
                 }
@@ -744,13 +745,31 @@
             // update local variables
             playerList = players;
 
-            // upodate round #
-            $(".round-number").html(round);
-
             // update total rounds
             var total_rounds = (60 / players.length);
 
-            $(".total-rounds").html(total_rounds);
+            // upodate round #
+            $(".round-info").html("Round: " + round + " of " + total_rounds);
+
+            var total_bids = getTotalBids();
+            var over_under = "";
+            var bid_diff = Math.abs(total_bids - round);
+
+            if(total_bids > round)
+                over_under = "overbid";
+            else if(total_bids < round)
+                over_under = "underbid";
+            else
+                over_under = "even";
+
+            var bid_desc = "Bidding: We are " + over_under;
+
+            if(total_bids > round || total_bids < round) {
+                bid_desc += " by " + bid_diff; 
+            }
+
+            // update bid info
+            $(".bid-info").html("- " + bid_desc);
 
             // update UI
             for(i = 0; i < players.length; i++) {
@@ -1434,7 +1453,9 @@
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h1 class="game-info">Round: <span class="round-number">0</span> of <span class="total-rounds">0</span>
+        <h1 class="game-info">
+            <span class="round-info"></span>
+            <span class="bid-info"></span>
             <span class="pull-right">Trump:
                 <span class="trump label label-danger" style="top: 0px;">Loading</span>
             </span>
