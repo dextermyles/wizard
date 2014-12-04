@@ -275,6 +275,9 @@ namespace WizardGame
                 // erase cards played
                 gameState.CardsPlayed = null;
 
+                // reset suit to follow
+                gameState.SuitToFollow = Suit.None;
+
                 // update game status
                 gameState.Status = GameStateStatus.RoundInProgress;
             }
