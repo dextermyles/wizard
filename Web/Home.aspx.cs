@@ -131,12 +131,16 @@ namespace WizardGame
                     
                     html.AppendLine("</tr>");
                 }
-            }
-            else
-            {
-                html.AppendLine("<tr>");
-                html.AppendLine("<td colspan='4'>No game lobbies available</td>");
-                html.AppendLine("</tr>");
+
+                // no game lobbies
+                if (gameLobbies.Length == 0)
+                {
+                    // update no game lobbies found text
+                    html.AppendLine("<tr>");
+                    html.AppendLine("<td colspan='4'>No game lobbies found</td>");
+                    html.AppendLine("</tr>");
+                }
+
             }
 
             return html.ToString();

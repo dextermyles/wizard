@@ -160,10 +160,10 @@ namespace WizardGame.Helpers
                         SuitToFollow = Suit.Wizard;
                     else
                         SuitToFollow = playedCard.Suit;
-                }
+                }                    
                                     
                 // add card to played pile
-                cardsPlayedList.Add(card);
+                cardsPlayedList.Add(playedCard);
 
                 // replace array
                 CardsPlayed = cardsPlayedList.ToArray();
