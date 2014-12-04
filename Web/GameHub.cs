@@ -159,11 +159,13 @@ namespace WizardGame
             // get player data
             Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
 
-            // set trump suit
-            gameState.SuitToFollow = suit;
-
             // set trump card
-            gameState.TrumpCard = null;
+            gameState.TrumpCard = new Card();
+            gameState.TrumpCard.Suit = suit;
+            gameState.TrumpCard.Value = 0;
+
+            // set suit to follow
+            gameState.SuitToFollow = Suit.None;
 
             // update game state status to bidding
             gameState.Status = GameStateStatus.BiddingInProgress;
