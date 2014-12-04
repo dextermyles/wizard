@@ -65,19 +65,22 @@
         };
 
         // get card image path
-        function getCardImagePath(card) {
-            if(card == null)
-                return "";
+        function getCardImagePath(_suit, _value) {
+            if(_suit == null)
+                return "deck_cover.png";
 
-            var suitName = getSuitName(card.Suit);
-            var value = card.Value;
-            var imageFileName = suitName.toLowerCase() + "_" + value + ".png";
+            var suitName = getSuitName(_suit);
+            var value = _value;
+            var imageFileName = '';
 
-            if(card.Suit == suit.Wizard)
+            if(_suit == suit.Wizard)
                 imageFileName = "wizard.png";
-
-            if(card.Suit == suit.Fluff)
+            else if(_suit == suit.Fluff)
                 imageFileName = "fluff.png";
+            else
+                imageFileName  = suitName.toLowerCase() + "_" + value + ".png";
+                
+
 
             return "/Assets/Cards/" + imageFileName;
         };
@@ -253,14 +256,10 @@
 
         // receiveGameData
         hub.client.receiveGameData = function receiveGameData(gameData, isReconnect) {
-            // update game data
-            processGameData(gameData); 
+            console.log('is reconnet: ' + isReconnect);
 
-            // player reconnect
-            if(isReconnect) {
-                // deal cards
-                dealCards(lastGameState.Round);
-            }    
+            // update game data
+            processGameData(gameData);    
         };
 
         // receiveBid
@@ -318,7 +317,7 @@
         };
 
         // cardPlayed
-        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, scoreHistoryArray, gameData) {
+        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData) {
             console.log(gameData);
 
             // update game state
@@ -328,41 +327,47 @@
             drawPlayerCards();
 
             // if score history passed
-            if(scoreHistoryArray != null)
+            if(previousRoundScoreArray != null)
             {
                 console.log("score history:");
-                console.log(scoreHistoryArray);
+                console.log(previousRoundScoreArray);
 
-                // show point animations
-                for(var x = 0; x < scoreHistoryArray.length; x++) {
-                    // get score data
-                    var scoreHistory = scoreHistoryArray[x];
-                    var playerScore = scoreHistory.Score;
+                // previous run score
+                var previousRoundScore = 0;
+
+                // update total scores
+                for(var i = 0; i < previousRoundScoreArray.length;i++) {
+                    // player ref
+                    var playerScore = previousRoundScoreArray[i];
+
+                    console.log('previous round scores: ');
+                    console.log(playerScore);
 
                     // get player div
-                    var $playerDiv = getPlayerDivByPlayerId(scoreHistory.PlayerId);
+                    $playerDiv = getPlayerDivByPlayerId(playerScore.PlayerId);
 
-                    // html
-                    var score_html = "<label class='score-reporter'>" + playerScore + " points</label>";
+                    // append prev round score
+                    $playerDiv.find(".player-score").append("<span class='score-reporter'>" + playerScore.Score + "</span>");
+                    
+                    // update css
+                    $playerDiv.find(".score-reporter").css({
+                        'position':'absolute'
+                    });
 
-                    // append html to player-score
-                    $playerDiv.find(".player-name").append(score_html);
+                    // animate and remove last round score
+                    $playerDiv.find(".score-reporter").animate({
+                        'top':'-=30px',
+                        'opacity':'0.8'
+                    }, 1500, function() {
+                        $(this).remove()
+                    });
                 }
-
-                // animate
-                $(".score-reporter").animate({
-                    'top': "-=30px",
-                    'background-color': "#ff0000",
-                    'opacity': '0'
-                }, 3000, function() {
-                    $(this).remove();
-                });
             }
 
             // animate card played
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
             var playerPosition = $playerDiv.offset();
-            var cardPlayedFilename = getCardImagePath(_card);
+            var cardPlayedFilename = getCardImagePath(_card.Suit, _card.Value);
 
             // get game board position
             var $cardsPlayedDiv = $(".cards-played-container");
@@ -580,6 +585,25 @@
             console.log(players);
         };
 
+        function getPlayerById(_playerId) {
+            if(lastGameState == null)
+                return null;
+
+            var player = null;
+
+            for(var y = 0; y < lastGameState.Players.length;y++) {
+                current_player = lastGameState.Players[y];
+
+                if(current_player.PlayerId == _playerId) {
+                    player = current_player;
+
+                    break;
+                }
+            }
+
+            return player;
+        };
+
         function getListOfPlayersInGame() {
             if (isConnected) {
                 hub.server.listPlayersInGame(gameId, groupNameId);
@@ -643,7 +667,7 @@
                         var suitName = getSuitName(card.Suit);
                         var value = card.Value;
                         var ownerPlayerId = card.OwnerPlayerId;
-                        var imageFileName = getCardImagePath(card);
+                        var imageFileName = getCardImagePath(card.Suit, card.Value);
 
                         $cardsPlayed.append("<a id=\"" + card.Id + "\" suit=\"" + card.Suit + "\" value=\"" + card.Value + "\"><img src=\"" + imageFileName + "\" class='card' /></a>");
                     }
@@ -666,10 +690,15 @@
                     // update trump value
                     $(".trump").html(getSuitName(lastGameState.TrumpCard.Suit));
                 } 
+
+                // update trump graphic
+                updateTrumpCardGraphic(lastGameState.TrumpCard.Suit, lastGameState.TrumpCard.Value);
+            }
+            else {
+                updateTrumpCardGraphic(lastGameState.SuitToFollow, 0);
             }
 
-            // update trump graphic
-            updateTrumpCardGraphic(lastGameState.TrumpCard);
+            
         };
 
         function updateEmptySeats(numPlayers) {
@@ -1113,10 +1142,11 @@
             }
         };
 
-        function updateTrumpCardGraphic(_trumpCard) {
-            // update trump card
-            var trumpFileName = getCardImagePath(_trumpCard);
+        function updateTrumpCardGraphic(_suit, _value) {
+            // get file path
+            var trumpFileName = getCardImagePath(_suit, _value);
 
+            // update trump card graphic
             $(".trump-card").children("img").attr("src", trumpFileName);
         };
 
@@ -1155,11 +1185,11 @@
         function dealRemainingCards() {
             // dealer data
             var dealerIndex = lastGameState.DealerPositionIndex;
-            var $dealerDiv = $("#position-" + (dealerIndex + 1));
-            var dealerPosition = $dealerDiv.find(".player-profile-image").offset();
+            var $dealerDiv = $(".cards-played-container");
+            var dealerPosition = $dealerDiv.offset();
 
             // offset position
-            dealerPosition.left = (dealerPosition.left);
+            dealerPosition.left = (dealerPosition.left + ($dealerDiv.width() / 2) - 32);
             dealerPosition.top = (dealerPosition.top);
 
             // validate
@@ -1174,7 +1204,15 @@
                 var $trumpDiv = $(".trump-card img");
                 var trumpPosition = $trumpDiv.offset();
                 var trumpCard = lastGameState.TrumpCard;
-                var trumpFileName = getCardImagePath(trumpCard);
+
+                var trumpFileName = "";
+                
+                if(trumpCard == null) {
+                    trumpFileName = getCardImagePath(lastGameState.SuitToFollow, 0);
+                }
+                else {
+                    trumpFileName = getCardImagePath(trumpCard.Suit, trumpCard.Value);
+                }
 
                 // spawn trump card at dealer position
                 $("body").append("<img id='deal-card-trump' src='" + trumpFileName + "' class='deal-card card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
@@ -1182,15 +1220,22 @@
                 // animate trump card
                 $("#deal-card-trump")
                     .animate({
-                        left: trumpPosition.left + 'px',
-                        top: trumpPosition.top + 'px',
-                    }, 250, function() {
-                        // update trump card
-                        updateTrumpCardGraphic(trumpCard);
+                        'left': trumpPosition.left + 'px',
+                        'top': trumpPosition.top + 'px',
+                        'opacity': '0'
+                    }, 1000, function() {
+                        // remove spawned card
+                        $(this).remove();
 
-                        // remove dealt cards
-                        $(".deal-card").remove();
-
+                        if(trumpCard == null) {
+                            // trump was chosen, use generic suit card
+                            updateTrumpCardGraphic(lastGameState.SuitToFollow, 0);
+                        }
+                        else {
+                            // trump was decided by the turn
+                            updateTrumpCardGraphic(trumpCard.Suit, trumpCard.Value);
+                        }
+                        
                         // disable dealing flag
                         isDealing = false;
 
@@ -1221,13 +1266,33 @@
 
             // spawn card at dealer location
             $("body").append("<img id='deal-card-" + dealtCardIndex + "' src='/Assets/Cards/deck_cover.png' class='deal-card' style='position: absolute; left:" + dealerPosition.left + "px; top:" + dealerPosition.top + "px;' />");
-                 
+             
+            // get deal speed based on rounds
+            var animation_speed = (lastGameState.Round > 4) ? 230 : 250;
+
+            // 12 rounds and up, increase deal speed
+            if(lastGameState.Round > 8)
+                animation_speed -= 15;
+
+            // 12 rounds and up, increase deal speed
+            if(lastGameState.Round > 11)
+                animation_speed -= 18;
+
+            // 16 rounds and up, increase deal speed
+            if(lastGameState.Round > 15)
+                animation_speed -= 20;
+
+
             // animate dealt card
             $("#deal-card-" + dealtCardIndex)
                 .animate({
-                    left: targetPosition.left + 'px',
-                    top: targetPosition.top + 'px'
-                }, 100, function() {
+                    'left': targetPosition.left + 'px',
+                    'top': targetPosition.top + 'px',
+                    'opacity':'0.7'
+                }, animation_speed, function() {
+                    // remove card
+                    $(this).remove();
+
                     // amimation comete - deal next card
                     dealRemainingCards();
                 });
@@ -1255,6 +1320,7 @@
 
             // player is not first to act - check if we can follow suit
             if(lastGameState.SuitToFollow != suit.None 
+                && lastGameState.SuitToFollow != suit.Wizard
                 && lastGameState.CardsPlayed != null 
                 && lastGameState.CardsPlayed.length > 0) {
                 // loop through player cards
@@ -1280,12 +1346,9 @@
                 var suitName = getSuitName(card.Suit);
                 var value = card.Value;
                 var ownerPlayerId = card.OwnerPlayerId;
-                var imageFileName = getCardImagePath(card);
+                var imageFileName = getCardImagePath(card.Suit, card.Value);
 
                 var style = "";
-
-                
-
                 var fullCardName = "";
                 var cardValueName = "";
 

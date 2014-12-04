@@ -86,6 +86,9 @@ namespace WizardGame.Services
         HandHistory GetLastHandHistoryByGameId(int gameId);
 
         [OperationContract]
+        Game GetLatestGameByPlayerId(int playerId);
+
+        [OperationContract]
         Player GetPlayerByConnectionId(string connectionId);
 
         [OperationContract]

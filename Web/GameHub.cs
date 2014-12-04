@@ -289,6 +289,8 @@ namespace WizardGame
                 // update score cards
                 gameState.AddScoreEntries();
 
+                PlayerScore[] playerScores = gameState.PlayerScores;
+
                 // save score history
                 roundScoreHistory = gameState.GetPlayerScoreByRound(gameState.Round);
 

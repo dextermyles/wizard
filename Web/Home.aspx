@@ -9,6 +9,44 @@
                 $("#facebook-photo-preview").fadeIn("slow");
             }
         }
+
+        <%
+        if (GameInProgress != null)
+        {
+        %> 
+
+        function rejoinGame() {
+            var gameId = <%=GameInProgress.GameId %>;
+
+            window.location = 'Play.aspx?GameId=' + gameId;
+
+            return false;
+        };
+
+        $(document).ready(function () {
+            // new player modal
+            $('#newPlayerModal').on('show.bs.modal', function (event) {
+                // load profile picture url from facebook (if signed in)
+                getFacebookPictureURL();
+
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var modal = $(this)
+            });
+
+            // update modals
+            $(".modal").modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
+
+            // show game in progress notification
+            $("#gameInProgressModal").modal('show');
+        });
+        <%
+        }
+        %>
+        
     </script>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
@@ -141,13 +179,21 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $('#newPlayerModal').on('show.bs.modal', function (event) {
-            // load profile picture url from facebook (if signed in)
-            getFacebookPictureURL();
-
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var modal = $(this)
-        })
-    </script>
+    <div class="modal fade" id="gameInProgressModal" tabindex="-1" role="dialog" aria-labelledby="gameInProgressModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="gameInProgressModalLabel">You left a game in progress!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary btn-block" onclick="rejoinGame(); return false;">
+                            Rejoin game!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
