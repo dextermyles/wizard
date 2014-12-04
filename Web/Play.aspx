@@ -630,6 +630,8 @@
                 score_total += lastGameState.Players[i].Bid;
             }
 
+            console.log('total bids:' + score_total);
+
             return score_total;
         }
 
@@ -973,6 +975,7 @@
             var total_bids = getTotalBids();
 
             $(".total-bids").html(total_bids);
+            $(".round-number").html(round);
 
             // generate bid # buttons
             $playerBid = $(".player-bid");
