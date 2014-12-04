@@ -1437,7 +1437,7 @@
                 }        
                 
                 if(i > 0) {
-                    style = "style='margin-left: -60px'";
+                    style = "style='margin-left: -48px'";
                 }
 
                 if(is_playable) {
