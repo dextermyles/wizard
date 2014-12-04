@@ -329,39 +329,16 @@
             // if score history passed
             if(previousRoundScoreArray != null)
             {
-                console.log("score history:");
-                console.log(previousRoundScoreArray);
-
-                // previous run score
-                var previousRoundScore = 0;
-
                 // update total scores
                 for(var i = 0; i < previousRoundScoreArray.length;i++) {
-                    // player ref
+                    // player score ref
                     var playerScore = previousRoundScoreArray[i];
 
-                    console.log('previous round scores: ');
-                    console.log(playerScore);
+                    // player ref
+                    var player = getPlayerById(playerScore.PlayerId);
 
-                    // get player div
-                    $playerDiv = getPlayerDivByPlayerId(playerScore.PlayerId);
-
-                    // append prev round score
-                    $playerDiv.find(".player-score").append("<span class='score-reporter'>" + playerScore.Score + "</span>");
-                    
-                    // update css
-                    $playerDiv.find(".score-reporter").css({
-                        'position':'absolute'
-                    });
-
-                    // animate and remove last round score
-                    $playerDiv.find(".score-reporter").animate({
-                        'top':'-=30px',
-                        'opacity':'0.8',
-                        'color':'#fff'
-                    }, 3000, function() {
-                        $(this).remove()
-                    });
+                    // broadcast
+                    appendChatMessage("Server", player.Name + " scored " + playerScore.Score + " points");
                 }
             }
 
@@ -375,19 +352,12 @@
             var targetLeft = ($cardsPlayedDiv.offset().left + ($cardsPlayedDiv.width() / 2));
             var targetTop = ($cardsPlayedDiv.offset().top);
 
-            console.log("card played: ");
-            console.log(_card);
-            console.log("by player:");
-            console.log(_player);
-
             // spawn card
             var cardPlayedHtml = "<a><img id='card-played' src='" + cardPlayedFilename + "' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;' class='card' /></a>";
             
+            // append new card
             $("body").append(cardPlayedHtml);  
             
-            console.log("spawned played card");
-            console.log("animating played card to: left: " + targetLeft + " top: " + targetTop);
-
             // animate to card pile + remove card
             $("#card-played")
                 .animate({
@@ -408,16 +378,11 @@
                         'position': 'inherit'
                     });
 
-                    console.log('#card-played css updated!');
-
                     // animate pile if we have a winner
                     if(_playerWinner != null) {
                         // winner player div
                         var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
                         var playerWinnerPosition = $playerWinnerDiv.offset();
-
-                        // show tool tip
-                        showToolTip($playerWinnerDiv, "I won the trick!");
 
                         // delay card pile animation
                         setTimeout(function() {
@@ -484,9 +449,11 @@
             // broadcast win
             appendChatMessage("Server", "Game has ended. " + _player.Name + " won!");
 
-            // update modal values
+            // update winner scores
             $(".winner-points").html(_player.Score);
             $(".winner-name").html(_player.Name);
+
+            // dialog is shown when processGameData is called (dateCompleted will be populated)
         };
 
         /*******************************************
@@ -871,12 +838,13 @@
                 startTurn();
             }
 
+            // check if game ended
             if(dateGameEnded != null) {
-                // show modal
-                $("#gameEndedModal").modal('show');
-
                 // update final scores
                 drawFinalScores();
+
+                // show modal
+                $("#gameEndedModal").modal('show');
             }
         };
 
