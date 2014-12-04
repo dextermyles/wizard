@@ -920,6 +920,9 @@
             if(isSelectingBid)
                 return;
 
+            // play audio
+            $(".gameAudio").trigger('play');
+
             // update flag
             isSelectingBid = true;
 
@@ -965,6 +968,9 @@
             // check if already selecting card
             if(isSelectingCard)
                 return;
+
+            // play audio
+            $(".gameAudio").trigger('play');
 
             // update flag
             isSelectingCard = true;
@@ -1013,6 +1019,9 @@
             // check if already selecting trump
             if(isSelectingTrump)
                 return;
+
+            // play audio
+            $(".gameAudio").trigger('play');
 
             // update trump
             isSelectingTrump = true;
@@ -1147,12 +1156,12 @@
                 // select trump
                 selectTrump();
             }
-            // enter bid
+                // enter bid
             else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
                 // select bid
                 selectBid(lastGameState.Round); 
             }
-            // play card
+                // play card
             else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
                 // select card to play
                 selectCard();
@@ -1738,6 +1747,9 @@
                 height: $(window).height(),
                 width: $(window).width()
             });
+
+            // load game audio
+            $(".gameAudio").trigger('load');
         });
 
         // update offline message size when window resizes
@@ -1749,4 +1761,7 @@
             });
         });
     </script>
+    <audio class="gameAudio" controls preload="auto">
+        <source src="Assets/Sounds/beep.mp3" type="audio/mpeg">
+    </audio>
 </asp:Content>

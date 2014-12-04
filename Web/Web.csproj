@@ -160,6 +160,7 @@
     <Content Include="Assets\Cards\spades_8.png" />
     <Content Include="Assets\Cards\spades_9.png" />
     <Content Include="Assets\Cards\wizard.png" />
+    <Content Include="Assets\Sounds\beep.mp3" />
     <Content Include="Assets\Table\table-default.png" />
     <Content Include="Assets\Table\table-official.png" />
     <Content Include="clear_game_data.sql" />
