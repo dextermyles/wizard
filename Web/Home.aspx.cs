@@ -18,7 +18,7 @@ namespace WizardGame
         public Session UserSession = null;
         public Player[] UserPlayers = null;
         public User UserData = null;
-        public Game GameInProgress = null;
+        public Game GameInProgress = new Game();
 
         // service
         WizardService wizWS = new WizardService();

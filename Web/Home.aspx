@@ -98,18 +98,18 @@
                 lobby_html += "<td class='text-center'>" + gameLobby.OwnerPlayerName + "</td>";
                 lobby_html += "<td class='text-center'>" + gameLobby.NumPlayersInLobby + " / " + gameLobby.MaxPlayers + "</td>";
                 <%
-                if(UserPlayers.Length != null && UserPlayers.Length > 0) 
-                {
+        if (UserPlayers.Length != null && UserPlayers.Length > 0)
+        {
                 %>
                 lobby_html += "<td class='text-center'><a href=\"GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "\" class=\"btn btn-sm btn-success\">Join</a></td>";
                 <%
-                }
-                else
-	            {
+        }
+        else
+        {
                 %>
                 lobby_html += "<td class='text-center'><a onclick=\"alert('You must create a Player before joining a game');\" class=\"btn btn-sm btn-danger\">Join</a></td>";
                 <%
-	            }
+                }
                 %>
                 lobby_html += "</tr>";
             }
@@ -125,6 +125,14 @@
             // update total number of lobbies
             $(".total-num-lobbies").html(_lobbies.length);
         };
+
+        function joinGame() {
+            var gameId = <%=GameInProgress.GameId %>;
+
+            window.location = "Play.aspx?GameId=" + gameId;
+
+            return false;
+        }
     </script>
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
@@ -143,12 +151,12 @@
                     <li class="list-group-item">
                         <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#newPlayerModal" onclick="return false;">
                             Create your Player
+                       
                         </button>
                     </li>
                     <% } // UserPlayers %>
                     <li class="list-group-item">
-                        <a class="btn btn-lg btn-default btn-block" href="HostGame.aspx">
-                            Host Game
+                        <a class="btn btn-lg btn-default btn-block" href="HostGame.aspx">Host Game
                         </a>
                     </li>
                     <!--
@@ -170,8 +178,8 @@
                 <table class="table table-responsive table-game-lobbies">
                     <thead>
                         <tr>
-                            <th style="width:40%;">Lobby</th>
-                            <th class="text-center" style="width:40%;">Host</th>
+                            <th style="width: 40%;">Lobby</th>
+                            <th class="text-center" style="width: 40%;">Host</th>
                             <th class="text-center" style="width: 20%;">Players</th>
                             <th>&nbsp;</th>
                         </tr>
@@ -246,6 +254,7 @@
                         <label>
                             <asp:CheckBox ID="cbUseFacebookPhoto" runat="server" OnClick="selectUseFacebookPhoto();" />
                             Use profile photo from Facebook
+                           
                             <input type="hidden" id="txtFacebookPhotoUrl" name="txtFacebookPhotoUrl" runat="server" value="" />
                         </label>
                     </div>
@@ -259,13 +268,43 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="gameInProgressModal" tabindex="-1" role="dialog" aria-labelledby="gameInProgressModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="gameInProgressModalLabel">You have a game in progress!</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="button" class="btn btn-lg btn-block btn-primary" value="Rejoin game!" onclick="joinGame(); return false;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
-        $('#newPlayerModal').on('show.bs.modal', function (event) {
-            // load profile picture url from facebook (if signed in)
-            getFacebookPictureURL();
+        $(document).ready(function() {
+            // game in progress modal
+            $("#gameInProgressModal").modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
 
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var modal = $(this)
-        })
+            $('#newPlayerModal').on('show.bs.modal', function (event) {
+                // load profile picture url from facebook (if signed in)
+                getFacebookPictureURL();
+
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var modal = $(this);
+            });
+ 
+            <%
+            if (GameInProgress != null && GameInProgress.GameId > 0)
+            {
+                Response.Write("setTimeout(function() { $('#gameInProgressModal').modal('show'); }, 1000);");
+            }
+            %>
+        });
     </script>
 </asp:Content>
