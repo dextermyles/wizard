@@ -358,6 +358,9 @@
             // append new card
             $("body").append(cardPlayedHtml);  
             
+            // play audio
+            $(".soundCardPlayed").trigger('play');
+
             // animate to card pile + remove card
             $("#card-played")
                 .animate({
@@ -926,7 +929,7 @@
                 return;
 
             // play audio
-            $(".gameAudio").trigger('play');
+            $(".soundStartTurn").trigger('play');
 
             // update flag
             isSelectingBid = true;
@@ -976,7 +979,7 @@
                 return;
 
             // play audio
-            $(".gameAudio").trigger('play');
+            $(".soundStartTurn").trigger('play');
 
             // update flag
             isSelectingCard = true;
@@ -1027,7 +1030,7 @@
                 return;
 
             // play audio
-            $(".gameAudio").trigger('play');
+            $(".soundStartTurn").trigger('play');
 
             // update trump
             isSelectingTrump = true;
@@ -1795,7 +1798,10 @@
             });
         });
     </script>
-    <audio class="gameAudio" controls preload="auto">
+    <audio class="soundStartTurn" controls preload="auto" style="display: none;">
         <source src="Assets/Sounds/beep.mp3" type="audio/mpeg">
+    </audio>
+    <audio class="soundCardPlayed" controls preload="auto" style="display: none;">
+        <source src="Assets/Sounds/card-played.mp3" type="audio/mpeg">
     </audio>
 </asp:Content>
