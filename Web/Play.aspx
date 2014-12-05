@@ -364,13 +364,13 @@
             updateGameState(gameData.GameStateData);
 
             // round is not over
-            if(!isRoundOver) {
-                // update player cards
-                drawPlayerCards();
+            if(isRoundOver) {
+                // clear player cards
+                $(".player-cards").html('');
             }
             else {
-                // clear cards from table
-                $playerCards.html('');
+                // re-draw player cards
+                drawPlayerCards();
             }
 
             // if score history passed
@@ -1711,12 +1711,12 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" style="margin-bottom: 0px;">
                         <div class="panel-heading"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
                         <table class="table table-responsive player-bids"></table>
                     </div>
-                    <div>
-                        <div class="player-cards well well-sm"></div>
+                    <div class="modal-cards-played" style="margin-top: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+                        <div class="player-cards"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1738,20 +1738,18 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="panel panel-default">
+                    <div>
+                        <div class="panel panel-default" style="margin-bottom: 0px;">
                             <div class="panel-heading"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
                             <table class="table table-responsive player-bids"></table>
                         </div>
                     </div>
-                    <div class="modal-cards-played">
-                        <label>Cards played:</label>
-                        <div class="cards-played well well-sm"></div>
+                    <div class="modal-cards-played" style="margin-top: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+                        <div class="cards-played"></div>
                     </div>
-                    <div>
-                        <label>Select a card to play:</label>
-                        <div class="player-cards well well-sm"></div>
-                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: left;">
+                    <div class="player-cards" style="padding: 10px; background-color: #d8d8d8; border: 1px solid #ccc; border-radius: 5px;"></div>
                 </div>
             </div>
         </div>
@@ -1763,19 +1761,14 @@
                     <h4 class="modal-title" id="selectTrumpModalLabel">Please select Trump for this round</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Your cards</label>
-                        <div class="player-cards well well-sm"></div>
-                    </div>
+                    <div class="player-cards well well-sm"></div>
+                </div>
+                <div class="modal-footer">
                     <div>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Spades);">Spades
-                        </a>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Clubs);">Clubs
-                        </a>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Hearts);">Hearts
-                        </a>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Diamonds);">Diamonds
-                        </a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Spades);">Spades</a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Clubs);">Clubs</a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Hearts);">Hearts</a>
+                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Diamonds);">Diamonds</a>
                     </div>
                 </div>
             </div>
