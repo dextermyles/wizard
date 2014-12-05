@@ -18,7 +18,7 @@ namespace WizardGame
         public Session UserSession = null;
         public Player[] UserPlayers = null;
         public User UserData = null;
-        public Game GameInProgress = new Game();
+        public Game GameInProgress = null;
 
         // service
         WizardService wizWS = new WizardService();
@@ -66,11 +66,11 @@ namespace WizardGame
             // check player list for a player name
             if (UserPlayers != null && UserPlayers.Length > 0)
             {
-                //
+                // default player ref
                 Player defaultPlayer = UserPlayers[0];
 
                 // by default assign first player to session (will later be done via character select screen)
-                wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, defaultPlayer.PlayerId, UserSession.ConnectionId);
+                UserSession = wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, defaultPlayer.PlayerId, UserSession.ConnectionId);
 
                 // check for existing games in progress
                 GameInProgress = wizWS.GetLatestGameByPlayerId(defaultPlayer.PlayerId);

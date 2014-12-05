@@ -42,25 +42,28 @@ namespace WizardGame
                     // validate
                     if (player.PlayerId > 0)
                     {
-                        // player quit
+                        // update player state to disconnected
+                        wizWS.UpdateGamePlayers(game.GameId, player.PlayerId, connectionId, ConnectionState.DISCONNECTED);
+
+                        // players in game ref
+                        Player[] playersInGame = wizWS.ListPlayersByGameId(gp.GameId);
+
+                        int numPlayersInGame = 0;
+
+                        // get num connected players
+                        if (playersInGame != null)
+                            numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
+
+                        // player left (navigated away from game page)
                         if (stopCalled)
                         {
-                            // broadcast player left
-                            Clients.Group(game.GroupNameId).playerLeftGame(player.PlayerId, player.Name);
-
-                            // remove player from game lobby
-                            wizWS.DeletePlayerFromGame(player.PlayerId, game.GameId, string.Empty);
-
-                            // broadcast player timed out
-                            Clients.Group(game.GroupNameId).playerQuit(player);
+                            // player left game
+                            Clients.Group(game.GroupNameId).playerQuit(player, numPlayersInGame, false);
                         }
                         else
                         {
-                            // player timed out / went inactive
-                            wizWS.UpdateGamePlayers(game.GameId, player.PlayerId, connectionId, ConnectionState.DISCONNECTED);
-
                             // broadcast player timed out
-                            Clients.Group(game.GroupNameId).playerTimedOut(player);
+                            Clients.Group(game.GroupNameId).playerTimedOut(player, numPlayersInGame);
                         }
                     }
                 }
@@ -83,34 +86,39 @@ namespace WizardGame
             // validation
             if (player != null && player.PlayerId > 0)
             {
-                // get game lobby players data
-                GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
+                // game ref
+                Game game = wizWS.GetGameById(gameId);
 
-                // validation
-                if (gp != null && gp.GamePlayersId > 0)
-                {
-                    // call playerJoinedLobby on client
-                    Clients.Group(groupNameId).playerReconnected(player);
-                }
-                else
-                {
-                    // call playerJoinedLobby on client
-                    Clients.Group(groupNameId).playerJoinedGame(player);
-                }
+                // gamePlayers ref
+                GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
 
                 // add player to game lobby
                 wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.CONNECTED);
 
-                // get game data
-                Game game = wizWS.GetGameById(gameId);
-                game.EventId = Guid.NewGuid().ToString();
+                // get connected players
+                Player[] playersInGame = wizWS.ListPlayersByGameId(gameId);
 
-                // validate
-                if (game != null && game.GameId > 0)
+                int numPlayersInGame = 0;
+
+                if (playersInGame != null)
+                    numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
+
+                // player exists in game already
+                if (gp != null && gp.GamePlayersId > 0)
                 {
-                    // send game data
-                    Clients.Caller.receiveGameData(game, reconnected);
-                } 
+                    // player reconnected
+                    Clients.Group(groupNameId).playerReconnected(player, numPlayersInGame);
+
+                    reconnected = true;
+                }
+                else
+                {
+                    // player connected for first time
+                    Clients.Group(groupNameId).playerJoinedGame(player, numPlayersInGame);
+                }
+
+                // broadcast game data
+                Clients.Caller.receiveGameData(game, reconnected);
             }
         }
 
@@ -136,7 +144,6 @@ namespace WizardGame
 
             // save data in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
-            game.EventId = Guid.NewGuid().ToString();
 
             // update player last active date
             wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
@@ -172,10 +179,64 @@ namespace WizardGame
 
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
-            game.EventId = Guid.NewGuid().ToString();
 
             // broadcast trump set
             Clients.Group(groupNameId).trumpUpdated(player, gameState.TrumpCard, game);
+        }
+
+        public void CancelGame(int gameId, int playerId)
+        {
+            // get connectionId
+            string connectionId = Context.ConnectionId;
+
+            // get player ref
+            Player player = wizWS.GetPlayerById(playerId);
+
+            // get game data
+            Game game = wizWS.GetGameById(gameId);
+
+            // verify player is the host
+            if (playerId == game.OwnerPlayerId)
+            {
+                // mark game as completed
+                game.DateCompleted = DateTime.Now;
+
+                // save game in db
+                game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, game.DateCompleted, game.GameStateData, game.GroupNameId);
+
+                // broadcast game cancelled
+                Clients.Group(game.GroupNameId).gameCancelled();
+            }
+        }
+
+        public void QuitGame(int playerId, int gameId)
+        {
+            // player ref
+            Player player = wizWS.GetPlayerById(playerId);
+
+            // game ref
+            Game game = wizWS.GetGameById(gameId);
+
+            // gamePlayers ref
+            GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
+
+            // player belongs to game
+            if (gp != null && gp.GamePlayersId > 0)
+            {
+                // remove player from db
+                wizWS.DeletePlayerFromGame(playerId, gameId, string.Empty);
+
+                // get num remaining players
+                Player[] playersInGame = wizWS.ListPlayersByGameId(gp.GameId);
+
+                int numPlayersInGame = 0;
+
+                if (playersInGame != null)
+                    numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
+
+                // broadcast player quit
+                Clients.Group(game.GroupNameId).playerQuit(player, numPlayersInGame, true);
+            }
         }
 
         public void PlayCard(int gameId, int playerId, Card card, string groupNameId)
@@ -195,13 +256,23 @@ namespace WizardGame
             // winning player (if round is over)
             Player playerWinner = null;
 
+            // date game completed
+            DateTime? dateGameEnded = null;
+
+            // score from last round
+            PlayerScore[] roundScoreHistory = null;
+
             // play card
             bool cardPlayedResult = gameState.PlayCard(player.PlayerId, card);
 
+            // has round ended
+            bool IsRoundOver = false;
+
+            // player could not play card
             if (!cardPlayedResult)
             {
-                // broadcast game data
-                Clients.Caller.receiveGameData(game, false);
+                // broadcast failed attempt to player
+                Clients.Caller.cardPlayedFailed(card.ToString(), game);
 
                 return;
             }
@@ -209,96 +280,84 @@ namespace WizardGame
             // check if turns ended
             bool IsTurnEnded = (gameState.Status == GameStateStatus.TurnEnded);
 
+            // turn has ended
             if (IsTurnEnded)
             {
-                // get highest card in pile
-                Card highestCard = null;
-
-                // no suit to follow - everyone played a fluff
-                if (gameState.SuitToFollow == Suit.None)
-                {
-                    // last fluff is the highest card
-                    highestCard = gameState.CardsPlayed.LastOrDefault();
-                }
-                else
-                {
-                    // look for first wizard (if any)
-                    highestCard = gameState.CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
-
-                    // no wizard, get highest trump card
-                    if (highestCard == null)
-                    {
-                        // look for highest trump card
-                        if (gameState.TrumpCard != null)
-                        {
-                            var trumpCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.TrumpCard.Suit).ToList();
-
-                            if (trumpCards.Count > 0)
-                                highestCard = trumpCards.OrderByDescending(c => c.Value).FirstOrDefault();
-                        }
-                        
-                        // no trump cards (fluff was likely led, first non fluff card led is new suit)
-                        if (highestCard == null)
-                        {
-                            var suitToFollowCards = gameState.CardsPlayed.Where(c => c.Suit == gameState.SuitToFollow).ToList();
-
-                            highestCard = suitToFollowCards.OrderByDescending(c => c.Value).FirstOrDefault();
-                        }
-                    }  
-                }
+                // get best card from CardsPlayed
+                Card bestCard = gameState.GetBestCardFromCardsPlayed();
 
                 // get winning player
-                playerWinner = gameState.Players.Where(p => p.PlayerId == highestCard.OwnerPlayerId).FirstOrDefault();
+                playerWinner = gameState.Players.Where(p => p.PlayerId == bestCard.OwnerPlayerId).FirstOrDefault();
 
-                // incrememnt num of tricks taken
-                playerWinner.TricksTaken++;
+                // player found
+                if (playerWinner != null)
+                {
+                    // incrememnt num of tricks taken
+                    playerWinner.TricksTaken++;
 
-                // clear turn flags (IsTurn + IsLastToAct)
-                gameState.ClearTurnFlags();
+                    // clear turn flags (IsTurn + IsLastToAct)
+                    gameState.ClearTurnFlags();
 
-                // get last to act index
-                int winningPlayerIndex = Array.IndexOf(gameState.Players, playerWinner);
+                    // get index of winning player
+                    int winningPlayerIndex = -1;
 
-                // update current player index
-                gameState.PlayerTurnIndex = winningPlayerIndex;
+                    // loop through players
+                    for (int i = 0; i < gameState.Players.Length; i++)
+                    {
+                        if(gameState.Players[i].PlayerId == playerWinner.PlayerId)
+                        {
+                            // set winning player index
+                            winningPlayerIndex = i;
 
-                // set turn flag
-                gameState.Players[gameState.PlayerTurnIndex].IsTurn = true;
+                            break;
+                        }
+                    }
 
-                // update last to act index
-                gameState.LastToActIndex = winningPlayerIndex - 1;
+                    // update current player index
+                    gameState.PlayerTurnIndex = winningPlayerIndex;
 
-                if (gameState.LastToActIndex < 0)
-                    gameState.LastToActIndex = gameState.Players.Length - 1;
+                    // set turn flag
+                    gameState.Players[gameState.PlayerTurnIndex].IsTurn = true;
 
-                // set last to act flag
-                gameState.Players[gameState.LastToActIndex].IsLastToAct = true;
+                    // update last to act index
+                    gameState.LastToActIndex = (winningPlayerIndex - 1);
 
-                // erase cards played
-                gameState.CardsPlayed = null;
+                    // validate last to act
+                    if (gameState.LastToActIndex < 0)
+                        gameState.LastToActIndex = (gameState.Players.Length - 1);
 
-                // reset suit to follow
-                gameState.SuitToFollow = Suit.None;
+                    // set last to act flag
+                    gameState.Players[gameState.LastToActIndex].IsLastToAct = true;
 
-                // update game status
-                gameState.Status = GameStateStatus.RoundInProgress;
+                    // save hand history in db before clearing cards
+                    
+
+                    // erase cards played
+                    gameState.CardsPlayed = null;
+
+                    // reset suit to follow
+                    gameState.SuitToFollow = Suit.None;
+
+                    // update game status
+                    gameState.Status = GameStateStatus.RoundInProgress;
+                }
             }
 
-            // check if round ended
-            if (gameState.HasRoundEnded())
+            // players have no cards
+            if (!gameState.PlayersHaveCards())
+            {
+                // round has ended
                 gameState.Status = GameStateStatus.RoundEnded;
 
-            DateTime? dateGameEnded = null;
-            bool IsRoundOver = (gameState.Status == GameStateStatus.RoundEnded);
-            PlayerScore[] roundScoreHistory = null;
-
-            // check if round ended
+                // update flag
+                IsRoundOver = true;
+            }
+                
+            // round has ended
             if (IsRoundOver)
             {
                 // update score cards
                 gameState.AddScoreEntries();
-
-                PlayerScore[] playerScores = gameState.PlayerScores;
 
                 // save score history
                 roundScoreHistory = gameState.GetPlayerScoreByRound(gameState.Round);
@@ -310,9 +369,6 @@ namespace WizardGame
                 {
                     // get point leader
                     Player pointLeader = gameState.GetPointLeader();
-
-                    // broadcast game has ended
-                    Clients.Group(groupNameId).gameEnded(pointLeader);
 
                     // update game history
                     for(int i = 0; i < gameState.Players.Length; i++ ){
@@ -332,12 +388,19 @@ namespace WizardGame
                     
                     // get date
                     dateGameEnded = DateTime.Now;
+
+                    // save game state
+                    game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
+
+                    // broadcast game has ended
+                    Clients.Group(groupNameId).gameEnded(pointLeader, game);
+
+                    return;
                 }
             }
 
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
-            game.EventId = Guid.NewGuid().ToString();
 
             // broadcast game data
             Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, roundScoreHistory, game);

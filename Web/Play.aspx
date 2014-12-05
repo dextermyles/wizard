@@ -190,54 +190,69 @@
          *******************************************/
 
         // playerJoinedLobby
-        hub.client.playerJoinedGame = function (_player) {
-            // chat message player joined
+        hub.client.playerJoinedGame = function (_player, numPlayersInGame) {
+            // broadcast
             appendChatMessage(_player.Name, "Joined the game lobby.")
 
-            // increment num players connected
-            numPlayersConnected++;
+            // update num connected players
+            numPlayersConnected = numPlayersInGame;
 
-            // validate
-            if(numPlayersConnected > numPlayersExpected)
-                numPlayersConnected = numPlayersExpected;
+            // all players present
+            if(numPlayersConnected == numPlayersExpected) {
+                // broadcast
+                appendChatMessage("Server","All players present. Resuming game!");
+
+                // todo: resumeGame();
+            }
         };
 
         // player reconnected
-        hub.client.playerReconnected = function playerReconnected(_player) {
-            // increment num players connected
-            numPlayersConnected++;
-
-            // validate
-            if(numPlayersConnected > numPlayersExpected)
-                numPlayersConnected = numPlayersExpected;
-
-            if(numPlayersConnected == numPlayersExpected)
-            {
-                // resume game
-            }
-
+        hub.client.playerReconnected = function playerReconnected(_player, numPlayersInGame) {
             // broadcast
             appendChatMessage("Server", _player.Name + " reconnected.");
+
+            // update num connected players
+            numPlayersConnected = numPlayersInGame;
+
+            // all players present
+            if(numPlayersConnected == numPlayersExpected) {
+                // broadcast
+                appendChatMessage("Server","All players present. Resuming game!");
+
+                // todo: resumeGame();
+            }
         };
 
-        hub.client.playerQuit = function playerQuit(_player) {
-            // decrease num players
-            numPlayersConnected--;
-
-            // pause game
+        hub.client.playerQuit = function playerQuit(_player, numPlayersInGame, forcedQuit) {
+            // get num of connect players
+            numPlayersConnected = numPlayersInGame;
 
             // broadcast
             appendChatMessage("Server", _player.Name + " quit the game.");
+
+            // pause game if missing players
+            if(numPlayersConnected < numPlayersExpected) {
+                // broadcast
+                appendChatMessage("Server","Not all players are connected. Pausing game!");
+
+                // todo: pauseGame();
+            }
         };
 
-        hub.client.playerTimedOut = function playerTimedOut(_player) {
-            // decrease num players
-            numPlayersConnected--;
+        hub.client.playerTimedOut = function playerTimedOut(_player, numPlayersInGame) {
+            // get num of connect players
+            numPlayersConnected = numPlayersInGame;
 
             // broadcast
             appendChatMessage("Server", _player.Name + " timed out.");
 
-            // pause game
+            // pause game if missing players
+            if(numPlayersConnected < numPlayersExpected) {
+                // broadcast
+                appendChatMessage("Server","Not all players are connected. Pausing game!");
+
+                // todo: pauseGame();
+            }
         };
 
         // receiveChatMessage
@@ -309,6 +324,21 @@
                 // update game data
                 processGameData(gameData);
 
+                // start turn
+                startTurn();
+            }, 2000);
+        };
+
+        // cardPlayedFailed
+        hub.client.cardPlayedFailed = function(_cardName, gameData) {
+            // broadcast
+            appendChatMessage("Server", "Failed to play card: " + _cardName);
+
+            // update game state
+            updateGameState(gameData.gameState);
+
+            // start turn
+            setTimeout(function() {
                 // start turn
                 startTurn();
             }, 2000);
@@ -446,16 +476,32 @@
         };
 
         // gameEnded
-        hub.client.gameEnded = function (_player) {
+        hub.client.gameEnded = function (_player, gameData) {
             // broadcast win
-            appendChatMessage("Server", "Game has ended. " + _player.Name + " won!");
+            appendChatMessage("Server", "Game has ended. " + _player.Name + " won with " + _player.Score + " points!");
 
             // update winner scores
             $(".winner-points").html(_player.Score);
             $(".winner-name").html(_player.Name);
 
-            // dialog is shown when processGameData is called (dateCompleted will be populated)
+            // update ui
+            processGameData(gameData);
+
+            // update final scores table
+            drawFinalScores();
+
+            // show game ended modal
+            $("#gameEndedModal").modal('show');
         };
+
+        // gameCancelled
+        hub.client.gameCancelled = function() {
+            // alert cancelled
+            alert('game cancelled by game host');
+
+            // game cancelled
+            window.location = "Home.aspx";
+        }
 
         /*******************************************
          * functions that are called by the client *
@@ -732,13 +778,13 @@
             var bid_diff = Math.abs(total_bids - round);
 
             if(total_bids > round)
-                over_under = "overbid";
+                over_under = "Overbid";
             else if(total_bids < round)
-                over_under = "underbid";
+                over_under = "Underbid";
             else
-                over_under = "even";
+                over_under = "Even";
 
-            var bid_desc = "Bidding: We are " + over_under;
+            var bid_desc = "Bidding: " + over_under;
 
             if(total_bids > round || total_bids < round) {
                 bid_desc += " by " + bid_diff; 
@@ -783,38 +829,35 @@
                     $playerDiv.find(".player-name").addClass("dealer");
                 }
 
-                // add special label for players turn
+                // add special label for players turn (except when current players turn)
                 if(player.IsTurn) {
                     // change background of player name when its their turn
                     $playerDiv.find(".player-name").addClass("active");
 
-                    // only show tool tip for other players
-                    if(currentPlayer.PlayerId != player.PlayerId) {
-                        var message = '';
+                    // construct announcement message
+                    var message = '';
 
-                        // construct announcement message
-                        if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
-                            message = player.Name + "'s turn to bid"; 
-                        }
-                        else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
-                            message = player.Name + "'s turn to play a card";
-                        }
-                        else if(lastGameState.Status == gameStateStatus.SelectTrump) {
-                            message = player.Name + "'s turn to choose trump";
-                        }
-                        else {
-                            message = player.Name + "'s turn!";
-                        }
-
-                        // only show tool tip for other players (not current player)
-                        if(player.PlayerId != currentPlayer.PlayerId) {
-                            // announce via tool tip
-                            showToolTip($playerDiv, message);
-                        }
-
-                        // announce to chat window
-                        appendChatMessage("Server", message);
+                    if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                        message = player.Name + "'s turn to bid"; 
                     }
+                    else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
+                        message = player.Name + "'s turn to play a card";
+                    }
+                    else if(lastGameState.Status == gameStateStatus.SelectTrump) {
+                        message = player.Name + "'s turn to choose trump";
+                    }
+                    else {
+                        message = player.Name + "'s turn!";
+                    }
+
+                    // only show tool tip for other players (not current player)
+                    if(player.PlayerId != currentPlayer.PlayerId) {
+                        // announce via tool tip
+                        showToolTip($playerDiv, message);
+                    }
+
+                    // announce to chat window
+                    appendChatMessage("Server", message);
                 }  
             } 
 
@@ -837,16 +880,7 @@
 
                 // start turn
                 startTurn();
-            }
-
-            // check if game ended
-            if(dateGameEnded != null) {
-                // update final scores
-                drawFinalScores();
-
-                // show modal
-                $("#gameEndedModal").modal('show');
-            }
+            } 
         };
 
         function drawFinalScores() {
@@ -883,10 +917,16 @@
                 var player = lastGameState.Players[i];
                 
                 if(currentPlayer.PlayerId == player.PlayerId) {
-                    is_player_class = 'info';
+                    is_player_class = 'danger';
                 }
 
-                playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
+                if(player.IsDealer) {
+                    playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
+                }
+                else {
+                    playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
+                }
+                
             }
             
             playerBidsHtml += "</tr>";
@@ -900,7 +940,7 @@
                 var is_player_class = '';
 
                 if(currentPlayer.PlayerId == lastGameState.Players[i].PlayerId) {
-                    is_player_class = 'info';
+                    is_player_class = 'danger';
                 }
 
                 playerBidsHtml += "<td class='text-center " + is_player_class + "'>" + lastGameState.Players[i].TricksTaken + "/" + lastGameState.Players[i].Bid + "</td>";
@@ -1457,7 +1497,15 @@
 
             // remove onclick attr
             $("card-holder .player-cards").removeAttr("onclick");
-        }
+        };
+
+        function pauseGame() {
+            $("#gamePausedModal").modal('show');
+        };
+
+        function resumeGame() {
+            $("#gamePausedModal").modal('hide');
+        };
     </script>
     <!--[if gte IE 9]>
       <style type="text/css">
@@ -1762,8 +1810,34 @@
             </div>
         </div>
     </div>
-    <div class="waiting-for-players-message" style="display: none;">
-        <span>Waiting for player(s) to reconnect!</span>
+    <div class="modal" id="gamePausedModal" tabindex="-1" role="dialog" aria-labelledby="gamePausedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="gamePausedModalLabel">Game paused!</h4>
+                </div>
+                <div class="modal-body">
+                    <h3 style="margin: 0px 0px;">Not enough players to continue.</h3>
+                    <p>Game will automatically resume once all players have connected.</p>
+                </div>
+                <div class="modal-footer">
+                    <%
+                    // game host may cancel game
+                    if(Game.OwnerPlayerId == PlayerData.PlayerId)
+                    {
+                        // show cancel game button if game host
+                        Response.Write("<button class=\"btn btn-primary\" onclick=\"cancelGame(); return false;\">Cancel game</button>");
+                    }
+                    else
+                    {
+                        // show quit button
+                        Response.Write("<button class=\"btn btn-primary\" onclick=\"quitGame(); return false;\">Quit game</button>");
+                    }
+                    %>
+                    
+                </div>
+            </div>
+        </div>
     </div>
     <div class="offline-message" style="display: none;">
         <input type="button" id="btnReconnect" onclick="reconnect();" value="Reconnect" class="btn btn-primary btn-block" style="height: 50%;" />

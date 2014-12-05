@@ -97,20 +97,20 @@
                 lobby_html += "<td>" + gameLobby.Name + "</td>";
                 lobby_html += "<td class='text-center'>" + gameLobby.OwnerPlayerName + "</td>";
                 lobby_html += "<td class='text-center'>" + gameLobby.NumPlayersInLobby + " / " + gameLobby.MaxPlayers + "</td>";
-                <%
-        if (UserPlayers.Length != null && UserPlayers.Length > 0)
-        {
-                %>
+<%
+    if (UserSession != null && UserSession.PlayerId > 0)
+    {
+%>
                 lobby_html += "<td class='text-center'><a href=\"GameLobbyRoom.aspx?GameLobbyId=" + gameLobby.GameLobbyId + "\" class=\"btn btn-sm btn-success\">Join</a></td>";
-                <%
-        }
-        else
-        {
-                %>
+<%
+    }
+    else
+    {
+%>
                 lobby_html += "<td class='text-center'><a onclick=\"alert('You must create a Player before joining a game');\" class=\"btn btn-sm btn-danger\">Join</a></td>";
-                <%
-                }
-                %>
+<%
+    }
+%>
                 lobby_html += "</tr>";
             }
 
@@ -126,12 +126,36 @@
             $(".total-num-lobbies").html(_lobbies.length);
         };
 
-        function joinGame() {
-            var gameId = <%=GameInProgress.GameId %>;
+        // gameId of game in progress (if any)
+        var gameId = <%= (GameInProgress != null) ? GameInProgress.GameId : 0 %>;
 
+        // active player id
+        var playerId = <%= (UserSession != null) ? UserSession.PlayerId : 0 %>;
+
+        function joinGame() {
             window.location = "Play.aspx?GameId=" + gameId;
 
             return false;
+        }
+
+        function quitGame() {
+            // close game in progress
+            $("#gameInProgressModal").modal('close');
+
+            if(isConnected) {
+                // quit game
+                hub.server.quitGame(playerId, gameId);
+            }
+        }
+
+        function cancelGame() {
+            // close game in progress
+            $("#gameInProgressModal").modal('close');
+
+            if(isConnected) {
+                // cancel game
+                hub.server.cancelGame(playerId, gameId);
+            }
         }
     </script>
 </asp:Content>
@@ -276,7 +300,15 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <input type="button" class="btn btn-lg btn-block btn-primary" value="Rejoin game!" onclick="joinGame(); return false;" />
+                        <input type="button" class="btn btn-lg btn-block btn-primary" value="Rejoin game" onclick="joinGame(); return false;" />
+                        <% 
+                        // player is the game host
+                        if(GameInProgress != null && GameInProgress.OwnerPlayerId == UserSession.PlayerId) {
+                        %>
+                        <input type="button" class="btn btn-lg btn-block btn-danger" value="Cancel game" onclick="cancelGame(); return false;" />
+                        <% } else { %>
+                        <input type="button" class="btn btn-lg btn-block btn-danger" value="Quit game" onclick="quitGame(); return false;" />
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -300,6 +332,7 @@
             });
  
             <%
+            // show game in progress modal
             if (GameInProgress != null && GameInProgress.GameId > 0)
             {
                 Response.Write("setTimeout(function() { $('#gameInProgressModal').modal('show'); }, 1000);");

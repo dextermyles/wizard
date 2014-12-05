@@ -26,12 +26,11 @@ namespace WizardGame.Helpers
 
         public bool HasCards()
         {
-            if (Cards == null)
-                return false;
-
-            if (Cards.Length > 0)
+            // player has cards
+            if (Cards != null && Cards.Length > 0)
                 return true;
 
+            // player has no cards
             return false;
         }
 
@@ -41,7 +40,7 @@ namespace WizardGame.Helpers
             List<Card> cardList = (Cards == null) ? 
                 new List<Card>() : Cards.ToList();
 
-            // assign player id
+            // update owner id
             _card.OwnerPlayerId = PlayerId;
 
             // add card to list
@@ -51,6 +50,7 @@ namespace WizardGame.Helpers
             Cards = cardList.OrderBy(c => c.Suit).ThenBy(c => c.Value).ToArray();
 
             // clear list
+            cardList.Clear();
             cardList = null;
         }
 
@@ -58,26 +58,27 @@ namespace WizardGame.Helpers
         {
             // validation
             if (Cards == null)
-                return null; ;
-
-            Card returnCard = null;
+                return null;
 
             // card list
             List<Card> cardList = Cards.ToList();
 
-            // update last used card
-            LastCardPlayed = _card;
-
-            // remove card
+            // loop through cards
             for (int i = 0; i < Cards.Length; i++)
             {
+                // card ref
                 Card card = Cards[i];
 
+                // card exists in players hand
                 if (card.Id == _card.Id)
                 {
-                    returnCard = card;
+                    // update last used card
+                    LastCardPlayed = card;
 
+                    // remove card from players hand
                     cardList.Remove(card);
+
+                    break;
                 }    
             }
 
@@ -85,10 +86,11 @@ namespace WizardGame.Helpers
             Cards = cardList.ToArray();
 
             // clear list
+            cardList.Clear();
             cardList = null;
 
             // return played card
-            return returnCard;
+            return LastCardPlayed;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
+using WizardGame.Services;
 
 namespace WizardGame.Helpers
 {
@@ -114,7 +115,7 @@ namespace WizardGame.Helpers
             }
         }
 
-        public bool HasRoundEnded()
+        public bool PlayersHaveCards()
         {
             if (Players != null)
             {
@@ -123,11 +124,71 @@ namespace WizardGame.Helpers
                 {
                     // round has not ended if player still has cards
                     if (Players[i].HasCards())
-                        return false;
+                        return true;
                 }
             }
 
-            return true;
+            return false;
+        }
+
+        public Card GetBestCardFromCardsPlayed()
+        {
+            try
+            {
+                // cards have been played
+                if (CardsPlayed != null && CardsPlayed.Length > 0)
+                {
+                    // wizard led or all fluffs
+                    if (SuitToFollow == Suit.None)
+                    {
+                        // look for first wizard
+                        Card firstWizard = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
+
+                        // return first wizard
+                        if (firstWizard != null)
+                            return firstWizard;
+
+                        // check if all fluffs played
+                        List<Card> fluffList = CardsPlayed.Where(c => c.Suit == Suit.Fluff).ToList();
+
+                        // all flu
+                        if (fluffList != null && fluffList.Count > 0 && fluffList.Count == CardsPlayed.Length)
+                        {
+                            Card lastFluff = fluffList.LastOrDefault(c => c.Suit == Suit.Fluff);
+
+                            return lastFluff;
+                        }
+
+                        // get first non fluff
+                        Card firstNonFluff = CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
+
+                        // set suit to follow as first non fluff/wiz card
+                        if (firstNonFluff != null)
+                        {
+                            SuitToFollow = firstNonFluff.Suit;
+                        }
+                    }
+
+                    // get highest card from led suit
+                    Card highestCard = CardsPlayed.Where(c => c.Suit == SuitToFollow) // list of cards with same suit that was lead
+                        .OrderByDescending(c => c.Value) // sort by highest card
+                        .FirstOrDefault(); // get highest card
+
+                    // return highest card
+                    if (highestCard != null)
+                        return highestCard;
+                }
+            }
+            catch (Exception ex)
+            {
+                // log error
+                WizardService wizWS = new WizardService();
+                
+                wizWS.LogError(ex);
+            }
+
+            // highest card not found
+            return null;
         }
 
         public bool PlayCard(int playerId, Card card)
@@ -138,37 +199,44 @@ namespace WizardGame.Helpers
             // validate
             if (player != null && player.PlayerId > 0)
             {
+                // if no suit to follow has been set, next card can potentially be the leading suit
+                if (SuitToFollow == Suit.None)
+                {
+                    switch (card.Suit)
+                    {
+                        case Suit.Fluff:
+                            SuitToFollow = Suit.None;
+                            break;
+                        case Suit.Wizard:
+                            SuitToFollow = Suit.None;
+                            break;
+                        default:
+                            SuitToFollow = card.Suit;
+                            break;
+                    }
+                }
+
                 // play card
                 Card playedCard = player.PlayCard(card);
 
-                if(playedCard == null)
+                // card could not be played
+                if (playedCard == null)
                     return false;
 
                 // update turn flag
                 player.IsTurn = false;
 
                 // get cards played list
-                List<Card> cardsPlayedList = (CardsPlayed == null) ? 
+                List<Card> cardsPlayedList = (CardsPlayed == null) ?
                     new List<Card>() : CardsPlayed.ToList();
 
-                // if no suit to follow has been set, next card can potentially be the leading suit
-                if (SuitToFollow == Suit.None)
-                {
-                    if (card.Suit == Suit.Fluff)
-                        SuitToFollow = Suit.None;
-                    else if (card.Suit == Suit.Wizard)
-                        SuitToFollow = Suit.Wizard;
-                    else
-                        SuitToFollow = playedCard.Suit;
-                }                    
-                                    
                 // add card to played pile
                 cardsPlayedList.Add(playedCard);
 
                 // replace array
                 CardsPlayed = cardsPlayedList.ToArray();
 
-                // check if last player
+                // check if last to act
                 if (PlayerTurnIndex == LastToActIndex)
                 {
                     // update status
@@ -180,6 +248,9 @@ namespace WizardGame.Helpers
                     // validate turn #
                     if (Turn > Round)
                         Turn = Round;
+
+                    // reset suit to follow
+                    SuitToFollow = Suit.None;
                 }
                 else
                 {
@@ -192,9 +263,6 @@ namespace WizardGame.Helpers
                     // update turn flag
                     Players[PlayerTurnIndex].IsTurn = true;
                 }
-
-                // clear list
-                cardsPlayedList = null;
             }
 
             return true;
@@ -244,11 +312,12 @@ namespace WizardGame.Helpers
             // max rounds
             int maxRounds = (60 / Players.Length);
 
-            if (Round > maxRounds)
-                return false;
-
             // increment rounds
             Round++;
+
+            // game is over
+            if (Round > maxRounds)
+                return false;
 
             // set turn #
             Turn = 1;
@@ -287,9 +356,6 @@ namespace WizardGame.Helpers
             LastToActIndex = DealerPositionIndex;
 
             Players[LastToActIndex].IsLastToAct = true;
-
-            // set game status
-            Status = GameStateStatus.DealInProgress;
 
             // get number of cards to deal
             int numCardsToDeal = (Round * Players.Length);

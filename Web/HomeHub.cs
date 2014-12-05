@@ -12,6 +12,58 @@ namespace WizardGame
     {
         public WizardService wizWS = new WizardService();
 
+        public void CancelGame(int playerId, int gameId)
+        {
+            // get player ref
+            Player player = wizWS.GetPlayerById(playerId);
+
+            // get game data
+            Game game = wizWS.GetGameById(gameId);
+
+            // verify player is the host
+            if (playerId == game.OwnerPlayerId)
+            {
+                // mark game as completed
+                game.DateCompleted = DateTime.Now;
+
+                // save game in db
+                game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, game.DateCompleted, game.GameStateData, game.GroupNameId);
+
+                // broadcast game cancelled
+                Clients.Group(game.GroupNameId).gameCancelled();
+            }
+        }
+
+        public void QuitGame(int playerId, int gameId)
+        {
+            // player ref
+            Player player = wizWS.GetPlayerById(playerId);
+
+            // game ref
+            Game game = wizWS.GetGameById(gameId);
+
+            // gamePlayers ref
+            GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
+
+            // player belongs to game
+            if (gp != null && gp.GamePlayersId > 0)
+            {
+                // remove player from db
+                wizWS.DeletePlayerFromGame(playerId, gameId, string.Empty);
+
+                // get num remaining players
+                Player[] playersInGame = wizWS.ListPlayersByGameId(gp.GameId);
+
+                int numPlayersInGame = 0;
+
+                if (playersInGame != null)
+                    numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
+
+                // broadcast player quit
+                Clients.Group(game.GroupNameId).playerQuit(player, numPlayersInGame, true);
+            }
+        }
+
         public void ListAllGameLobbies(int maxLobbies)
         {
             // containers
