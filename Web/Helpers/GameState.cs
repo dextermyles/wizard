@@ -312,6 +312,10 @@ namespace WizardGame.Helpers
             // max rounds
             int maxRounds = (60 / Players.Length);
 
+            // cap rounds at 15 (20 is too much!)
+            if (maxRounds > 15)
+                maxRounds = 15;
+
             // increment rounds
             Round++;
 
@@ -383,8 +387,10 @@ namespace WizardGame.Helpers
             // set game status
             Status = GameStateStatus.BiddingInProgress;
 
-            // update trump card if cards remain
-            if (Deck.Cards != null && Deck.Cards.Length > 0)
+            // no trump on last round
+            if ((Deck.Cards != null) 
+                && (Deck.Cards.Length > 0)
+                && (Round != maxRounds))
             {
                 // determine trump
                 TrumpCard = Deck.TakeTopCard();
@@ -394,6 +400,13 @@ namespace WizardGame.Helpers
                 {
                     Status = GameStateStatus.SelectTrump;
                 }
+            }
+            else
+            {
+                // final round
+                TrumpCard = new Card();
+                TrumpCard.Suit = Suit.Fluff;
+                TrumpCard.Value = 0;
             }
 
             return true;

@@ -33,40 +33,44 @@ namespace WizardGame
                 // get game data
                 Game game = wizWS.GetGameById(gp.GameId);
 
-                // validate
-                if (!string.IsNullOrEmpty(game.GroupNameId))
+                // game is has not completed
+                if (game != null && !game.DateCompleted.HasValue)
                 {
-                    // get player
-                    Player player = wizWS.GetPlayerById(gp.PlayerId);
-
                     // validate
-                    if (player.PlayerId > 0)
+                    if (!string.IsNullOrEmpty(game.GroupNameId))
                     {
-                        // update player state to disconnected
-                        wizWS.UpdateGamePlayers(game.GameId, player.PlayerId, connectionId, ConnectionState.DISCONNECTED);
+                        // get player
+                        Player player = wizWS.GetPlayerById(gp.PlayerId);
 
-                        // players in game ref
-                        Player[] playersInGame = wizWS.ListPlayersByGameId(gp.GameId);
-
-                        int numPlayersInGame = 0;
-
-                        // get num connected players
-                        if (playersInGame != null)
-                            numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
-
-                        // player left (navigated away from game page)
-                        if (stopCalled)
+                        // validate
+                        if (player.PlayerId > 0)
                         {
-                            // player left game
-                            Clients.Group(game.GroupNameId).playerQuit(player, numPlayersInGame, false);
-                        }
-                        else
-                        {
-                            // broadcast player timed out
-                            Clients.Group(game.GroupNameId).playerTimedOut(player, numPlayersInGame);
+                            // update player state to disconnected
+                            wizWS.UpdateGamePlayers(game.GameId, player.PlayerId, connectionId, ConnectionState.DISCONNECTED);
+
+                            // players in game ref
+                            Player[] playersInGame = wizWS.ListPlayersByGameId(gp.GameId);
+
+                            int numPlayersInGame = 0;
+
+                            // get num connected players
+                            if (playersInGame != null)
+                                numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
+
+                            // player left (navigated away from game page)
+                            if (stopCalled)
+                            {
+                                // player left game
+                                Clients.Group(game.GroupNameId).playerQuit(player, numPlayersInGame, false);
+                            }
+                            else
+                            {
+                                // broadcast player timed out
+                                Clients.Group(game.GroupNameId).playerTimedOut(player, numPlayersInGame);
+                            }
                         }
                     }
-                }
+                } 
             }
 
             return base.OnDisconnected(stopCalled);
@@ -89,36 +93,48 @@ namespace WizardGame
                 // game ref
                 Game game = wizWS.GetGameById(gameId);
 
-                // gamePlayers ref
-                GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
-
-                // add player to game lobby
-                wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.CONNECTED);
-
-                // get connected players
-                Player[] playersInGame = wizWS.ListPlayersByGameId(gameId);
-
-                int numPlayersInGame = 0;
-
-                if (playersInGame != null)
-                    numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
-
-                // player exists in game already
-                if (gp != null && gp.GamePlayersId > 0)
+                // game has not completed
+                if (game != null && !game.DateCompleted.HasValue)
                 {
-                    // player reconnected
-                    Clients.Group(groupNameId).playerReconnected(player, numPlayersInGame);
+                    // gamePlayers ref
+                    GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
 
-                    reconnected = true;
+                    // add player to game lobby
+                    wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.CONNECTED);
+
+                    // get connected players
+                    Player[] playersInGame = wizWS.ListPlayersByGameId(gameId);
+
+                    int numPlayersInGame = 0;
+
+                    if (playersInGame != null)
+                        numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
+
+                    // player exists in game already
+                    if (gp != null && gp.GamePlayersId > 0)
+                    {
+                        // player reconnected
+                        Clients.Group(groupNameId).playerReconnected(player, numPlayersInGame);
+
+                        reconnected = true;
+                    }
+                    else
+                    {
+                        // player connected for first time
+                        Clients.Group(groupNameId).playerJoinedGame(player, numPlayersInGame);
+                    }
+
+                    // broadcast game data
+                    Clients.Caller.receiveGameData(game, reconnected);
                 }
                 else
                 {
-                    // player connected for first time
-                    Clients.Group(groupNameId).playerJoinedGame(player, numPlayersInGame);
-                }
+                    // point leader ref
+                    Player pointLeader = game.GameStateData.GetPointLeader();
 
-                // broadcast game data
-                Clients.Caller.receiveGameData(game, reconnected);
+                    // broadcast game data
+                    Clients.Caller.gameEnded(pointLeader, game);
+                }
             }
         }
 

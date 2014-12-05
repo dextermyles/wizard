@@ -195,14 +195,17 @@
             appendChatMessage(_player.Name, "Joined the game lobby.")
 
             // update num connected players
-            numPlayersConnected = numPlayersInGame;
+            numPlayersConnected = parseInt(numPlayersInGame);
+
+            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // all players present
             if(numPlayersConnected == numPlayersExpected) {
                 // broadcast
                 appendChatMessage("Server","All players present. Resuming game!");
 
-                // todo: resumeGame();
+                // resume game
+                resumeGame();
             }
         };
 
@@ -212,46 +215,55 @@
             appendChatMessage("Server", _player.Name + " reconnected.");
 
             // update num connected players
-            numPlayersConnected = numPlayersInGame;
+            numPlayersConnected = parseInt(numPlayersInGame);
+
+            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // all players present
             if(numPlayersConnected == numPlayersExpected) {
                 // broadcast
                 appendChatMessage("Server","All players present. Resuming game!");
 
-                // todo: resumeGame();
+                // resume game
+                resumeGame();
             }
         };
 
         hub.client.playerQuit = function playerQuit(_player, numPlayersInGame, forcedQuit) {
             // get num of connect players
-            numPlayersConnected = numPlayersInGame;
+            numPlayersConnected = parseInt(numPlayersInGame);
 
             // broadcast
             appendChatMessage("Server", _player.Name + " quit the game.");
+
+            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // pause game if missing players
             if(numPlayersConnected < numPlayersExpected) {
                 // broadcast
                 appendChatMessage("Server","Not all players are connected. Pausing game!");
 
-                // todo: pauseGame();
+                // pause game
+                pauseGame();
             }
         };
 
         hub.client.playerTimedOut = function playerTimedOut(_player, numPlayersInGame) {
             // get num of connect players
-            numPlayersConnected = numPlayersInGame;
+            numPlayersConnected = parseInt(numPlayersInGame);
 
             // broadcast
             appendChatMessage("Server", _player.Name + " timed out.");
+
+            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // pause game if missing players
             if(numPlayersConnected < numPlayersExpected) {
                 // broadcast
                 appendChatMessage("Server","Not all players are connected. Pausing game!");
 
-                // todo: pauseGame();
+                // pause game
+                pauseGame();
             }
         };
 
@@ -273,12 +285,16 @@
 
             // update game data
             processGameData(gameData);    
+
+            // player reconnected
+            if(isReconnect) {
+                // start turn
+                startTurn();
+            }
         };
 
         // receiveBid
         hub.client.receiveBid = function receiveBid(_player, bid, gameData) {
-            console.log(gameData);
-
             // update game state
             updateGameState(gameData.GameStateData);
 
@@ -303,8 +319,6 @@
 
         // trumpUpdated
         hub.client.trumpUpdated = function trumpUpdated(_player, newTrumpCard, gameData) {
-            console.log(gameData);
-
             // update game state
             updateGameState(gameData.GameStateData);
 
@@ -346,13 +360,18 @@
 
         // cardPlayed
         hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData) {
-            console.log(gameData);
-
             // update game state
             updateGameState(gameData.GameStateData);
 
-            // update player cards
-            drawPlayerCards();
+            // round is not over
+            if(!isRoundOver) {
+                // update player cards
+                drawPlayerCards();
+            }
+            else {
+                // clear cards from table
+                $playerCards.html('');
+            }
 
             // if score history passed
             if(previousRoundScoreArray != null)
@@ -484,6 +503,11 @@
             $(".winner-points").html(_player.Score);
             $(".winner-name").html(_player.Name);
 
+            // update profile picture
+            if(_player.PictureURL.indexOf('http') > -1) {
+                $(".winner-profile-picture").attr("src", _player.PictureURL);
+            }
+            
             // update ui
             processGameData(gameData);
 
@@ -644,8 +668,6 @@
                 score_total += lastGameState.Players[i].Bid;
             }
 
-            console.log('total bids:' + score_total);
-
             return score_total;
         }
 
@@ -738,19 +760,8 @@
         };
 
         function processGameData(gameData) {
-            // log old state
-            if(lastGameState != null) {
-                // old state
-                console.log("old game state:");
-                console.log(lastGameState);
-            }
-
             // update game state
             updateGameState(gameData.GameStateData);
-
-            console.log("---------------");
-            console.log("new game state:");
-            console.log(lastGameState);
 
             // get vars
             var players = lastGameState.Players;
@@ -972,8 +983,6 @@
             // update flag
             isSelectingBid = true;
 
-            console.log("selecting bid");
-
             // draw player bids
             var playerBidsHtml = drawPlayerBidsHtml();
 
@@ -993,8 +1002,8 @@
             $playerBid.html('');
 
             // add new button based on round #
-            for(var i = 0; i <= round; i++) {
-                $playerBid.append("<a onclick=\"verifyBid(" + i + ");\" class=\"btn btn-lg btn-default\">" + i + "</a>&nbsp;");
+            for(var i = 0; i <= lastGameState.Round; i++) {
+                $playerBid.append("<a onclick=\"verifyBid(" + i + ");\" class=\"btn btn-lg btn-default\" style=\"width: 54px !important; margin:1px 1px;\">" + i + "</a>");
             }
 
             // show bid box
@@ -1021,8 +1030,6 @@
 
             // update flag
             isSelectingCard = true;
-
-            console.log("selecting card to play");
 
             // draw player bids
             var playerBidsHtml = drawPlayerBidsHtml();
@@ -1242,8 +1249,6 @@
         var targetPlayerIndex = 0;
 
         function dealCards() {
-            console.log("dealing cards");
-
             // update dealing flag
             isDealing = true;
 
@@ -1272,8 +1277,6 @@
             if(numCardsToDeal < 0)
                 numCardsToDeal = 0;
 
-            console.log('num cards left to deal: ' + numCardsToDeal);
-            
             // no cards left to deal - flip trump card and animate
             if(numCardsToDeal == 0) {
                 // trump card data
@@ -1708,21 +1711,17 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
-                            <table class="table table-responsive player-bids"></table>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Your cards:</label>
-                        <div class="player-cards well well-sm"></div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
+                        <table class="table table-responsive player-bids"></table>
                     </div>
                     <div>
-                        <label>Select your bid:</label>
-                        <div class="player-bid">
-                            <!-- placeholder for buttons -->
-                        </div>
+                        <div class="player-cards well well-sm"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="player-bid">
+                        <!-- placeholder for buttons -->
                     </div>
                 </div>
             </div>
@@ -1790,9 +1789,22 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <h2 style="margin-top: 0px;">Congratulations!</h2>
-                        <span class="winner-name">Player</span>
-                        won the game with <span class="winner-points">0</span> points!
+                        <h3 style="margin-top: 0px;">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                            Congratulations, <span class="winner-name" style="text-transform: capitalize;">Player</span>!
+                        </h3>
+                        <div class="media">
+                            <a class="media-left" href="#">
+                                <img src="holder.js/64x64/" class="winner-profile-picture img-thumbnail">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    <span class="winner-name" style="text-transform: capitalize;"></span>
+                                    won the game with <span class="winner-points">0</span> points!
+                                </h4>
+                                <a href="HostGame.aspx">Start a new game</a> or look <a href="Home.aspx">for an existing game lobby</a>.
+                            </div>
+                        </div>
                     </div>
                     <div class="panel panel-default" style="margin-bottom: 0px;">
                         <div class="panel-heading">
@@ -1800,10 +1812,10 @@
                         </div>
                         <table class="table table-responsive final-scores-table"></table>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-lg btn-primary btn-block" onclick="window.location='Home.aspx';">
+                    <button class="btn btn-lg btn-primary" onclick="window.location='Home.aspx'; return false;">
                         Exit game
                     </button>
                 </div>
@@ -1822,19 +1834,18 @@
                 </div>
                 <div class="modal-footer">
                     <%
-                    // game host may cancel game
-                    if(Game.OwnerPlayerId == PlayerData.PlayerId)
-                    {
-                        // show cancel game button if game host
-                        Response.Write("<button class=\"btn btn-primary\" onclick=\"cancelGame(); return false;\">Cancel game</button>");
-                    }
-                    else
-                    {
-                        // show quit button
-                        Response.Write("<button class=\"btn btn-primary\" onclick=\"quitGame(); return false;\">Quit game</button>");
-                    }
+                        // game host may cancel game
+                        if (Game.OwnerPlayerId == PlayerData.PlayerId)
+                        {
+                            // show cancel game button if game host
+                            Response.Write("<button class=\"btn btn-primary\" onclick=\"cancelGame(); return false;\">Cancel game</button>");
+                        }
+                        else
+                        {
+                            // show quit button
+                            Response.Write("<button class=\"btn btn-primary\" onclick=\"quitGame(); return false;\">Quit game</button>");
+                        }
                     %>
-                    
                 </div>
             </div>
         </div>
@@ -1843,7 +1854,7 @@
         <input type="button" id="btnReconnect" onclick="reconnect();" value="Reconnect" class="btn btn-primary btn-block" style="height: 50%;" />
         <input type="button" id="btnQuit" onclick="quitGame();" value="Quit game" class="btn btn-default btn-block" style="height: 50%;" />
     </div>
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             $(".modal").modal({
                 backdrop: 'static',
@@ -1873,7 +1884,7 @@
     <audio class="soundStartTurn" preload="auto" style="display: none;">
         <source src="Assets/Sounds/beep.mp3" type="audio/mpeg">
     </audio>
-    <audio class="soundCardPlayed" preload="auto" style="display: none;" >
+    <audio class="soundCardPlayed" preload="auto" style="display: none;">
         <source src="Assets/Sounds/card-played.mp3" type="audio/mpeg">
     </audio>
 </asp:Content>
