@@ -39,18 +39,9 @@
 
         // list game lobbies
         function getListOfGameLobbies() {
-            // log
-            console.log("calling listAllGameLobbies on server");
-
             if (isConnected) {
                 // request list of game lobbies
-                hub.server.listAllGameLobbies(maxLobbies)
-                .done(function () {
-                    console.log("getListOfGameLobbies executed on server");
-                })
-                .fail(function (msg) {
-                    console.log("failed to execute getListOfGameLobbies: " + msg);
-                });
+                hub.server.listAllGameLobbies(maxLobbies);
             }
         };
 
@@ -79,18 +70,6 @@
 
                 if(gameLobby == null)
                     break;
-
-                /*
-                DateCreated: "2014-12-04T20:45:36.56"
-                GameLobbyId: 102
-                InProgress: false
-                MaxPlayers: 6
-                Name: "test"
-                NumPlayersInLobby: 1
-                OwnerPlayerId: 18
-                OwnerPlayerName: "steve"
-                Password: ""
-                */
 
                 // append new lobbies
                 lobby_html += "<tr>";
