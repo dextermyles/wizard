@@ -280,7 +280,7 @@
         };
 
         // receiveGameData
-        hub.client.receiveGameData = function receiveGameData(gameData, isReconnect, numPlayersInGame) {cance
+        hub.client.receiveGameData = function receiveGameData(gameData, isReconnect, numPlayersInGame) {
             // get num of connect players
             numPlayersConnected = parseInt(numPlayersInGame);
 
@@ -300,6 +300,15 @@
 
                 // pause game
                 pauseGame();
+            }
+
+            // pause game if missing players
+            if(numPlayersConnected == numPlayersExpected) {
+                // broadcast
+                appendChatMessage("Server","All players present. Resuming game!");
+
+                // pause game
+                resumeGame();
             }
         };
 
