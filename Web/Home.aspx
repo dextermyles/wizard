@@ -150,7 +150,7 @@
 
         function cancelGame() {
             // close game in progress
-            $("#gameInProgressModal").modal('close');
+            $("#gameInProgressModal").modal('hide');
 
             if(isConnected) {
                 // cancel game
