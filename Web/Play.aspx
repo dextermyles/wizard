@@ -1855,7 +1855,7 @@
                     <h4 class="modal-title" id="gamePausedModalLabel">Game paused!</h4>
                 </div>
                 <div class="modal-body">
-                    <h3 style="margin: 0px 0px;">Not enough players to continue.</h3>
+                    <h4 style="margin-top: 0px;">Not enough players to continue.</h4>
                     <p>Game will automatically resume once all players have connected.</p>
                 </div>
                 <div class="modal-footer">
