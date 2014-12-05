@@ -280,8 +280,9 @@
         };
 
         // receiveGameData
-        hub.client.receiveGameData = function receiveGameData(gameData, isReconnect) {
-            console.log('is reconnet: ' + isReconnect);
+        hub.client.receiveGameData = function receiveGameData(gameData, isReconnect, numPlayersInGame) {cance
+            // get num of connect players
+            numPlayersConnected = parseInt(numPlayersInGame);
 
             // update game data
             processGameData(gameData);    
@@ -290,6 +291,15 @@
             if(isReconnect) {
                 // start turn
                 startTurn();
+            }
+
+            // pause game if missing players
+            if(numPlayersConnected < numPlayersExpected) {
+                // broadcast
+                appendChatMessage("Server","Not all players are connected. Pausing game!");
+
+                // pause game
+                pauseGame();
             }
         };
 
@@ -539,7 +549,21 @@
 
             // redirect
             window.location = 'Home.aspx';
+
+            return false;
         };
+
+        function cancelGame() {
+            if(isConnected) {
+                // cancel game
+                hub.server.cancelGame(gameId, currentPlayer.PlayerId);
+            }
+
+            // redirect
+            window.location = 'Home.aspx';
+
+            return false;
+        }
 
         function reconnect() {
             // reconnect to server

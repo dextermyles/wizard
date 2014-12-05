@@ -125,7 +125,7 @@ namespace WizardGame
                     }
 
                     // broadcast game data
-                    Clients.Caller.receiveGameData(game, reconnected);
+                    Clients.Caller.receiveGameData(game, reconnected, numPlayersInGame);
                 }
                 else
                 {
