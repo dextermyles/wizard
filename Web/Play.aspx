@@ -1686,7 +1686,7 @@
         </div>
         <div class="card-holder row">
             <div class="player-cards col-xs-9"></div>
-            <div class="trump-card-container col-xs-3 text-center">
+            <div class="trump-card-container col-xs-3 text-right">
                 <a class="trump-card">
                     <img src="Assets/Cards/deck_cover.png" class="card" alt="trump card" />
                 </a>
