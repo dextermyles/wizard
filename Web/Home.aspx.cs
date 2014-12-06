@@ -45,6 +45,9 @@ namespace WizardGame
             // get list of players for current user
             UserPlayers = wizWS.ListPlayersByUserId(UserSession.UserId);
 
+            // update session with default player
+            SetDefaultPlayer();
+
             // get user data
             UserData = wizWS.GetUserById(UserSession.UserId);
 
@@ -55,10 +58,7 @@ namespace WizardGame
             }
 
             // update page details
-            UpdatePageDetails();
-
-            // update session with default player
-            SetDefaultPlayer(); 
+            UpdatePageDetails(); 
         }
 
         private void SetDefaultPlayer()
@@ -215,6 +215,7 @@ namespace WizardGame
 
             // new player
             Player player = wizWS.UpdatePlayer(0, PlayerName.Text.Trim(), photoUrl, UserSession.UserId);
+
 
             // validate
             if(player != null && player.PlayerId > 0) 

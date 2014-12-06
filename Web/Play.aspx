@@ -417,7 +417,7 @@
             var $cardsPlayedDiv = null;
             
             // if player won, animate cards to their card pile
-            if(_playerWinner.PlayerId == currentPlayer.PlayerId) {
+            if(_playerWinner != null && _playerWinner.PlayerId == currentPlayer.PlayerId) {
                 $cardsPlayedDiv = $(".card-holder .player-cards");
             }
             else {
