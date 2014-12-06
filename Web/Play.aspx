@@ -509,7 +509,7 @@
 
                             // announce next players turn to act
                             startTurn();
-                        }, 1500);
+                        }, 3000);
                     }
                 });
         };
