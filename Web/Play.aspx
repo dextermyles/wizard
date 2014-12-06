@@ -814,6 +814,9 @@
             // update total rounds
             var total_rounds = (60 / players.length);
 
+            if(total_rounds > 15)
+                total_rounds = 15; // capped at 15
+
             // upodate round #
             $(".round-info").html("Round: " + round + " of " + total_rounds);
 
