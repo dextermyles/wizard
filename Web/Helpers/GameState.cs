@@ -154,7 +154,7 @@ namespace WizardGame.Helpers
                         // all flu
                         if (fluffList != null && fluffList.Count > 0 && fluffList.Count == CardsPlayed.Length)
                         {
-                            Card lastFluff = fluffList.LastOrDefault(c => c.Suit == Suit.Fluff);
+                            Card lastFluff = fluffList.FirstOrDefault(c => c.Suit == Suit.Fluff);
 
                             return lastFluff;
                         }
