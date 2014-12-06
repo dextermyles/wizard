@@ -164,6 +164,13 @@ namespace WizardGame
             // update player last active date
             wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
 
+            Session session = Functions.GetSessionFromCookie();
+
+            if(session != null) {
+                wizWS.UpdateSession(session.Secret, session.UserId, player.PlayerId, connectionId);
+            }
+            
+
             // broadcast enterBid event
             Clients.Group(groupNameId).receiveBid(player, bid, game);
         }

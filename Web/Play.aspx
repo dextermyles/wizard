@@ -1046,50 +1046,6 @@
             $('#selectBidModal').modal('show');
         };
 
-        var isSelectingCard = false;
-
-        // select card to play
-        function selectCard() {
-            // validate
-            if(!currentPlayer.IsTurn) {
-                logMessage("-- you must wait your turn --");
-
-                return false;
-            }
-
-            // check if already selecting card
-            if(isSelectingCard)
-                return;
-
-            // play audio
-            $(".soundStartTurn").trigger('play');
-
-            // update flag
-            isSelectingCard = true;
-
-            // draw player bids
-            var playerBidsHtml = drawPlayerBidsHtml();
-
-            $(".player-bids").html(''); //clear player bids
-            $(".player-bids").append(playerBidsHtml);
-
-            // update total bids
-            var total_bids = getTotalBids();
-
-            $(".total-bids").html(total_bids);
-
-            // first to act
-            if(lastGameState.CardsPlayed == null) {
-                $(".modal-cards-played").hide();
-            }
-            else {
-                $(".modal-cards-played").show();
-            }
-
-            // show select card box
-            $('#selectCardModal').modal('show');
-        };
-
         var isSelectingTrump = false;
 
         function selectTrump() {
@@ -1153,28 +1109,92 @@
             } 
         };
 
-        function verifySelectedCard(selectedCard) {
+        var isSelectingCard = false;
+
+        // select card to play
+        function selectCard() {
             // validate
             if(!currentPlayer.IsTurn) {
                 logMessage("-- you must wait your turn --");
 
-                return;
+                return false;
             }
+
+            // check if already selecting card
+            if(isSelectingCard)
+                return false;
+
+            // play audio
+            $(".soundStartTurn").trigger('play');
+
+            // update flag
+            isSelectingCard = true;
+
+            // draw player bids
+            var playerBidsHtml = drawPlayerBidsHtml();
+
+            $(".player-bids").html(''); //clear player bids
+            $(".player-bids").append(playerBidsHtml);
+
+            // update total bids
+            var total_bids = getTotalBids();
+
+            $(".total-bids").html(total_bids);
+
+            // first to act
+            if(lastGameState.CardsPlayed == null) {
+                $(".modal-cards-played").hide();
+            }
+            else {
+                $(".modal-cards-played").show();
+            }
+
+            // show select card box
+            $('#selectCardModal').modal('show');
+        };
+
+        var preselectedCard = null;
+
+        function verifySelectedCard(selectedCard) {
+            // suit to follow
+            var suitToFollow = lastGameState.SuitToFollow;
+
+            // $card ref
+            var $card = $(selectedCard);
+
+            // card id
+            var cardId = $card.attr("id");   
+
+            // card suit
+            var cardSuit = parseInt($card.attr("suit"));
+
+            // card value
+            var cardValue = parseInt($card.attr("value"));
+
+            // create temp card object
+            var tempSelectedCard = {
+                Id: cardId,
+                Suit: parseInt(cardSuit),
+                Value: parseInt(cardValue),
+                SelectedCard: $card
+            };
+
+            // log
+            console.log('temp selected card: ' + tempSelectedCard);
+
+            
 
             if(lastGameState.Status != gameStateStatus.RoundInProgress) {
                 logMessage("-- you cant play a card right now --");
 
-                return;
+                return false;
             }
 
-            var suitToFollow = lastGameState.SuitToFollow;
-            var $card = $(selectedCard);
-            var cardId = $card.attr("id");   
-            var cardSuit = parseInt($card.attr("suit"));
-            var cardValue = parseInt($card.attr("value"));
-
+            
+            
+            // perform validation on the card being played
             // not player fluff or wizard
-            if(cardSuit != suit.Fluff && cardSuit != suit.Wizard) {
+            if(tempSelectedCard.Suit != suit.Fluff && tempSelectedCard.Suit != suit.Wizard) {
                 // not first to act
                 if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
                     // if wizard is led, then allow any card to be played
@@ -1194,20 +1214,38 @@
                 }
             }
             
-            // hide modal
-            $('#selectCardModal').modal('hide');
+            // not players turn
+            if(!currentPlayer.IsTurn) {
+                // update preselected card 
+                preselectedCard = tempSelectedCard;
+
+                // animate card slightly to show it has been selected
+                preselectedCard.SelectedCard.children("img").css("margin-top", "-50px");
+            }
 
             // update flag
             isSelectingCard = false;
 
-            logMessage("-- selected card: " + cardValue + " of " + getSuitName(cardSuit) + " (" + cardSuit + ")");
+            // log
+            console.log("card selected: " + tempSelectedCard);
 
+            // dont send data if not players turn
+            if(!currentPlayer.IsTurn) {
+                return false;
+            }
+
+            // reset preselected card
+            preselectedCard = null;
+
+            // remove card
+            tempSelectedCard.SelectedCard.remove();
+            
             // send data to server
             var cardObject = {
-                Id: cardId,
+                Id: tempSelectedCard.Id,
                 OwnerPlayerId: currentPlayer.PlayerId,
-                Suit: cardSuit,
-                Value: cardValue
+                Suit: tempSelectedCard.Suit,
+                Value: tempSelectedCard.Value
             };
 
             if(isConnected) {
@@ -1253,8 +1291,11 @@
             }
                 // play card
             else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
-                // select card to play
-                selectCard();
+                // check if player has preselected card
+                if(preselectedCard != null) {
+                    // attempt to play selected card
+                    verifySelectedCard(preselectedCard.SelectedCard.get(0));
+                }
             }
             else {
                 console.log("-- cant start turn - game state unknown: " + lastGameState.Status);
@@ -1522,8 +1563,44 @@
                 if(is_playable) {
                     // card is playable
                     $playerCards.append("<a onclick='verifySelectedCard(this);' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "' " + style + " title='" + fullCardName + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
+                    
+                    // check if card was preselected (it gets erased on every card draw)
+                    if(preselectedCard != null) {
+
+                        // preselected card is no longer playable
+                        if(preselectedCard.Id == card.Id) {
+
+                            // get last appended player card
+                            var $card = $($playerCards.children("a").last());
+
+                            // create temp card object
+                            var tempSelectedCard = {
+                                Id: cardId,
+                                Suit: parseInt(cardSuit),
+                                Value: parseInt(cardValue),
+                                SelectedCard: $card
+                            };
+
+                            // overwrite preselected card
+                            preselectedCard = tempSelectedCard;
+
+                            // offset preselected card
+                            preselectedCard.SelectedCard.children("img").css("margin-top", "-50px");
+                        }
+                    }
                 }
                 else {
+                    // check if card is preselected
+                    if(preselectedCard != null) {
+                        // preselected card is no longer playable
+                        if(preselectedCard.Id == card.Id) {
+                            preselectedCard.SelectedCard.children("img").css("margin-top", "0px");
+
+                            // clear preselected card
+                            preselectedCard = null;
+                        }
+                    }
+
                     // card is not playable
                     $playerCards.append("<a title='" + fullCardName + "' class='unplayable'" + style + "><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
                 }

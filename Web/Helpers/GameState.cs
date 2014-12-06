@@ -138,36 +138,30 @@ namespace WizardGame.Helpers
                 // cards have been played
                 if (CardsPlayed != null && CardsPlayed.Length > 0)
                 {
-                    // wizard led or all fluffs
+                    // check for all fluffs
                     if (SuitToFollow == Suit.None)
                     {
-                        // look for first wizard
-                        Card firstWizard = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
-
-                        // return first wizard
-                        if (firstWizard != null)
-                            return firstWizard;
-
                         // check if all fluffs played
                         List<Card> fluffList = CardsPlayed.Where(c => c.Suit == Suit.Fluff).ToList();
 
-                        // all flu
+                        // all fluffs
                         if (fluffList != null && fluffList.Count > 0 && fluffList.Count == CardsPlayed.Length)
                         {
-                            Card lastFluff = fluffList.LastOrDefault(c => c.Suit == Suit.Fluff);
+                            // first fluff ends up winnin the trick
+                            Card firstFluff = fluffList.FirstOrDefault(c => c.Suit == Suit.Fluff);
 
-                            return lastFluff;
-                        }
-
-                        // get first non fluff
-                        Card firstNonFluff = CardsPlayed.FirstOrDefault(c => c.Suit != Suit.Fluff);
-
-                        // set suit to follow as first non fluff/wiz card
-                        if (firstNonFluff != null)
-                        {
-                            SuitToFollow = firstNonFluff.Suit;
+                            // return first fluff
+                            return firstFluff;
                         }
                     }
+
+                    // look for first wizard
+                    Card firstWizard = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
+
+                    // return first wizard
+                    if (firstWizard != null)
+                        return firstWizard;
+
 
                     // get highest card from led suit
                     Card highestCard = CardsPlayed.Where(c => c.Suit == SuitToFollow) // list of cards with same suit that was lead
@@ -248,9 +242,6 @@ namespace WizardGame.Helpers
                     // validate turn #
                     if (Turn > Round)
                         Turn = Round;
-
-                    // reset suit to follow
-                    SuitToFollow = Suit.None;
                 }
                 else
                 {
@@ -390,7 +381,7 @@ namespace WizardGame.Helpers
             // no trump on last round
             if ((Deck.Cards != null) 
                 && (Deck.Cards.Length > 0)
-                && (Round != maxRounds))
+                && (Round <= maxRounds))
             {
                 // determine trump
                 TrumpCard = Deck.TakeTopCard();
