@@ -168,6 +168,12 @@ namespace WizardGame.Helpers
                             SuitToFollow = firstNonFluff.Suit;
                         }
                     }
+                     
+                    // get highest trump
+                    Card highestTrumpCard = CardsPlayed.Where(c => c.Suit == TrumpCard.Suit).OrderByDescending(c => c.Value).FirstOrDefault();
+
+                    if (highestTrumpCard != null)
+                        return highestTrumpCard;
 
                     // get highest card from led suit
                     Card highestCard = CardsPlayed.Where(c => c.Suit == SuitToFollow) // list of cards with same suit that was lead

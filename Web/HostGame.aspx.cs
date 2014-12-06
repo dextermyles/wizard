@@ -49,9 +49,9 @@ namespace WizardGame
                 PlayerData = playerList[0];
 
                 // get post vars
-                string strGameName = txtGameName.Value;
+                string strGameName = Functions.CleanText(txtGameName.Value);
                 int maxPlayers = Convert.ToInt32(selectMaxPlayers.Value);
-                string strPassword = txtPassword.Value;
+                string strPassword = Functions.CleanInput(txtPassword.Value);
 
                 // create new game lobby
                 GameLobby gameLobby = wizWS.UpdateGameLobby(0, PlayerData.PlayerId, strGameName, maxPlayers, "", strPassword, false);
