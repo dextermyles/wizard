@@ -1386,9 +1386,6 @@
                 return false;
             }
             
-            // log
-            logMessage("-- start turn: " + currentPlayer.IsTurn + " --");
-
             // select trump
             if(lastGameState.Status == gameStateStatus.SelectTrump) {
                 // select trump
@@ -1410,18 +1407,21 @@
                     return;
                 }
 
+                // has not played a card yet
+                if(!hasPlayedCard) {
+                    // create turn popover
+                    $('.card-holder').popover({
+                        title: 'Its your turn',
+                        content: 'Please pick a card to play!',
+                        placement: 'top',
+                        trigger: 'manual'
+                    });
+
+                    console.log('showing popover');
+                }
+
                 // player turn sound
                 $(".soundStartTurn").trigger('play');
-
-                // create turn popover
-                $('.card-holder').popover({
-                    title: 'Its your turn',
-                    content: 'Please pick a card to play!',
-                    placement: 'top',
-                    trigger: 'manual'
-                });
-
-                console.log('showing popover');
 
                 // show popover
                 $('.card-holder').popover('show');
