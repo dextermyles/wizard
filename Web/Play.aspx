@@ -1029,7 +1029,7 @@
             var total_bids = getTotalBids();
 
             $(".total-bids").html(total_bids);
-            $(".round-number").html(round);
+            $(".round-number").html(lastGameState.Round);
 
             // generate bid # buttons
             $playerBid = $(".player-bid");
@@ -1762,8 +1762,8 @@
             </table>
         </div>
         <div class="card-holder row">
-            <div class="player-cards col-xs-9 text-center"></div>
-            <div class="trump-card-container col-xs-3 text-center">
+            <div class="player-cards col-xs-9"></div>
+            <div class="trump-card-container col-xs-3 text-right">
                 <a class="trump-card">
                     <img src="Assets/Cards/deck_cover.png" class="card" alt="trump card" />
                 </a>
@@ -1825,7 +1825,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="panel panel-default" style="margin-bottom: 0px;">
-                        <div class="panel-heading"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
+                        <div class="panel-heading player-bids-title"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
                         <table class="table table-responsive player-bids"></table>
                     </div>
                     <div class="modal-cards-played" style="margin-top: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">

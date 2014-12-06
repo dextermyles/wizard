@@ -285,6 +285,12 @@ namespace WizardGame
             // score from last round
             PlayerScore[] roundScoreHistory = null;
 
+            // get session from cookie
+            var UserSession = Functions.GetSessionFromCookie();
+
+            // update session
+            wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, player.PlayerId, connectionId);
+
             // play card
             bool cardPlayedResult = gameState.PlayCard(player.PlayerId, card);
 
