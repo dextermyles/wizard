@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Newtonsoft.Json;
 using WizardGame.Services;
 
 namespace WizardGame.Helpers
@@ -162,6 +161,16 @@ namespace WizardGame.Helpers
                     if (firstWizard != null)
                         return firstWizard;
 
+                    // get highest trump
+                    var highestTrumpCardList = CardsPlayed.Where(c => c.Suit != Suit.Fluff && c.Suit == TrumpCard.Suit);
+
+                    if (highestTrumpCardList != null)
+                    {
+                        Card highestTrumpCard = highestTrumpCardList.OrderByDescending(c => c.Value).FirstOrDefault();
+
+                        if (highestTrumpCard != null)
+                            return highestTrumpCard;
+                    }
 
                     // get highest card from led suit
                     Card highestCard = CardsPlayed.Where(c => c.Suit == SuitToFollow) // list of cards with same suit that was lead
@@ -177,7 +186,7 @@ namespace WizardGame.Helpers
             {
                 // log error
                 WizardService wizWS = new WizardService();
-                
+
                 wizWS.LogError(ex);
             }
 
@@ -193,6 +202,7 @@ namespace WizardGame.Helpers
             // validate
             if (player != null && player.PlayerId > 0)
             {
+
                 // if no suit to follow has been set, next card can potentially be the leading suit
                 if (SuitToFollow == Suit.None)
                 {
@@ -205,10 +215,31 @@ namespace WizardGame.Helpers
                             SuitToFollow = Suit.None;
                             break;
                         default:
-                            SuitToFollow = card.Suit;
+                            // first card played
+                            if (CardsPlayed != null && CardsPlayed.Length > 0)
+                            {
+                                // get first card
+                                Card firstCard = CardsPlayed[0];
+
+                                // check if first card led was wizard
+                                if (firstCard.Suit == Suit.Wizard)
+                                {
+                                    SuitToFollow = Suit.None;
+                                }
+                                else
+                                {
+                                    SuitToFollow = card.Suit;
+                                }
+                            }
+                            else
+                            {
+                                SuitToFollow = card.Suit;
+                            }
+
                             break;
                     }
                 }
+
 
                 // play card
                 Card playedCard = player.PlayCard(card);
@@ -288,7 +319,7 @@ namespace WizardGame.Helpers
 
                 // update next player turn flag
                 Players[PlayerTurnIndex].IsTurn = true;
-            }  
+            }
         }
 
         public bool StartNextRound()
@@ -379,7 +410,7 @@ namespace WizardGame.Helpers
             Status = GameStateStatus.BiddingInProgress;
 
             // no trump on last round
-            if ((Deck.Cards != null) 
+            if ((Deck.Cards != null)
                 && (Deck.Cards.Length > 0)
                 && (Round <= maxRounds))
             {
@@ -406,7 +437,7 @@ namespace WizardGame.Helpers
         public void StartGame(Player[] _players)
         {
             // validate players
-            if(_players == null || _players.Length < 3)
+            if (_players == null || _players.Length < 3)
                 throw new Exception("3 players minimum required to play");
 
             // reset cards played
@@ -420,7 +451,7 @@ namespace WizardGame.Helpers
 
             // assign dealer index
             DealerPositionIndex = random.Next(0, Players.Length - 1);
-            
+
             // set flag
             Players[DealerPositionIndex].IsDealer = true;
 
@@ -475,7 +506,7 @@ namespace WizardGame.Helpers
 
             // update trump card
             TrumpCard = Deck.TakeTopCard();
-                
+
             // set game status
             Status = GameStateStatus.BiddingInProgress;
 

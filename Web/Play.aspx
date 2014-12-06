@@ -342,7 +342,7 @@
             updateGameState(gameData.GameStateData);
 
             // broadcast to chat
-            appendChatMessage("Server", _player.Name + " has made " + getSuitName(lastGameState.SuitToFollow) + " trump!");
+            appendChatMessage("Server", _player.Name + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
 
             // update trump
             updateTrump();
@@ -350,7 +350,7 @@
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
 
             // show tool tip
-            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(lastGameState.SuitToFollow));
+            showToolTip($playerDiv, _player.Name + " made trump " + getSuitName(newTrumpCard.Suit));
 
             // delay start
             setTimeout(function() {
@@ -419,7 +419,7 @@
             var targetTop = ($cardsPlayedDiv.offset().top);
 
             // spawn card
-            var cardPlayedHtml = "<a><img id='card-played' src='" + cardPlayedFilename + "' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;' class='card' /></a>";
+            var cardPlayedHtml = "<a class='card-played'><img src='" + cardPlayedFilename + "' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;' class='card' /></a>";
             
             // append new card
             $("body").append(cardPlayedHtml);  
@@ -427,23 +427,24 @@
             // play audio
             $(".soundCardPlayed").trigger('play');
 
-            // animate to card pile + remove card
-            $("#card-played")
+            // animate to card image to pile + remove card
+            $(".card-played").children("img")
                 .animate({
                     left: targetLeft + 'px',
                     top: targetTop + 'px',
-                    opacity: 0.5
+                    opacity: 0.5,
+                    height: '100px'
                 }, 
                 500, 
                 function() {
                     // remove initial spawned card
-                    $("#card-played").remove();
+                    $(".card-played").remove();
 
                     // append card played to container
                     $cardsPlayedDiv.append(cardPlayedHtml);
 
                     // update css
-                    $("#card-played").css({
+                    $(".card-played").children("img").css({
                         'position': 'inherit'
                     });
 
@@ -480,7 +481,7 @@
                                     $(this).remove();
                                 });
                             });
-                        }, 500); 
+                        }, 2000); 
                     }
 
                     // round ended
@@ -793,6 +794,8 @@
         };
 
         function processGameData(gameData) {
+            console.log('processGameData(): ' + pageJustLoaded);
+
             // update game state
             updateGameState(gameData.GameStateData);
 
@@ -807,6 +810,33 @@
             var dateGameEnded = lastGameState.DateGameEnded;
             var i = 0;
             var numPlayers = 0;
+
+
+            // update hasPlayedCard
+            if(cardsPlayed != null) {
+                console.log('checking if player has already played a card this turn');
+                console.log(cardsPlayed);
+
+                // loop through cards
+                for(i = 0; i < cardsPlayed.length; i++) {
+                    // temp card ref
+                    var tempCard = cardsPlayed[i];
+
+                    // check if player has already played a card this turn
+                    if(tempCard.OwnerPlayerId == currentPlayer.PlayerId) {
+                        console.log('current player has already played a card this round');
+
+                        // update flag
+                        hasPlayedCard = true;
+
+                        break;
+                    }  
+                }
+            }
+            else {
+                // update flag
+                hasPlayedCard = false;
+            }
 
             // update local variables
             playerList = players;
@@ -840,6 +870,9 @@
             // update bid info
             $(".bid-info").html("- " + bid_desc);
 
+            // update bid description
+            $(".player-bids-title").html("<strong>" + bid_desc + "</strong>");
+
             // update UI
             for(i = 0; i < players.length; i++) {
                 // num players
@@ -872,17 +905,13 @@
                 // remove any existing classes
                 $playerDiv.find(".player-name").removeClass("active dealer");
 
-                if(player.IsDealer) {
-                    $playerDiv.find(".player-name").addClass("dealer");
-                }
+                // construct announcement message
+                var message = '';
 
                 // add special label for players turn (except when current players turn)
                 if(player.IsTurn) {
                     // change background of player name when its their turn
                     $playerDiv.find(".player-name").addClass("active");
-
-                    // construct announcement message
-                    var message = '';
 
                     if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
                         message = player.Name + "'s turn to bid"; 
@@ -890,13 +919,23 @@
                     else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
                         message = player.Name + "'s turn to play a card";
                     }
-                    else if(lastGameState.Status == gameStateStatus.SelectTrump) {
-                        message = player.Name + "'s turn to choose trump";
-                    }
                     else {
                         message = player.Name + "'s turn!";
-                    }
+                    }  
+                }  
 
+                // player is dealer
+                if(player.IsDealer) {
+                    // add dealer class to player name
+                    $playerDiv.find(".player-name").addClass("dealer");
+
+                    if(lastGameState.Status == gameStateStatus.SelectTrump) {
+                        message = player.Name + "'s turn to choose trump";
+                    }
+                }
+
+                // display message
+                if(message.length > 0) {
                     // only show tool tip for other players (not current player)
                     if(player.PlayerId != currentPlayer.PlayerId) {
                         // announce via tool tip
@@ -905,7 +944,13 @@
 
                     // announce to chat window
                     appendChatMessage("Server", message);
-                }  
+                }
+
+                // current player
+                if(player.PlayerId == currentPlayer.PlayerId) {
+                    // change border for current player
+                    $playerDiv.css("border", "1px solid #fff");
+                }
             } 
 
             // update trump
@@ -960,20 +1005,23 @@
 
             // player names
             for(var i = 0; i < lastGameState.Players.length; i ++) {
-                var is_player_class = '';
+                // player ref
                 var player = lastGameState.Players[i];
-                
+
+                // class
+                var is_player_class = '';
+
+                // players turn
                 if(currentPlayer.PlayerId == player.PlayerId) {
-                    is_player_class = 'danger';
+                    is_player_class = 'player-name-active';
                 }
 
+                // player is dealer
                 if(player.IsDealer) {
-                    playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
+                    is_player_class = 'player-name-dealer';
                 }
-                else {
-                    playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
-                }
-                
+
+                playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
             }
             
             playerBidsHtml += "</tr>";
@@ -984,10 +1032,20 @@
 
             // player bids
             for(var i = 0; i < lastGameState.Players.length; i ++) {
+                // player ref
+                var player = lastGameState.Players[i];
+
+                // class
                 var is_player_class = '';
 
-                if(currentPlayer.PlayerId == lastGameState.Players[i].PlayerId) {
-                    is_player_class = 'danger';
+                // players turn
+                if(currentPlayer.PlayerId == player.PlayerId) {
+                    is_player_class = 'player-name-active';
+                }
+
+                // player is dealer
+                if(player.IsDealer) {
+                    is_player_class = 'player-name-dealer';
                 }
 
                 playerBidsHtml += "<td class='text-center " + is_player_class + "'>" + lastGameState.Players[i].TricksTaken + "/" + lastGameState.Players[i].Bid + "</td>";
@@ -1009,12 +1067,12 @@
                 return false;
             }
 
+            // player turn sound
+            $(".soundStartTurn").trigger('play');
+
             // check if window open already
             if(isSelectingBid)
                 return;
-
-            // play audio
-            $(".soundStartTurn").trigger('play');
 
             // update flag
             isSelectingBid = true;
@@ -1051,13 +1109,13 @@
         function selectTrump() {
             // validate
             if(!currentPlayer.IsDealer) {
-                logMessage("-- only the dealer can choose trump --");
+                console.log("only dealer can set trump");
 
                 return;
             }
                 
             if(lastGameState.Status != gameStateStatus.SelectTrump) {
-                logMessage("-- you cant select trump right now --");
+                console.log("trump is not able to be changed right now");
 
                 return;
             }
@@ -1066,7 +1124,7 @@
             if(isSelectingTrump)
                 return;
 
-            // play audio
+            // player turn sound
             $(".soundStartTurn").trigger('play');
 
             // update trump
@@ -1124,9 +1182,6 @@
             if(isSelectingCard)
                 return false;
 
-            // play audio
-            $(".soundStartTurn").trigger('play');
-
             // update flag
             isSelectingCard = true;
 
@@ -1154,8 +1209,13 @@
         };
 
         var preselectedCard = null;
+        var hasPlayedCard = false;
 
         function verifySelectedCard(selectedCard) {
+            // dont allow another card to be played if already done
+            if(hasPlayedCard)
+                return false;
+
             // suit to follow
             var suitToFollow = lastGameState.SuitToFollow;
 
@@ -1182,16 +1242,12 @@
             // log
             console.log('temp selected card: ' + tempSelectedCard);
 
-            
-
             if(lastGameState.Status != gameStateStatus.RoundInProgress) {
                 logMessage("-- you cant play a card right now --");
 
                 return false;
             }
 
-            
-            
             // perform validation on the card being played
             // not player fluff or wizard
             if(tempSelectedCard.Suit != suit.Fluff && tempSelectedCard.Suit != suit.Wizard) {
@@ -1216,15 +1272,39 @@
             
             // not players turn
             if(!currentPlayer.IsTurn) {
-                // update preselected card 
-                preselectedCard = tempSelectedCard;
+                // new card flag
+                var isNewCard = true;
 
-                // animate card slightly to show it has been selected
-                preselectedCard.SelectedCard.children("img").css("margin-top", "-50px");
+                // preselected card has been previously set
+                if(preselectedCard != null) {
+                    // unset preselected card
+                    if(preselectedCard.Id == tempSelectedCard.Id) {
+                        // reset preselected card
+                        preselectedCard.SelectedCard.children("img").removeClass("preselected");
+                        
+                        // clear preset card
+                        preselectedCard = null;
+
+                        // update new card flag
+                        isNewCard = false;
+                    }
+                    else {
+                        // reset position of old preset card
+                        preselectedCard.SelectedCard.children("img").removeClass("preselected");
+                    }
+                }
+
+                // is new preselected card.
+                if(isNewCard) {
+                    // update preselected card 
+                    preselectedCard = tempSelectedCard;
+
+                    // animate card slightly to show it has been selected
+                    preselectedCard.SelectedCard.children("img").addClass("preselected");
+
+                    console.log("added class: preselected to " + preselectedCard.SelectedCard.children("img"));
+                } 
             }
-
-            // update flag
-            isSelectingCard = false;
 
             // log
             console.log("card selected: " + tempSelectedCard);
@@ -1234,11 +1314,30 @@
                 return false;
             }
 
+            // destroy turn popover
+            $('.card-holder').popover('destroy');
+
+            // update selecting card flag
+            isSelectingCard = false;
+
+            // update played card flag
+            hasPlayedCard = true;
+
             // reset preselected card
             preselectedCard = null;
 
             // remove card
             tempSelectedCard.SelectedCard.remove();
+
+            // fix margin overlap
+            $(".card-holder .player-cards").children("a").each(function(index) {
+                if(index == 0) {
+                    $(this).css("margin-left", "0px");
+                }
+                else {
+                    $(this).css("margin-left", "-66px");
+                }
+            });
             
             // send data to server
             var cardObject = {
@@ -1276,6 +1375,17 @@
         };
 
         function startTurn() {
+            console.log('startTurn(): ' + currentPlayer.IsTurn);
+            console.log('gameStateStatus: ' + lastGameState.Status);
+
+            // not players turn and not selecting trump
+            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.SelectTrump) {
+                // destroy existing turn popover
+                $('.card-holder').popover('destroy');
+
+                return false;
+            }
+            
             // log
             logMessage("-- start turn: " + currentPlayer.IsTurn + " --");
 
@@ -1284,18 +1394,37 @@
                 // select trump
                 selectTrump();
             }
-                // enter bid
             else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
                 // select bid
                 selectBid(lastGameState.Round); 
             }
-                // play card
             else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
+                // reset card played flag
+                hasPlayedCard = false;
+
                 // check if player has preselected card
                 if(preselectedCard != null) {
                     // attempt to play selected card
                     verifySelectedCard(preselectedCard.SelectedCard.get(0));
+
+                    return;
                 }
+
+                // player turn sound
+                $(".soundStartTurn").trigger('play');
+
+                // create turn popover
+                $('.card-holder').popover({
+                    title: 'Its your turn',
+                    content: 'Please pick a card to play!',
+                    placement: 'top',
+                    trigger: 'manual'
+                });
+
+                console.log('showing popover');
+
+                // show popover
+                $('.card-holder').popover('show');
             }
             else {
                 console.log("-- cant start turn - game state unknown: " + lastGameState.Status);
@@ -1461,7 +1590,8 @@
         
         function drawPlayerCards() {
             // draw player cards
-            var $playerCards = $(".player-cards");
+            var $playerCards = $(".card-holder .player-cards");
+            var $modalPlayerCards = $(".modal-cards-played .player-cards");
 
             // clear existing cards
             $playerCards.html('');
@@ -1554,11 +1684,14 @@
                 else {
                     // player cant follow suit - card is playable
                     is_playable = true;
-                }        
+                } 
                 
                 if(i > 0) {
-                    style = "style='margin-left: -48px'";
+                    style = "style='margin-left: -66px'";
                 }
+
+                // append card to modal (on select bid screen)
+                $modalPlayerCards.append("<a title=\"" + fullCardName + "\" " + style + "><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
 
                 if(is_playable) {
                     // card is playable
@@ -1566,26 +1699,31 @@
                     
                     // check if card was preselected (it gets erased on every card draw)
                     if(preselectedCard != null) {
+                        // log
+                        console.log('preselected card set:');
+                        console.log(preselectedCard);
 
                         // preselected card is no longer playable
                         if(preselectedCard.Id == card.Id) {
-
-                            // get last appended player card
-                            var $card = $($playerCards.children("a").last());
+                            // get ref to new preselected card
+                            var newPreSelectedCard = $playerCards.children("a").last();
+                            
+                            console.log('new preselected card:');
+                            console.log(newPreSelectedCard);
 
                             // create temp card object
                             var tempSelectedCard = {
-                                Id: cardId,
-                                Suit: parseInt(cardSuit),
-                                Value: parseInt(cardValue),
-                                SelectedCard: $card
+                                Id: card.Id,
+                                Suit: parseInt(card.Suit),
+                                Value: parseInt(card.Value),
+                                SelectedCard: newPreSelectedCard
                             };
 
                             // overwrite preselected card
                             preselectedCard = tempSelectedCard;
-
+                            
                             // offset preselected card
-                            preselectedCard.SelectedCard.children("img").css("margin-top", "-50px");
+                            preselectedCard.SelectedCard.children("img").addClass("preselected");
                         }
                     }
                 }
@@ -1594,8 +1732,6 @@
                     if(preselectedCard != null) {
                         // preselected card is no longer playable
                         if(preselectedCard.Id == card.Id) {
-                            preselectedCard.SelectedCard.children("img").css("margin-top", "0px");
-
                             // clear preselected card
                             preselectedCard = null;
                         }
@@ -1825,44 +1961,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="panel panel-default" style="margin-bottom: 0px;">
-                        <div class="panel-heading player-bids-title"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
+                        <div class="panel-heading player-bids-title"></div>
                         <table class="table table-responsive player-bids"></table>
-                    </div>
-                    <div class="modal-cards-played" style="margin-top: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
-                        <div class="player-cards"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="player-bid">
                         <!-- placeholder for buttons -->
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal" id="selectCardModal" tabindex="-1" role="dialog" aria-labelledby="selectCardModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="selectCardModalLabel">Your turn to play a card!
-                        <span class="pull-right">Trump:
-                            <span class="trump label label-danger" style="top: 0px;">Loading</span>
-                        </span>
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="panel panel-default" style="margin-bottom: 0px;">
-                            <div class="panel-heading"><strong>Player bids - <span class="total-bids">0</span> of <span class="round-number">0</span></strong></div>
-                            <table class="table table-responsive player-bids"></table>
-                        </div>
-                    </div>
-                    <div class="modal-cards-played" style="margin-top: 10px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
-                        <div class="cards-played"></div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="text-align: left;">
-                    <div class="player-cards" style="padding: 10px; background-color: #d8d8d8; border: 1px solid #ccc; border-radius: 5px;"></div>
                 </div>
             </div>
         </div>
@@ -1901,7 +2007,7 @@
                         </h3>
                         <div class="media">
                             <a class="media-left" href="#">
-                                <img src="holder.js/64x64/" class="winner-profile-picture img-thumbnail">
+                                <img data-src="holder.js/64x64/" class="winner-profile-picture img-thumbnail">
                             </a>
                             <div class="media-body">
                                 <h4 class="media-heading">

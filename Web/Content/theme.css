@@ -24,6 +24,14 @@ body {
     background-color: #f5f5f5;
 }
 
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: transparent !important;
+}
+
 .navbar {
     margin-bottom: 5px;
 }
@@ -48,6 +56,10 @@ body {
 
 .modal {
     z-index: 10000;
+}
+
+.row {
+    margin: 0px auto;
 }
 
 .label {
@@ -113,7 +125,12 @@ body {
     font-weight: bold;
 }
 
-.player-bid { text-align: center; }
+.player-bid {
+    text-align: center;
+}
+
+.player-name-dealer { background-color: #FF9C9C; }
+.player-name-active { background-color: #AAFF9C; }
 
 .player-container {
     margin: 0 auto;
@@ -153,21 +170,21 @@ body {
     }
 
         .player-container > .player-details .player-name.active {
-            background-color: #0f0 !important;
+            background-color: #AAFF9C !important;
             border-top-left-radius: 10px;
             border-bottom: 1px solid #000;
             color: #000 !important;
         }
 
         .player-container > .player-details .player-name.dealer {
-            background-color: #007aff;
+            background-color: #FF9C9C;
             border-top-left-radius: 10px;
             border-bottom: 1px solid #000;
             color: #000 !important;
         }
 
 .score-reporter {
-    font-family:Tahoma;
+    font-family: Tahoma;
     width: 64px;
     border-radius: 2px;
     position: absolute;
@@ -176,19 +193,32 @@ body {
     font-size: 12px;
     font-weight: bold;
     background-color: #007aff;
-    border:1px solid #032b56;
+    border: 1px solid #032b56;
     color: #032b56;
     display: inline-block;
 }
 
-.player-cards a.unplayable { }
-    .player-cards a img {
-        position: relative;
+.card-holder {
+    border-radius: 5px;
+    margin-top: 10px;
+    background-color: #C1C1C1;
+    padding: 10px 0;
+    border: 1px solid #999;
+}
+
+    .card-holder .player-cards {
     }
 
-    .player-cards a.unplayable {
-        position: relative;
-    }
+.player-cards a.unplayable {
+}
+
+.player-cards a img {
+    position: relative;
+}
+
+.player-cards a.unplayable {
+    position: relative;
+}
 
     .player-cards a.unplayable img {
         opacity: 0.25;
@@ -203,10 +233,20 @@ body {
 .card {
     cursor: pointer;
     margin: 2px 5px;
-    height: 100px;
+    height: 130px;
     border-radius: 5px;
     border: 1px solid #000;
     z-index: 100;
+    position: relative;
+    background-color: #fff;
+}
+
+.card.preselected {
+    margin-top: -20px;
+}
+
+.cards-played .card {
+    height: 100px;
 }
 
 
