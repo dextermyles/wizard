@@ -141,13 +141,6 @@ namespace WizardGame.Helpers
                     // wizard led or all fluffs
                     if (SuitToFollow == Suit.None)
                     {
-                        // look for first wizard
-                        Card firstWizard = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
-
-                        // return first wizard
-                        if (firstWizard != null)
-                            return firstWizard;
-
                         // check if all fluffs played
                         List<Card> fluffList = CardsPlayed.Where(c => c.Suit == Suit.Fluff).ToList();
 
@@ -169,8 +162,15 @@ namespace WizardGame.Helpers
                         }
                     }
 
+                    // look for first wizard
+                    Card firstWizard = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
+
+                    // return first wizard
+                    if (firstWizard != null)
+                        return firstWizard;
+
                     // get highest trump
-                    var highestTrumpCardList = CardsPlayed.Where(c => c.Suit == TrumpCard.Suit);
+                    var highestTrumpCardList = CardsPlayed.Where(c => c.Suit != Suit.Fluff && c.Suit == TrumpCard.Suit);
 
                     if (highestTrumpCardList != null)
                     {
