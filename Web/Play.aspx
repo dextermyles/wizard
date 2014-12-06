@@ -414,16 +414,8 @@
             var cardPlayedFilename = getCardImagePath(_card.Suit, _card.Value);
 
             // get game board position
-            var $cardsPlayedDiv = null;
+            var $cardsPlayedDiv = $(".cards-played-container");;
             
-            // if player won, animate cards to their card pile
-            if(_playerWinner != null && _playerWinner.PlayerId == currentPlayer.PlayerId) {
-                $cardsPlayedDiv = $(".card-holder .player-cards");
-            }
-            else {
-                $cardsPlayedDiv = $(".cards-played-container");
-            }
-
             var targetLeft = ($cardsPlayedDiv.offset().left + ($cardsPlayedDiv.width() / 2));
             var targetTop = ($cardsPlayedDiv.offset().top);
 
@@ -461,6 +453,12 @@
                     if(_playerWinner != null) {
                         // winner player div
                         var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
+
+                        // if player won, animate cards to their card pile
+                        if(_playerWinner != null && _playerWinner.PlayerId == currentPlayer.PlayerId) {
+                            $playerWinnerDiv = $(".player-cards");
+                        }
+
                         var playerWinnerPosition = $playerWinnerDiv.offset();
 
                         // delay card pile animation
