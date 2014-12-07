@@ -890,8 +890,7 @@
 
                                 // change css of card
                                 $card.css({
-                                    'border':'2px solid #0F0',
-                                    'background-color':'#0F0',
+                                    'background-color':'rgb(199, 199, 199)',
                                     'border-radius': '5px'
                                 });
 
