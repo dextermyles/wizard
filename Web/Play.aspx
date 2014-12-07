@@ -452,10 +452,7 @@
                 500, 
                 function() {
                     // remove initial spawned card
-                    console.log($(this));
-
                     $(this).remove();
-
 
                     // we have cards played
                     if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
@@ -525,6 +522,9 @@
                         if(isRoundOver) {
                             // start next round in 3 seconds
                             setTimeout(function() {
+                                // update ui
+                                updateUI();
+
                                 // deal cards
                                 dealCards(lastGameState.Round); 
                             }, 3000); 
@@ -1871,9 +1871,6 @@
                         setTimeout(function() {
                             // update flag if player has played card
                             hasCurrentPlayerPlayedCard();
-
-                            // update game data
-                            updateUI();
 
                             // draw player cards
                             drawPlayerCards();
