@@ -2159,9 +2159,6 @@
                     <h4 class="modal-title" id="selectTrumpModalLabel">Please select Trump for this round</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="player-cards well well-sm"></div>
-                </div>
-                <div class="modal-footer">
                     <div>
                         <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Spades);">Spades</a>
                         <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Clubs);">Clubs</a>
