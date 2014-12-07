@@ -528,17 +528,33 @@
                             });
                         }, 2000); 
 
-                        // start next turn in 3 seconds
-                        setTimeout(function() {
-                            // update flag if player has played card
-                            hasCurrentPlayerPlayedCard();
+                        if(isRoundOver) {
+                            // start next turn in 3 seconds
+                            setTimeout(function() {
+                                // update flag if player has played card
+                                hasCurrentPlayerPlayedCard();
 
-                            // update game data
-                            updateUI(gameData);
+                                // update game data
+                                updateUI(gameData);
 
-                            // deal cards
-                            dealCards(lastGameState.Round); 
-                        }, 3000); 
+                                // deal cards
+                                dealCards(lastGameState.Round); 
+                            }, 3000); 
+                        }
+                        else {
+                            // start next turn in 3 seconds
+                            setTimeout(function() {
+                                // update flag if player has played card
+                                hasCurrentPlayerPlayedCard();
+
+                                // update ui
+                                updateUI();
+
+                                // start turn
+                                startTurn();
+                            }, 3000); 
+                        }
+                        
                     }
                     else {
                         // turn has ended
