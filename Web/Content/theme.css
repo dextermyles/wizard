@@ -128,7 +128,7 @@ body {
 
 .game-info {
     margin: 0px;
-    font-size: 18px;
+    font-size: 14px !important;
     margin-bottom: 10px;
     min-height: 20px;
 }
@@ -151,9 +151,16 @@ body {
     }
 
 .cards-played-container {
-    height: 94px;
+    /*height: 94px;*/
 }
 
+.trump-card {
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid #75e163;
+    border-radius: 5px;
+    background-color: #aef5a2;
+}
 .deal-card {
     cursor: pointer;
     height: 100px;

@@ -1079,9 +1079,28 @@
             } 
 
             // update trump
-            updateTrump(); 
+            updateTrump();
+            
+            // draw game info
+            drawGameInfo();
         };
 
+        function drawGameInfo() {
+            if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
+                // show game info if bidding
+                $(".import-game-info").fadeIn("slow");
+                $("#InfoText").html("Players are currently bidding!");
+            }
+            else if(lastGameState.Status == gameStateStatus.SelectTrump) {
+                // show trump being chosen info
+                $(".import-game-info").fadeIn("slow");
+                $("#InfoText").html("Trump is currently being chosen!");
+            }
+            else {
+                // hide info
+                $(".import-game-info").hide();
+            }
+        }
         function drawFinalScores() {
             // generate table html
             var scores_html = "<tr>";
@@ -1994,6 +2013,10 @@
                         <div class="cards-played cards-played-container">
                             <!-- place holder for cards played -->
                         </div>
+                        <div class="import-game-info" style="display: none; width:100%;vertical-align: middle; border: 1px solid #000; background-color: #fff; border-radius: 5px; opacity: 0.75;">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                            <span id="InfoText" style="margin: 0px; font-weight: bold; font-size: 16px;">Players are currently bidding</span>
+                        </div>
                     </td>
                     <td>
                         <div id="position-3" class="player-container">
@@ -2223,6 +2246,21 @@
         <input type="button" id="btnQuit" onclick="quitGame();" value="Quit game" class="btn btn-default btn-block" style="height: 50%;" />
     </div>
     <script type="text/javascript">
+        // Find the right method, call on correct element
+        function launchIntoFullscreen(element) {
+            console.log('requesting full screen');
+
+            if(element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if(element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if(element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if(element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            }
+        }
+
         $(document).ready(function() {
             $(".modal").modal({
                 backdrop: 'static',
@@ -2238,6 +2276,9 @@
 
             // load game audio
             $(".gameAudio").trigger('load');
+
+            // Launch fullscreen for browsers that support it!
+            launchIntoFullscreen(document.documentElement); // the whole page
         });
 
         // update offline message size when window resizes
