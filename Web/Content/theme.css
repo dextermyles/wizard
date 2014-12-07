@@ -126,6 +126,17 @@ body {
     color: #fff;
 }
 
+.import-game-info {
+    width: auto;
+    vertical-align: middle;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    opacity: 0.75;
+    background-color: rgb(255, 255, 255);
+    display: inline-block;
+    padding: 15px;
+
+}
 .game-info {
     margin: 0px;
     font-size: 14px !important;

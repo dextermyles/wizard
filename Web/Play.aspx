@@ -352,7 +352,7 @@
 
                 // start turn
                 startTurn();
-            }, 2000);
+            }, 500);
         };
 
         // trumpUpdated
@@ -363,9 +363,7 @@
             // broadcast to chat
             appendChatMessage("Server", _player.Name + " has made " + getSuitName(newTrumpCard.Suit) + " trump!");
 
-            // update trump
-            updateTrump();
-
+            // player div ref
             var $playerDiv = getPlayerDivByPlayerId(_player.PlayerId);
 
             // show tool tip
@@ -378,7 +376,7 @@
 
                 // start turn
                 startTurn();
-            }, 2000);
+            }, 500);
         };
 
         // cardPlayedFailed
@@ -525,14 +523,8 @@
                         }, 2000); 
 
                         if(isRoundOver) {
-                            // start next turn in 3 seconds
+                            // start next round in 3 seconds
                             setTimeout(function() {
-                                // update flag if player has played card
-                                hasCurrentPlayerPlayedCard();
-
-                                // update game data
-                                updateUI(gameData);
-
                                 // deal cards
                                 dealCards(lastGameState.Round); 
                             }, 3000); 
@@ -561,7 +553,7 @@
                                 hasCurrentPlayerPlayedCard();
 
                                 // update game data
-                                updateUI(gameData);
+                                updateUI();
 
                                 // draw cards played
                                 drawCardsPlayed();
@@ -945,6 +937,8 @@
                 // update flag
                 hasPlayedCard = false;
             }
+
+            return hasPlayedCard;
         };
 
         function updateUI() {
@@ -1101,6 +1095,7 @@
                 $(".import-game-info").hide();
             }
         }
+
         function drawFinalScores() {
             // generate table html
             var scores_html = "<tr>";
@@ -1681,12 +1676,18 @@
 
                         // delay turn start
                         setTimeout(function() {
+                            // update flag if player has played card
+                            hasCurrentPlayerPlayedCard();
+
+                            // update game data
+                            updateUI(gameData);
+
                             // draw player cards
                             drawPlayerCards();
 
                             // start turn
                             startTurn();
-                        }, 2000);
+                        }, 500);
                     });
 
                 return;
@@ -2013,7 +2014,7 @@
                         <div class="cards-played cards-played-container">
                             <!-- place holder for cards played -->
                         </div>
-                        <div class="import-game-info" style="display: none; width:100%;vertical-align: middle; border: 1px solid #000; background-color: #fff; border-radius: 5px; opacity: 0.75;">
+                        <div class="import-game-info" style="display: none; width: 100%; vertical-align: middle; border: 1px solid #000; background-color: #fff; border-radius: 5px; opacity: 0.75;">
                             <span class="glyphicon glyphicon-info-sign"></span>
                             <span id="InfoText" style="margin: 0px; font-weight: bold; font-size: 16px;">Players are currently bidding</span>
                         </div>
@@ -2159,12 +2160,33 @@
                     <h4 class="modal-title" id="selectTrumpModalLabel">Please select Trump for this round</h4>
                 </div>
                 <div class="modal-body">
-                    <div>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Spades);">Spades</a>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Clubs);">Clubs</a>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Hearts);">Hearts</a>
-                        <a class="btn btn-default btn-lg btn-block" onclick="verifySelectedTrump(suit.Diamonds);">Diamonds</a>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <a class="btn btn-default" onclick="verifySelectedTrump(suit.Spades);">
+                                <div>Spades</div>
+                                <img src="Assets/Cards/spades_0.png" alt="Spades" class="card" />
+                            </a>
+                        </div>
+                        <div class="col-xs-3">
+                            <a class="btn btn-default" onclick="verifySelectedTrump(suit.Clubs);">
+                                <div>Clubs</div>
+                                <img src="Assets/Cards/clubs_0.png" alt="Clubs" class="card" />
+                            </a>
+                        </div>
+                        <div class="col-xs-3">
+                            <a class="btn btn-default" onclick="verifySelectedTrump(suit.Hearts);">
+                                <div>Hearts</div>
+                                <img src="Assets/Cards/hearts_0.png" alt="Hearts" class="card" />
+                            </a>
+                        </div>
+                        <div class="col-xs-3">
+                            <a class="btn btn-default" onclick="verifySelectedTrump(suit.Diamonds);">
+                                <div>Diamonds</div>
+                                <img src="Assets/Cards/diamonds_0.png" alt="Diamonds" class="card" />
+                            </a>
+                        </div>
                     </div>
+                    <div class="clearfix"></div>
                 </div>
             </div>
         </div>
