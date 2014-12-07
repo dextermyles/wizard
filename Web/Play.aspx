@@ -514,8 +514,9 @@
                                 });
 
                                 $card.animate({
-                                    left: playerWinnerPosition.left + 'px',
-                                    top: playerWinnerPosition.top + 'px'
+                                    'left': playerWinnerPosition.left + 'px',
+                                    'top': playerWinnerPosition.top + 'px',
+                                    'opacity': '0.25'
                                 }, 500, function() {
                                     $(this).remove();
                                 });
@@ -595,7 +596,7 @@
             }
             
             // update ui
-            updateUI(gameData);
+            updateUI();
 
             // update final scores table
             drawFinalScores();
@@ -1680,7 +1681,7 @@
                             hasCurrentPlayerPlayedCard();
 
                             // update game data
-                            updateUI(gameData);
+                            updateUI();
 
                             // draw player cards
                             drawPlayerCards();
