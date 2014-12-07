@@ -430,7 +430,7 @@
             var $cardsPlayedDiv = $(".play-area");
             
             var targetLeft = ($cardsPlayedDiv.offset().left + ($cardsPlayedDiv.width() / 2));
-            var targetTop = ($cardsPlayedDiv.offset().top);
+            var targetTop = ($cardsPlayedDiv.offset().top + ($cardsPlayedDiv.height() / 2));
 
             // spawn card
             var cardPlayedHtml = "<a class='card-played'><img src='" + cardPlayedFilename + "' style='position: absolute; left:" + playerPosition.left + "px; top:" + playerPosition.top + "px;' class='card' /></a>";
