@@ -1812,7 +1812,7 @@
         function dealRemainingCards() {
             // dealer data
             var dealerIndex = lastGameState.DealerPositionIndex;
-            var $dealerDiv = $(".cards-played-container");
+            var $dealerDiv = $(".play-area");
             var dealerPosition = $dealerDiv.offset();
 
             // offset position
