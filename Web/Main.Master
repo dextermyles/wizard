@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head runat="server">
-    <meta name="viewport" content="width=device-width, initial-scale=0.47">
+    <meta name="viewport" content="height=device-height,width=device-width,initial-scale=0.47,maximum-scale=0.85" >
     <title>Office Wizard</title>
     <!-- css -->
     <link rel="stylesheet" media="all" href="Content/themes/base/theme.css" />
