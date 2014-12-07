@@ -986,7 +986,7 @@
             else
                 over_under = "Even";
 
-            var bid_desc = "Bidding: " + over_under;
+            var bid_desc = over_under;
 
             if(total_bids > round || total_bids < round) {
                 bid_desc += " by " + bid_diff; 
