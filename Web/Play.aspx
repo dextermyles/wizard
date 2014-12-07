@@ -427,7 +427,7 @@
             var cardPlayedFilename = getCardImagePath(_card.Suit, _card.Value);
 
             // get game board position
-            var $cardsPlayedDiv = $(".cards-played-container");
+            var $cardsPlayedDiv = $(".play-area");
             
             var targetLeft = ($cardsPlayedDiv.offset().left + ($cardsPlayedDiv.width() / 2));
             var targetTop = ($cardsPlayedDiv.offset().top);
@@ -466,19 +466,7 @@
                     }
                     else {
                         // attach card played to board
-                        $(".cards-played-container").append(cardPlayedHtml);
-
-                        // change parent css
-                        $(".card-played").css({
-                            'position': 'initial'
-                        });
-
-                        // change css position to be visible
-                        $(".card-played").children('img').css({
-                            'position': 'initial',
-                            'top':'auto',
-                            'left':'auto'
-                        });
+                        $(".cards-played-container").append("<a class='card-played'><img src='" + cardPlayedFilename + "' class='card' /></a>");
                     }
 
                     // player won trick
@@ -496,7 +484,7 @@
                         // after 2 seconds, animate winning cards to player
                         setTimeout(function() {
                             // animate card pile to winner
-                            $(".cards-played-container .card").each(function(index) {
+                            $(".cards-played-container a").each(function(index) {
                                 // card data
                                 var $card = $(this);
 
@@ -518,6 +506,7 @@
                                     'top': playerWinnerPosition.top + 'px',
                                     'opacity': '0.25'
                                 }, 500, function() {
+                                    // remove extra card containers
                                     $(this).remove();
                                 });
                             });
@@ -865,9 +854,167 @@
 
                         $cardsPlayed.append("<a id=\"" + card.Id + "\" suit=\"" + card.Suit + "\" value=\"" + card.Value + "\"><img src=\"" + imageFileName + "\" class='card' /></a>");
                     }
+
+                    // decore highest card
+                    var bestCard = getBestCardFromCardsPlayed();
+
+                    if(bestCard != null) {
+                        // loop through cards played on table
+                        $cardsPlayed.children("a").each(function(index) {
+                            var $card = $(this);
+
+                            if($card.attr("id") == bestCard.Id) {
+                                // found best card on table
+                                console.log('best card found:');
+                                console.log(bestCard);
+                            }
+                        });
+                    } 
                 }
             }
         };
+
+        function getBestCardFromCardsPlayed() {
+            // best card
+            var bestCard = null;
+
+            // cards have been played
+            if(lastGameState.CardsPlayed != null) {
+                // temp card inside loop
+                var tempCard = null;
+
+                console.log('looking for first wizard');
+
+                // look for first wizard
+                for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                    // temp card ref
+                    tempCard = lastGameState.CardsPlayed[i]; 
+
+                    if(tempCard.Suit == suit.Wizard)
+                    {
+                        console.log('first wizard found!');
+
+                        bestCard = tempCard;
+
+                        break;
+                    }
+                }
+
+                // no wizard found
+                if(bestCard == null) {
+                    // trump card exists and trump card is not a fluff
+                    if(lastGameState.TrumpCard != null && lastGameState.TrumpCard.Suit != suit.Fluff) {
+                        // log
+                        console.log('looking for highest trump');
+
+                        // temp highest trump card
+                        var tempTrumpCard = null;
+
+                        // look for highest trump
+                        for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                            // temp card ref
+                            tempCard = lastGameState.CardsPlayed[i]; 
+
+                            // trump suit found
+                            if(tempCard.Suit == lastGameState.TrumpCard.Suit)
+                            {
+                                // check if card is higher than previous card
+                                if(tempTrumpCard != null) {
+                                    // card is higher
+                                    if(tempCard.Value > tempTrumpCard.Value) {
+                                        // update highest trump card found
+                                        tempTrumpCard = tempCard;
+                                    }
+                                }
+                                else {
+                                    // first trump card
+                                    tempTrumpCard = tempCard;
+                                }
+                            }
+                        }
+
+                        // we found highest trump card
+                        if(tempTrumpCard != null) {
+                            // log
+                            console.log('highest trump found!');
+
+                            bestCard = tempTrumpCard;
+                        }
+                    }
+                }
+
+                // no best trump card found
+                if(bestCard == null) {
+                    // suit to follow has been set
+                    if(lastGameState.SuitToFollow != suit.None) {
+                        // highest suit led card
+                        var tempHighestSuitToFollowCard = null;
+
+                        // look for highest card that followed suit
+                        for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                            // temp card ref
+                            tempCard = lastGameState.CardsPlayed[i]; 
+
+                            // card follows suit
+                            if(tempCard.Suit == lastGameState.SuitToFollow)
+                            {
+                                // temp card exists, check if higher
+                                if(tempHighestSuitToFollowCard != null) {
+                                    // higher card found
+                                    if(tempCard.Value > tempHighestSuitToFollowCard.Value) {
+                                        // update highest card found
+                                        tempHighestSuitToFollowCard = tempCard;
+                                    }
+                                }
+                                else {
+                                    // first card that followed suit
+                                    tempHighestSuitToFollowCard = tempCard;
+                                }
+                            }
+                        }
+
+                        // found highest card that followed suit
+                        if(tempHighestSuitToFollowCard != null) {
+                            // update best card
+                            bestCard = tempHighestSuitToFollowCard;
+                        }
+                    }
+                }
+
+                // no card found that follows suit
+                if(bestCard == null) {
+                    // first fluff is best card
+                    var isAllFluffs = true;
+
+                    // look for first wizard
+                    for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
+                        // temp card ref
+                        tempCard = lastGameState.CardsPlayed[i]; 
+
+                        if(tempCard.Suit =! suit.Fluff)
+                        {
+                            // non fluff found
+                            isAllFluffs = false;
+
+                            // break from loop
+                            break;
+                        }
+                    }
+
+                    // is all fluffs
+                    if(isAllFluffs) {
+                        // get first fluff card
+                        var firstFluffCard = lastGameState.CardsPlayed[0];
+
+                        // update best card
+                        bestCard = firstFluffCard;
+                    }
+                }
+            }
+            
+            // return best card
+            return bestCard;
+        }
 
         function updateTrump() {
             // update trump
@@ -2011,7 +2158,7 @@
                             </div>
                         </div>
                     </td>
-                    <td colspan="2">
+                    <td colspan="2" class="play-area">
                         <div class="cards-played cards-played-container">
                             <!-- place holder for cards played -->
                         </div>

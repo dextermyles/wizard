@@ -310,6 +310,14 @@ body {
     margin-top: -20px;
 }
 
+.player-cards a {
+    display: inline-block;
+}
+
+.cards-played a {
+    display: inline-block;
+}
+
 .cards-played .card {
     height: 100px;
 }
