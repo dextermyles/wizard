@@ -297,7 +297,7 @@ body {
 
 .card {
     cursor: pointer;
-    margin: 2px 5px;
+    margin: 2px 2px;
     height: 130px;
     border-radius: 5px;
     border: 1px solid #000;

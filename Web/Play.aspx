@@ -638,6 +638,9 @@
             // start interval to wait for player
             turnInterval = setInterval(waitingForPlayer, 1000);
 
+            // initial start seconds
+            $('#auto-player-timer').html(maxTurnWaitTime);
+
             // announcement
             announceCurrentPlayerTurn();
         }
@@ -664,8 +667,6 @@
 
             // update time remaining ui element
             $('#auto-player-timer').html(timeRemaining);
-
-            console.log('timer updated: ' + timeRemaining);
         };
 
         function quitGame() {
@@ -852,7 +853,7 @@
                         var ownerPlayerId = card.OwnerPlayerId;
                         var imageFileName = getCardImagePath(card.Suit, card.Value);
 
-                        $cardsPlayed.append("<a id=\"" + card.Id + "\" suit=\"" + card.Suit + "\" value=\"" + card.Value + "\"><img src=\"" + imageFileName + "\" class='card' /></a>");
+                        $cardsPlayed.append("<a id=\"" + card.Id + "\" suit=\"" + card.Suit + "\" value=\"" + card.Value + "\" owner=\"" + card.OwnerPlayerId + "\" ><img src=\"" + imageFileName + "\" class='card' /></a>");
                     }
 
                     // decore highest card
@@ -867,6 +868,26 @@
                                 // found best card on table
                                 console.log('best card found:');
                                 console.log(bestCard);
+
+                                // change css of card
+                                $card.css({
+                                    'border':'5px solid rgb(153, 255, 0)',
+                                    'background-color':'rgb(153, 255, 0)',
+                                    'border-radius': '5px'
+                                });
+
+                                // change css of card image
+                                $card.children("img").css({
+                                    'border':'none'
+                                });
+
+                                // append player name to best card
+                                var ownerPlayerId = parseInt($card.attr("owner"));
+                                var cardOwner = getPlayerById(ownerPlayerId);
+
+                                if(cardOwner != null) {
+                                    $card.prepend("<div>" + cardOwner.Name + "</div>")
+                                }  
                             }
                         });
                     } 
