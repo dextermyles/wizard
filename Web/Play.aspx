@@ -395,7 +395,7 @@
         };
 
         // cardPlayed
-        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData) {
+        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData, cardsPlayed) {
             // update game state
             updateGameState(gameData.GameStateData);
 
@@ -456,17 +456,24 @@
 
                     $(this).remove();
 
+
                     // we have cards played
                     if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
-                        // log
-                        console.log('redrawing cards played');
-
                         // redraw cards played 
                         drawCardsPlayed();
                     }
                     else {
-                        // attach card played to board
-                        $(".cards-played-container").append("<a class='card-played'><img src='" + cardPlayedFilename + "' class='card' /></a>");
+                        // temp update cardsplayed with old object
+                        var oldCardsPlayed = lastGameState.CardsPlayed;
+                        
+                        // update cards played with history value
+                        lastGameState.CardsPlayed = cardsPlayed;
+
+                        // redraw cards played 
+                        drawCardsPlayed();
+
+                        // restore cards played
+                        lastGameState.CardsPlayed = oldCardsPlayed;
                     }
 
                     // player won trick
@@ -612,6 +619,15 @@
         function playBestCard() {
             // stop waiting for player
             stopWaitingForPlayer();
+            
+            // random card to play found
+            if(randomCardToPlay != null) {
+                // click random card
+                randomCardToPlay.click();
+
+                // reset random card
+                randomCardToPlay = null;
+            }
         };
 
         function stopWaitingForPlayer() {
@@ -871,8 +887,8 @@
 
                                 // change css of card
                                 $card.css({
-                                    'border':'5px solid rgb(153, 255, 0)',
-                                    'background-color':'rgb(153, 255, 0)',
+                                    'border':'2px solid #0F0',
+                                    'background-color':'#0F0',
                                     'border-radius': '5px'
                                 });
 
@@ -886,7 +902,12 @@
                                 var cardOwner = getPlayerById(ownerPlayerId);
 
                                 if(cardOwner != null) {
-                                    $card.prepend("<div>" + cardOwner.Name + "</div>")
+                                    var playerName = cardOwner.Name;
+
+                                    if(playerName.length > 8)
+                                        playerName = playerName.substring(0,7);
+
+                                    $card.prepend("<div style='color:#000; !important'>" + playerName + "</div>");
                                 }  
                             }
                         });
@@ -1691,7 +1712,7 @@
                 $('.card-holder').popover({
                     html: true,
                     title: '<strong>' + currentPlayer.Name + '</strong>, its your turn!',
-                    content: '<p>A random card will be automatically played for you if you do not respond in <span id="auto-player-timer">0</span> seconds.</p>',
+                    content: '<p>A random card will be <span class="text-warning">automatically played for you</span> if you do not respond in <strong><span id="auto-player-timer">' + maxTurnWaitTime + '</span> seconds</strong>.</p>',
                     placement: 'top',
                     trigger: 'manual'
                 });
@@ -1913,10 +1934,11 @@
             numCardsToDeal--;
         };  
         
+        var randomCardToPlay = null;
+
         function drawPlayerCards() {
             // draw player cards
             var $playerCards = $(".card-holder .player-cards");
-            var $modalPlayerCards = $(".modal-cards-played .player-cards");
 
             // clear existing cards
             $playerCards.html('');
@@ -1928,6 +1950,8 @@
             var player;
             var i;
             var card;
+            // reset best card
+            randomCardToPlay = null;
 
             // player is not first to act - check if we can follow suit
             if(lastGameState.SuitToFollow != suit.None 
@@ -2015,12 +2039,9 @@
                     style = "style='margin-left: -70px'";
                 }
 
-                // append card to modal (on select bid screen)
-                $modalPlayerCards.append("<a title=\"" + fullCardName + "\" " + style + "><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
-
                 if(is_playable) {
                     // card is playable
-                    $playerCards.append("<a onclick='verifySelectedCard(this);' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "' " + style + " title='" + fullCardName + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
+                    $playerCards.append("<a class='playable' onclick='verifySelectedCard(this);' id='" + card.Id + "' suit='" + card.Suit + "' value='" + card.Value + "' " + style + " title='" + fullCardName + "'><img src=\"" + imageFileName + "\" class=\"card\" /></a>");
                     
                     // check if card was preselected (it gets erased on every card draw)
                     if(preselectedCard != null) {
@@ -2069,12 +2090,33 @@
 
             if(!canPlayerFollowSuit) {
                 // if player cant follow suit, all cards are playable
-                $playerCards.find("a").removeClass("unplayable");
+                $playerCards.find("a").removeClass("playable unplayable");
+                $playerCards.find("a").addClass("playable");
             }
 
-            // remove onclick attr
-            $("card-holder .player-cards").removeAttr("onclick");
+            var arrayOfPlayableCards = new Array();
+
+            $playerCards.children("a.playable").each(function(index) {
+                arrayOfPlayableCards[index] = $(this);
+            });
+
+            console.log('array of playable cards');
+            console.log(arrayOfPlayableCards);
+
+            if(arrayOfPlayableCards.length > 0) {
+                var randomIndex = getRandomInt(0, arrayOfPlayableCards.length -1);
+                var randomCard = arrayOfPlayableCards[randomIndex];
+
+                randomCardToPlay = randomCard;
+
+                console.log('new random card to play: ');
+                console.log(randomCard);
+            }
         };
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
         // is paused flag
         var isPaused = false;

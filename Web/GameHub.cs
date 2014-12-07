@@ -293,6 +293,9 @@ namespace WizardGame
             // has round ended
             bool IsRoundOver = false;
 
+            // keep history of cards played (so we have access to them when end of turnclears them)
+            Card[] historyOfCardsPlayed = gameState.CardsPlayed;
+
             // player could not play card
             if (!cardPlayedResult)
             {
@@ -386,7 +389,7 @@ namespace WizardGame
 
                 // save score history
                 roundScoreHistory = gameState.GetPlayerScoreByRound(gameState.Round);
-
+                
                 // start next round
                 bool canStartNextRound = gameState.StartNextRound();
 
@@ -429,7 +432,7 @@ namespace WizardGame
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
 
             // broadcast game data
-            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, roundScoreHistory, game);
+            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, roundScoreHistory, game, historyOfCardsPlayed);
         }
 
         public void SendChatMessage(string playerName, string message, string groupNameId)
