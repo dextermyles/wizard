@@ -285,10 +285,6 @@
 
         // player loading for first time
         hub.client.initialize = function initialize(gameData, isReconnect, numPlayersInGame) {
-            // log
-            console.log('initialize()');
-            console.log(gameData);
-
             // update gamestate
             updateGameState(gameData.GameStateData);
 
@@ -301,6 +297,9 @@
             // update ui
             updateUI();   
             
+            // update empty seats
+            updateEmptySeats(lastGameState.Players.length);
+
             // update flag
             pageJustLoaded = false;
 
@@ -309,9 +308,6 @@
 
             // update player cards
             drawPlayerCards();
-
-            // update empty seats
-            updateEmptySeats(lastGameState.Players.length);
 
             // start turn
             startTurn();
@@ -591,6 +587,9 @@
 
         // gameEnded
         hub.client.gameEnded = function (_player, gameData) {
+            // update game state
+            updateGameState(gameData.GameStateData);
+
             // broadcast win
             appendChatMessage("Server", "Game has ended. " + _player.Name + " won with " + _player.Score + " points!");
 
