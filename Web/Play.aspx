@@ -469,6 +469,9 @@
                         // update cards played with history value
                         lastGameState.CardsPlayed = cardsPlayed;
 
+                        console.log('cards played from previous round');
+                        console.log(cardsPlayed);
+
                         // redraw cards played 
                         drawCardsPlayed();
 
