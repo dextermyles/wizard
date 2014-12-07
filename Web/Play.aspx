@@ -2142,7 +2142,7 @@
                 <div class="modal-body">
                     <div class="panel panel-default" style="margin-bottom: 0px;">
                         <div class="panel-heading player-bids-title"></div>
-                        <table class="table table-responsive player-bids"></table>
+                        <table class="table table-responsive table-hover player-bids"></table>
                     </div>
                 </div>
                 <div class="modal-footer">
