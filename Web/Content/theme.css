@@ -29,7 +29,7 @@ body {
     top: 0;
     right: 0;
     left: 0;
-    background-color: transparent !important;
+    background-color: transparent;
 }
 
 .navbar {
@@ -62,6 +62,21 @@ body {
     margin: 0px auto;
 }
 
+.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #FF0101;
+    border-radius: 10px;
+}
+
 .label {
     padding: .2em .6em .2em;
     font-size: 75%;
@@ -84,6 +99,7 @@ body {
     margin: 0px;
     font-size: 18px;
     margin-bottom: 10px;
+    min-height: 20px;
 }
 
 .game-board {

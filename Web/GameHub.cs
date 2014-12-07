@@ -70,7 +70,7 @@ namespace WizardGame
                             }
                         }
                     }
-                } 
+                }
             }
 
             return base.OnDisconnected(stopCalled);
@@ -125,7 +125,7 @@ namespace WizardGame
                     }
 
                     // broadcast game data
-                    Clients.Caller.receiveGameData(game, reconnected, numPlayersInGame);
+                    Clients.Caller.initialize(game, reconnected, numPlayersInGame);
                 }
                 else
                 {
@@ -164,13 +164,6 @@ namespace WizardGame
             // update player last active date
             wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
 
-            Session session = Functions.GetSessionFromCookie();
-
-            if(session != null) {
-                wizWS.UpdateSession(session.Secret, session.UserId, player.PlayerId, connectionId);
-            }
-            
-
             // broadcast enterBid event
             Clients.Group(groupNameId).receiveBid(player, bid, game);
         }
@@ -203,6 +196,9 @@ namespace WizardGame
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
 
+            // update player last active date
+            wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
+
             // broadcast trump set
             Clients.Group(groupNameId).trumpUpdated(player, gameState.TrumpCard, game);
         }
@@ -217,6 +213,12 @@ namespace WizardGame
 
             // get game data
             Game game = wizWS.GetGameById(gameId);
+
+            // get session from cookie
+            Session UserSession = Functions.GetSessionFromCookie();
+
+            // update session
+            wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, player.PlayerId, connectionId);
 
             // verify player is the host
             if (playerId == game.OwnerPlayerId)
@@ -285,12 +287,6 @@ namespace WizardGame
             // score from last round
             PlayerScore[] roundScoreHistory = null;
 
-            // get session from cookie
-            var UserSession = Functions.GetSessionFromCookie();
-
-            // update session
-            wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, player.PlayerId, connectionId);
-
             // play card
             bool cardPlayedResult = gameState.PlayCard(player.PlayerId, card);
 
@@ -333,7 +329,7 @@ namespace WizardGame
                     // loop through players
                     for (int i = 0; i < gameState.Players.Length; i++)
                     {
-                        if(gameState.Players[i].PlayerId == playerWinner.PlayerId)
+                        if (gameState.Players[i].PlayerId == playerWinner.PlayerId)
                         {
                             // set winning player index
                             winningPlayerIndex = i;
@@ -359,7 +355,7 @@ namespace WizardGame
                     gameState.Players[gameState.LastToActIndex].IsLastToAct = true;
 
                     // save hand history in db before clearing cards
-                    
+
 
                     // erase cards played
                     gameState.CardsPlayed = null;
@@ -381,7 +377,7 @@ namespace WizardGame
                 // update flag
                 IsRoundOver = true;
             }
-                
+
             // round has ended
             if (IsRoundOver)
             {
@@ -400,12 +396,13 @@ namespace WizardGame
                     Player pointLeader = gameState.GetPointLeader();
 
                     // update game history
-                    for(int i = 0; i < gameState.Players.Length; i++ ){
+                    for (int i = 0; i < gameState.Players.Length; i++)
+                    {
                         Player currentPlayer = gameState.Players[i];
 
                         int won = 0;
 
-                        if(currentPlayer.PlayerId == pointLeader.PlayerId)
+                        if (currentPlayer.PlayerId == pointLeader.PlayerId)
                             won = 1;
 
                         // update won flag
@@ -414,7 +411,7 @@ namespace WizardGame
                         // update game history table
                         wizWS.UpdateGameHistory(0, game.GameId, currentPlayer.PlayerId, currentPlayer.Score, won);
                     }
-                    
+
                     // get date
                     dateGameEnded = DateTime.Now;
 
@@ -463,6 +460,12 @@ namespace WizardGame
         {
             // connection id
             string connectionId = Context.ConnectionId;
+
+            // get session from cookie
+            Session UserSession = Functions.GetSessionFromCookie();
+
+            // update session
+            wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, playerId, connectionId);
 
             // update database + last active time
             wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.CONNECTED);

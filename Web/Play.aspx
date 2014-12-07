@@ -119,6 +119,10 @@
         // player just connected
         var pageJustLoaded = true;
 
+        // player turn interval
+        var turnInterval = 0;
+        var maxTurnWaitTime = 20; // 5 seconds to play a card
+
         currentPlayer.PlayerId = '<%= PlayerData.PlayerId %>';
         currentPlayer.Name = '<%= PlayerData.Name %>';
         currentPlayer.PictureURL = '<%= PlayerData.PictureURL %>';
@@ -279,19 +283,38 @@
             updatePlayerList(players);
         };
 
-        // receiveGameData
-        hub.client.receiveGameData = function receiveGameData(gameData, isReconnect, numPlayersInGame) {
+        // player loading for first time
+        hub.client.initialize = function initialize(gameData, isReconnect, numPlayersInGame) {
+            // log
+            console.log('initialize()');
+            console.log(gameData);
+
+            // update gamestate
+            updateGameState(gameData.GameStateData);
+
             // get num of connect players
             numPlayersConnected = parseInt(numPlayersInGame);
 
-            // update game data
-            processGameData(gameData);    
+            // update flag if player has played card
+            hasCurrentPlayerPlayedCard();
 
-            // player reconnected
-            if(isReconnect) {
-                // start turn
-                startTurn();
-            }
+            // update ui
+            updateUI();   
+            
+            // update flag
+            pageJustLoaded = false;
+
+            // update cards played on table
+            drawCardsPlayed();
+
+            // update player cards
+            drawPlayerCards();
+
+            // update empty seats
+            updateEmptySeats(lastGameState.Players.length);
+
+            // start turn
+            startTurn();
 
             // pause game if missing players
             if(numPlayersConnected < numPlayersExpected) {
@@ -329,7 +352,7 @@
             // delay start
             setTimeout(function() {
                 // process game data
-                processGameData(gameData);
+                updateUI();
 
                 // start turn
                 startTurn();
@@ -355,7 +378,7 @@
             // delay start
             setTimeout(function() {
                 // update game data
-                processGameData(gameData);
+                updateUI();
 
                 // start turn
                 startTurn();
@@ -382,19 +405,15 @@
             // update game state
             updateGameState(gameData.GameStateData);
 
-            // round is not over
-            if(isRoundOver) {
-                // clear player cards
-                $(".player-cards").html('');
-            }
-            else {
-                // re-draw player cards
-                drawPlayerCards();
-            }
+            // update cards in players hand
+            drawPlayerCards();
 
-            // if score history passed
+            // round ended, previous round scores exist
             if(previousRoundScoreArray != null)
             {
+                // clear player cards
+                $(".card-holder .player-cards").html('');
+
                 // update total scores
                 for(var i = 0; i < previousRoundScoreArray.length;i++) {
                     // player score ref
@@ -414,7 +433,7 @@
             var cardPlayedFilename = getCardImagePath(_card.Suit, _card.Value);
 
             // get game board position
-            var $cardsPlayedDiv = $(".cards-played-container");;
+            var $cardsPlayedDiv = $(".cards-played-container");
             
             var targetLeft = ($cardsPlayedDiv.offset().left + ($cardsPlayedDiv.width() / 2));
             var targetTop = ($cardsPlayedDiv.offset().top);
@@ -439,17 +458,36 @@
                 500, 
                 function() {
                     // remove initial spawned card
-                    $(".card-played").remove();
+                    console.log($(this));
 
-                    // append card played to container
-                    $cardsPlayedDiv.append(cardPlayedHtml);
+                    $(this).remove();
 
-                    // update css
-                    $(".card-played").children("img").css({
-                        'position': 'inherit'
-                    });
+                    // we have cards played
+                    if(lastGameState.CardsPlayed != null && lastGameState.CardsPlayed.length > 0) {
+                        // log
+                        console.log('redrawing cards played');
 
-                    // animate pile if we have a winner
+                        // redraw cards played 
+                        drawCardsPlayed();
+                    }
+                    else {
+                        // attach card played to board
+                        $(".cards-played-container").append(cardPlayedHtml);
+
+                        // change parent css
+                        $(".card-played").css({
+                            'position': 'initial'
+                        });
+
+                        // change css position to be visible
+                        $(".card-played").children('img').css({
+                            'position': 'initial',
+                            'top':'auto',
+                            'left':'auto'
+                        });
+                    }
+
+                    // player won trick
                     if(_playerWinner != null) {
                         // winner player div
                         var $playerWinnerDiv = getPlayerDivByPlayerId(_playerWinner.PlayerId);
@@ -461,7 +499,7 @@
 
                         var playerWinnerPosition = $playerWinnerDiv.offset();
 
-                        // delay card pile animation
+                        // after 2 seconds, animate winning cards to player
                         setTimeout(function() {
                             // animate card pile to winner
                             $(".cards-played-container .card").each(function(index) {
@@ -484,39 +522,53 @@
                                 $card.animate({
                                     left: playerWinnerPosition.left + 'px',
                                     top: playerWinnerPosition.top + 'px'
-                                }, 1000, function() {
+                                }, 500, function() {
                                     $(this).remove();
                                 });
                             });
                         }, 2000); 
-                    }
 
-                    // round ended
-                    if(isRoundOver) {
-                        // delay turn start
+                        // start next turn in 3 seconds
                         setTimeout(function() {
+                            // update flag if player has played card
+                            hasCurrentPlayerPlayedCard();
+
                             // update game data
-                            processGameData(gameData);
+                            updateUI(gameData);
 
                             // deal cards
                             dealCards(lastGameState.Round); 
                         }, 3000); 
                     }
                     else {
-                        // delay turn start
-                        setTimeout(function() {
-                            // update game data
-                            processGameData(gameData);
+                        // turn has ended
+                        if(isTurnEnded) {
+                            // delay turn start
+                            setTimeout(function() {
+                                // update flag if player has played card
+                                hasCurrentPlayerPlayedCard();
 
-                            // draw cards played
-                            drawCardsPlayed();
+                                // update game data
+                                updateUI(gameData);
 
-                            // update player cards
-                            drawPlayerCards();
+                                // draw cards played
+                                drawCardsPlayed();
 
-                            // announce next players turn to act
+                                // announce next players turn to act
+                                startTurn();
+                            }, 3000);
+                        }
+                        else {
+                            // next players turn to play a card
+                            // update flag if player has played card
+                            hasCurrentPlayerPlayedCard();
+
+                            // update ui
+                            updateUI();
+
+                            // start turn
                             startTurn();
-                        }, 3000);
+                        }
                     }
                 });
         };
@@ -536,7 +588,7 @@
             }
             
             // update ui
-            processGameData(gameData);
+            updateUI(gameData);
 
             // update final scores table
             drawFinalScores();
@@ -557,6 +609,67 @@
         /*******************************************
          * functions that are called by the client *
          *******************************************/
+
+        var playerWaitTime = 0;
+
+        function playBestCard() {
+            // stop waiting for player
+            stopWaitingForPlayer();
+        };
+
+        function stopWaitingForPlayer() {
+            // clear waiting interval
+            clearInterval(turnInterval);
+
+            // reset timers
+            turnInterval = 0;
+            playerWaitTime = 0;
+
+            // destroy turn popover
+            $('.card-holder').popover('destroy'); 
+        };
+
+        function startWaitingForPlayer() {
+            // make sure no existing timer set
+            stopWaitingForPlayer();
+
+            console.log('starting wait timer!');
+
+            // reset wait time
+            playerWaitTime = 0;
+
+            // start interval to wait for player
+            turnInterval = setInterval(waitingForPlayer, 1000);
+
+            // announcement
+            announceCurrentPlayerTurn();
+        }
+
+        function waitingForPlayer() {
+            //if paused skip
+            // max time hit
+            if(playerWaitTime > maxTurnWaitTime) {
+                // auto play best card
+                playBestCard();  
+
+                return;
+            }
+
+            // game is paused
+            if(isPaused)
+                return false;
+
+            // increment time waited by 1 second
+            playerWaitTime++;
+
+            // remaining time
+            var timeRemaining = maxTurnWaitTime - playerWaitTime;
+
+            // update time remaining ui element
+            $('#auto-player-timer').html(timeRemaining);
+
+            console.log('timer updated: ' + timeRemaining);
+        };
 
         function quitGame() {
             if(isConnected) {
@@ -589,13 +702,7 @@
 
         function joinGame(playerId, groupNameId, reconnected) {
             // call joinGameLobby on server
-            hub.server.joinGame(playerId, gameId, groupNameId, reconnected)
-                .done(function () {
-                    logMessage("-- joinGame executed on server --");
-                })
-                .fail(function (msg) {
-                    logMessage("-- " + msg + " --");
-                });
+            hub.server.joinGame(playerId, gameId, groupNameId, reconnected);
         };
 
         function sendChatMessage() {
@@ -611,13 +718,7 @@
             $chatbox.val('');
 
             // send to server
-            hub.server.sendChatMessage(currentPlayer.Name, message, groupNameId)
-                .done(function () {
-                    logMessage("-- sendChatMessage executed on server --");
-                })
-                .fail(function (msg) {
-                    logMessage("-- " + msg + " --");
-                });
+            hub.server.sendChatMessage(currentPlayer.Name, message, groupNameId);
         };
 
         function clearChatWindow() {
@@ -800,24 +901,9 @@
             };
         };
 
-        function processGameData(gameData) {
-            console.log('processGameData(): ' + pageJustLoaded);
-
-            // update game state
-            updateGameState(gameData.GameStateData);
-
-            // get vars
-            var players = lastGameState.Players;
-            var round = lastGameState.Round;
-            var status = lastGameState.Status;
+        function hasCurrentPlayerPlayedCard() {
+            // cardsPlayd ref
             var cardsPlayed = lastGameState.CardsPlayed;
-            var dealerPositionIndex = lastGameState.DealerPositionIndex;
-            var playerTurnIndex = lastGameState.PlayerTurnIndex;
-            var lastToActIndex = lastGameState.LastToActIndex;
-            var dateGameEnded = lastGameState.DateGameEnded;
-            var i = 0;
-            var numPlayers = 0;
-
 
             // update hasPlayedCard
             if(cardsPlayed != null) {
@@ -844,6 +930,23 @@
                 // update flag
                 hasPlayedCard = false;
             }
+        };
+
+        function updateUI() {
+            // log
+            console.log('updateUI()');
+
+            // get vars
+            var players = lastGameState.Players;
+            var round = lastGameState.Round;
+            var status = lastGameState.Status;
+            var cardsPlayed = lastGameState.CardsPlayed;
+            var dealerPositionIndex = lastGameState.DealerPositionIndex;
+            var playerTurnIndex = lastGameState.PlayerTurnIndex;
+            var lastToActIndex = lastGameState.LastToActIndex;
+            var dateGameEnded = lastGameState.DateGameEnded;
+            var i = 0;
+            var numPlayers = 0;
 
             // update local variables
             playerList = players;
@@ -894,8 +997,8 @@
                 // update player name
                 var playerName = player.Name;
 
-                if(playerName.length > 12)
-                    playerName = playerName.substring(0,11);
+                if(playerName.length > 7)
+                    playerName = playerName.substring(0,7);
 
                 $playerDiv.find(".player-name").html(playerName);
 
@@ -934,7 +1037,7 @@
                 // player is dealer
                 if(player.IsDealer) {
                     // add dealer class to player name
-                    $playerDiv.find(".player-name").addClass("dealer");
+                    $playerDiv.find('.player-name').append(' <span class="badge">D</span>');
 
                     if(lastGameState.Status == gameStateStatus.SelectTrump) {
                         message = player.Name + "'s turn to choose trump";
@@ -961,25 +1064,7 @@
             } 
 
             // update trump
-            updateTrump();
-            
-            // check if first hand
-            if(pageJustLoaded) {
-                // update flag
-                pageJustLoaded = false;
-
-                // update cards played on table
-                drawCardsPlayed();
-
-                // update player cards
-                drawPlayerCards();
-
-                // update empty seats
-                updateEmptySeats(numPlayers);
-
-                // start turn
-                startTurn();
-            } 
+            updateTrump(); 
         };
 
         function drawFinalScores() {
@@ -1008,7 +1093,7 @@
             var playerBidsHtml = "<tr class=''>";
             
             // round
-            playerBidsHtml += "<th class='text-center'>Round</th>";
+            playerBidsHtml += "<th class='text-center' style='vertical-align: middle;'>Round</th>";
 
             // player names
             for(var i = 0; i < lastGameState.Players.length; i ++) {
@@ -1017,6 +1102,7 @@
 
                 // class
                 var is_player_class = '';
+                var dealer_badge = '';
 
                 // players turn
                 if(currentPlayer.PlayerId == player.PlayerId) {
@@ -1025,10 +1111,11 @@
 
                 // player is dealer
                 if(player.IsDealer) {
-                    is_player_class = 'player-name-dealer';
+                    playerBidsHtml += "<th class=\"text-center " + is_player_class + "\">" + player.Name + " <span class=\"badge\">D</span><br />" + player.Score + " points</th>";
                 }
-
-                playerBidsHtml += "<th class='text-center " + is_player_class + "'>" + player.Name + " (" + player.Score + ")</th>";
+                else {
+                    playerBidsHtml += "<th class=\"text-center " + is_player_class + "\">" + player.Name + "<br />" + player.Score + " points</th>";
+                } 
             }
             
             playerBidsHtml += "</tr>";
@@ -1050,12 +1137,7 @@
                     is_player_class = 'player-name-active';
                 }
 
-                // player is dealer
-                if(player.IsDealer) {
-                    is_player_class = 'player-name-dealer';
-                }
-
-                playerBidsHtml += "<td class='text-center " + is_player_class + "'>" + lastGameState.Players[i].TricksTaken + "/" + lastGameState.Players[i].Bid + "</td>";
+                playerBidsHtml += "<td class='text-center " + is_player_class + "'>" + lastGameState.Players[i].Bid + "</td>";
             }
   
             playerBidsHtml += "</tr>";
@@ -1114,22 +1196,23 @@
         var isSelectingTrump = false;
 
         function selectTrump() {
-            // validate
-            if(!currentPlayer.IsDealer) {
-                console.log("only dealer can set trump");
-
-                return;
-            }
-                
+            // not time to select trump
             if(lastGameState.Status != gameStateStatus.SelectTrump) {
                 console.log("trump is not able to be changed right now");
 
                 return;
             }
 
+            // not dealer
+            if(!currentPlayer.IsDealer) {
+                console.log("only dealer can set trump");
+
+                return;
+            }
+                
             // check if already selecting trump
             if(isSelectingTrump)
-                return;
+                return false;
 
             // player turn sound
             $(".soundStartTurn").trigger('play');
@@ -1220,8 +1303,14 @@
 
         function verifySelectedCard(selectedCard) {
             // dont allow another card to be played if already done
-            if(hasPlayedCard)
+            if(hasPlayedCard) {
+                console.log('player must wait until end of turn to play card'); 
+
                 return false;
+            }
+            
+            // stop waiting for player to select card
+            stopWaitingForPlayer();
 
             // suit to follow
             var suitToFollow = lastGameState.SuitToFollow;
@@ -1269,7 +1358,7 @@
                                 if(currentPlayer.Cards[i].Suit == suitToFollow) {
                                     alert('You have to follow suit! Picked: ' + getSuitName(cardSuit) + ' - must be: ' + getSuitName(suitToFollow));
 
-                                    return;
+                                    return false;
                                 }
                             } 
                         }
@@ -1321,9 +1410,6 @@
                 return false;
             }
 
-            // destroy turn popover
-            $('.card-holder').popover('destroy');
-
             // update selecting card flag
             isSelectingCard = false;
 
@@ -1342,7 +1428,7 @@
                     $(this).css("margin-left", "0px");
                 }
                 else {
-                    $(this).css("margin-left", "-66px");
+                    $(this).css("margin-left", "-70px");
                 }
             });
             
@@ -1361,80 +1447,105 @@
 
         
         function verifySelectedTrump(suitId) {
-            // validate
+            // not time to select trimp
+            if(lastGameState.Status != gameStateStatus.SelectTrump) {
+                return false;
+            }
+
+            // player is not the dealer
             if(!currentPlayer.IsDealer) {
-                return;
+                return false;
             }
 
-            if(!lastGameState.Status == gameStateStatus.SelectTrump) {
-                return;
-            }
-
-            // hide select trump modal
+            // hide selected trump modal
             $('#selectTrumpModal').modal('hide');
 
-            // update flag
+            // player is not selecting trump
+            if(!isSelectingTrump) {
+                return false;
+            }
+             
+            // update selecting trump flag
             isSelectingTrump = false;
 
             if(isConnected) {
+                // send new trump to server
                 hub.server.setTrump(gameId, currentPlayer.PlayerId, suitId, groupNameId);
             }
         };
 
-        function startTurn() {
-            console.log('startTurn(): ' + currentPlayer.IsTurn);
-            console.log('gameStateStatus: ' + lastGameState.Status);
+        function checkAndPlayPreselectedCard() {
+            // check if player has preselected card
+            if(preselectedCard != null) {
+                // attempt to play selected card
+                verifySelectedCard(preselectedCard.SelectedCard.get(0));
 
-            // not players turn and not selecting trump
-            if(!currentPlayer.IsTurn && lastGameState.Status != gameStateStatus.SelectTrump) {
-                // destroy existing turn popover
-                $('.card-holder').popover('destroy');
-
-                return false;
+                return true;
             }
-            
-            // select trump
-            if(lastGameState.Status == gameStateStatus.SelectTrump) {
-                // select trump
-                selectTrump();
-            }
-            else if(lastGameState.Status == gameStateStatus.BiddingInProgress) {
-                // select bid
-                selectBid(lastGameState.Round); 
-            }
-            else if(lastGameState.Status == gameStateStatus.RoundInProgress) {
-                // reset card played flag
-                hasPlayedCard = false;
 
-                // check if player has preselected card
-                if(preselectedCard != null) {
-                    // attempt to play selected card
-                    verifySelectedCard(preselectedCard.SelectedCard.get(0));
+            return false; 
+        };
 
-                    return;
-                }
-
-                // has not played a card yet
-                if(!hasPlayedCard) {
-                    // create turn popover
-                    $('.card-holder').popover({
-                        title: 'Its your turn',
-                        content: 'Please pick a card to play!',
-                        placement: 'top',
-                        trigger: 'manual'
-                    });
-
-                    console.log('showing popover');
-                }
-
-                // player turn sound
-                $(".soundStartTurn").trigger('play');
+        function announceCurrentPlayerTurn() {
+            // has not played a card yet
+            if(!hasPlayedCard) {
+                // create turn popover and show
+                $('.card-holder').popover({
+                    html: true,
+                    title: currentPlayer.Name + ', its your turn!',
+                    content: '<p>A random card will be automatically played for you if you do not respond in <span id="auto-player-timer">0</span> seconds.</p>',
+                    placement: 'top',
+                    trigger: 'manual'
+                });
 
                 // show popover
                 $('.card-holder').popover('show');
+
+                // when popover is shown
+                $('.card-holder').on('shown.bs.popover', function () {
+                    // player turn sound
+                    $(".soundStartTurn").trigger('play');
+                });
             }
-            else {
-                console.log("-- cant start turn - game state unknown: " + lastGameState.Status);
+        };
+
+        function startTurn() {
+            // start correct turn events based on gamestate
+            switch(lastGameState.Status) {
+                case gameStateStatus.SelectTrump:
+                    // player is dealer and its time to select trump
+                    if(currentPlayer.IsDealer && lastGameState.Status == gameStateStatus.SelectTrump) {
+                        // select trump
+                        selectTrump();
+                    }
+
+                    break;
+                case gameStateStatus.BiddingInProgress:
+                    // current players turn to select bid
+                    if(currentPlayer.IsTurn) {
+                        // select bid
+                        selectBid(lastGameState.Round); 
+                    }
+
+                    break;
+                case gameStateStatus.RoundInProgress:
+                    // current players turn to play a card
+                    if(currentPlayer.IsTurn) {
+                        // check and play preselected card if player chose one, return false if not
+                        var hasPlayedPreselectedCard = checkAndPlayPreselectedCard();
+
+                        // did not play preselected card
+                        if(!hasPlayedPreselectedCard) {
+                            // start waiting for player
+                            startWaitingForPlayer();
+                        }
+                    }
+                    
+                    break;
+                default:
+                    console.log('unable to start turn - unhandled gamestate: ' + lastGameState.Status);
+
+                    break;
             }
         };
 
@@ -1531,11 +1642,14 @@
                         // disable dealing flag
                         isDealing = false;
 
-                        // draw player cards
-                        drawPlayerCards();
+                        // remove remaining deal cards
+                        $(".deal-card").remove();
 
                         // delay turn start
                         setTimeout(function() {
+                            // draw player cards
+                            drawPlayerCards();
+
                             // start turn
                             startTurn();
                         }, 2000);
@@ -1694,7 +1808,7 @@
                 } 
                 
                 if(i > 0) {
-                    style = "style='margin-left: -66px'";
+                    style = "style='margin-left: -70px'";
                 }
 
                 // append card to modal (on select bid screen)
@@ -1758,12 +1872,32 @@
             $("card-holder .player-cards").removeAttr("onclick");
         };
 
+        // is paused flag
+        var isPaused = false;
+
         function pauseGame() {
+            // update paused flag
+            isPaused = true;
+
             $("#gamePausedModal").modal('show');
+
+            // change color of backdrop
+            $(".modal-backdrop").css({
+                'background-color':'#000',
+                'opacity': '0.75'
+            });
         };
 
         function resumeGame() {
+            // update paused flag
+            isPaused = false;
+
             $("#gamePausedModal").modal('hide');
+
+            // change color of backdrop
+            $(".modal-backdrop").css({
+                'background-color':'transparent'
+            });
         };
     </script>
     <!--[if gte IE 9]>
