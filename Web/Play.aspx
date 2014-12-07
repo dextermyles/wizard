@@ -2228,7 +2228,7 @@
                         <div class="cards-played cards-played-container">
                             <!-- place holder for cards played -->
                         </div>
-                        <div class="import-game-info" style="display: none; width: 100%; vertical-align: middle; border: 1px solid #000; background-color: #fff; border-radius: 5px; opacity: 0.75;">
+                        <div class="import-game-info" style="display: none;">
                             <span class="glyphicon glyphicon-info-sign"></span>
                             <span id="InfoText" style="margin: 0px; font-weight: bold; font-size: 16px;">Players are currently bidding</span>
                         </div>
