@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 namespace WizardGame.Helpers
 {
+    [Serializable]
     public class Player
     {
         public int PlayerId = 0;

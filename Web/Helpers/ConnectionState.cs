@@ -5,6 +5,7 @@ using System.Web;
 
 namespace WizardGame
 {
+    [Serializable]
     public enum ConnectionState
     {
         DISCONNECTED = 0,

@@ -5,6 +5,7 @@ using System.Web;
 
 namespace WizardGame.Helpers
 {
+    [Serializable]
     public class GamePlayers
     {
         public int GamePlayersId = 0;

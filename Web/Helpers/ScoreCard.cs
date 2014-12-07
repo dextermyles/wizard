@@ -5,6 +5,7 @@ using System.Web;
 
 namespace WizardGame.Helpers
 {
+    [Serializable]
     public class ScoreCard
     {
         public PlayerScore[] PlayerScores = null;
@@ -77,6 +78,7 @@ namespace WizardGame.Helpers
         }
     }
 
+    [Serializable]
     public class PlayerScore
     {
         public int PlayerId = 0;

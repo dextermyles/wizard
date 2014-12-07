@@ -395,7 +395,7 @@
         };
 
         // cardPlayed
-        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData, cardsPlayed) {
+        hub.client.cardPlayed = function(_card, _player, isTurnEnded, _playerWinner, isRoundOver, previousRoundScoreArray, gameData, previousRoundGameState) {
             // update game state
             updateGameState(gameData.GameStateData);
 
@@ -463,20 +463,20 @@
                         drawCardsPlayed();
                     }
                     else {
-                        // temp update cardsplayed with old object
-                        var oldCardsPlayed = lastGameState.CardsPlayed;
+                        console.log('previous game state:');
+                        console.log(previousRoundGameState);
+
+                        // temp store new gamestate
+                        var newGameState = gameData.GameStateData;
                         
-                        // update cards played with history value
-                        lastGameState.CardsPlayed = cardsPlayed;
+                        // replace gamestate with previous round data
+                        updateGameState(previousRoundGameState);
 
-                        console.log('cards played from previous round');
-                        console.log(cardsPlayed);
-
-                        // redraw cards played 
+                        // redraw cards played with best card
                         drawCardsPlayed();
 
-                        // restore cards played
-                        lastGameState.CardsPlayed = oldCardsPlayed;
+                        // restore game state
+                        updateGameState(newGameState);
                     }
 
                     // player won trick

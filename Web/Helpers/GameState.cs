@@ -6,6 +6,7 @@ using WizardGame.Services;
 
 namespace WizardGame.Helpers
 {
+    [Serializable]
     public class GameState
     {
         public int GameId = 0;

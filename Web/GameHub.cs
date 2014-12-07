@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -293,8 +294,8 @@ namespace WizardGame
             // has round ended
             bool IsRoundOver = false;
 
-            // keep history of cards played (so we have access to them when end of turnclears them)
-            Card[] historyOfCardsPlayed = gameState.CardsPlayed;
+            // keep history of game state with cards played and trump
+            GameState oldGameState = gameState.Clone();
 
             // player could not play card
             if (!cardPlayedResult)
@@ -432,7 +433,7 @@ namespace WizardGame
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, dateGameEnded, gameState, groupNameId);
 
             // broadcast game data
-            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, roundScoreHistory, game, historyOfCardsPlayed);
+            Clients.Group(groupNameId).cardPlayed(card, player, IsTurnEnded, playerWinner, IsRoundOver, roundScoreHistory, game, oldGameState);
         }
 
         public void SendChatMessage(string playerName, string message, string groupNameId)
