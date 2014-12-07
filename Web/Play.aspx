@@ -1492,7 +1492,7 @@
                 // create turn popover and show
                 $('.card-holder').popover({
                     html: true,
-                    title: currentPlayer.Name + ', its your turn!',
+                    title: '<strong>' + currentPlayer.Name + '</strong>, its your turn!',
                     content: '<p>A random card will be automatically played for you if you do not respond in <span id="auto-player-timer">0</span> seconds.</p>',
                     placement: 'top',
                     trigger: 'manual'
