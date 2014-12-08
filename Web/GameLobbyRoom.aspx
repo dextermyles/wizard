@@ -127,7 +127,7 @@
 
                 // add player to list
                 if(!isPlayerInList(playerName))
-                    $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
+                    $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + " <span class=\"glyphicon glyphicon-ok-sign\"></li>");
 
                 // resume refreshing player list
                 startRefreshingPlayerList();
@@ -160,9 +160,8 @@
                 // chat message player joined
                 appendChatMessage(playerName, "Reconnect to game lobby.")
 
-                // add player to list
                 if(!isPlayerInList(playerName))
-                    $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
+                    $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + " <span class=\"glyphicon glyphicon-ok-sign\"></li>");
 
                 // resume refreshing player list
                 startRefreshingPlayerList();
