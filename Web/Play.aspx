@@ -239,7 +239,7 @@
             // update num connected players
             numPlayersConnected = parseInt(numPlayersInGame);
 
-            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
+            console.log(_player.Name + ' joined game - players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // all players present
             if(numPlayersConnected == numPlayersExpected) {
@@ -259,7 +259,7 @@
             // update num connected players
             numPlayersConnected = parseInt(numPlayersInGame);
 
-            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
+            console.log(_player.Name + ' reconnected - players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // all players present
             if(numPlayersConnected == numPlayersExpected) {
@@ -278,7 +278,7 @@
             // broadcast
             appendChatMessage("Server", _player.Name + " quit the game.");
 
-            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
+            console.log(_player.Name + ' quit - players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // pause game if missing players
             if(numPlayersConnected < numPlayersExpected) {
@@ -297,7 +297,7 @@
             // broadcast
             appendChatMessage("Server", _player.Name + " timed out.");
 
-            console.log('players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
+            console.log(_player.Name + ' timed out - players present: ' + numPlayersConnected + ' / ' + numPlayersExpected);
 
             // pause game if missing players
             if(numPlayersConnected < numPlayersExpected) {
@@ -323,38 +323,59 @@
 
         // player loading for first time
         hub.client.initialize = function initialize(gameData, isReconnect, numPlayersInGame) {
+            console.log('initialize called by server');
+
+            // has new round started
+            var isNewRound = false;
+
+            // game state exists
+            if(lastGameState != null) {
+                // new round started
+                if(gameData.GameStateData.Round > lastGameState.Round) {
+                    // update new round flag
+                    isNewRound = true;
+                }
+            }
+
             // update gamestate
             updateGameState(gameData.GameStateData);
 
-            // get num of connect players
-            numPlayersConnected = parseInt(numPlayersInGame);
-
-            // reset the popup timer
-            stopWaitingForPlayer();
-
-            // cancel wait timer
-            clearInterval(turnInterval);
-
-            // update flag if player has played card
-            hasCurrentPlayerPlayedCard();
-
             // update ui
             updateUI();
-            
+
             // update empty seats
             updateEmptySeats(lastGameState.Players.length);
 
-            // update flag
-            pageJustLoaded = false;
+            // get num of connect players
+            numPlayersConnected = parseInt(numPlayersInGame);
 
             // update cards played on table
             drawCardsPlayed();
 
             // update player cards
             drawPlayerCards();
+            
+            // new round
+            if(isNewRound) {
+                // not waiting for player
+                if(!isWaitingForPlayer) {
+                    // if new round, wait 2 second before starting turn
+                    setTimeout(function() {
+                        // update flag if player has played card
+                        hasCurrentPlayerPlayedCard();
 
-            // start turn
-            startTurn();
+                        // start turn
+                        startTurn();
+                    }, 2000);
+                }
+            }
+            else {
+                // update flag if player has played card
+                hasCurrentPlayerPlayedCard();
+
+                // start turn
+                startTurn();
+            }
 
             // pause game if missing players
             if(numPlayersConnected < numPlayersExpected) {
@@ -679,7 +700,7 @@
 
         function stopWaitingForPlayer() {
             // log
-            console.log('cleared waiting for player interval');
+            console.log('stopped waiting for player interval');
 
             // clear waiting interval
             clearInterval(turnInterval);
@@ -687,18 +708,28 @@
             // reset timers
             playerWaitTime = 0;
 
+            // waiting for player flag
+            isWaitingForPlayer = false;
+
+            // player is selecting card
+            isSelectingCard = false;
+
             // destroy turn popover
             $('.card-holder').popover('destroy'); 
         };
 
+        var isWaitingForPlayer = false;
+
         function startWaitingForPlayer() {
+            // waiting for player
+            if(isWaitingForPlayer) {
+                console.log('already waiting for player');
+                
+                return false;
+            }
+                
             // log
-            console.log('started waiting for player interval');
-
-            // make sure no existing timer set
-            stopWaitingForPlayer();
-
-            console.log('starting wait timer!');
+            console.log('started waiting for player');
 
             // reset wait time
             playerWaitTime = 0;
@@ -708,6 +739,12 @@
 
             // initial start seconds
             $('#auto-player-timer').html(maxTurnWaitTime);
+
+            // waiting for player flag
+            isWaitingForPlayer = true;
+
+            // player is selecting card
+            isSelectingCard = true;
 
             // announcement
             announceCurrentPlayerTurn();
@@ -930,16 +967,14 @@
                     // decore highest card
                     var bestCard = getBestCardFromCardsPlayed();
 
+                    // best card found
                     if(bestCard != null) {
                         // loop through cards played on table
                         $cardsPlayed.children("a").each(function(index) {
                             var $card = $(this);
 
+                            // card matches best card
                             if($card.attr("id") == bestCard.Id) {
-                                // found best card on table
-                                console.log('best card found:');
-                                console.log(bestCard);
-
                                 // change css of card
                                 $card.css({
                                     'background-color':'rgb(199, 199, 199)',
@@ -1152,7 +1187,6 @@
             // update hasPlayedCard
             if(cardsPlayed != null) {
                 console.log('checking if player has already played a card this turn');
-                console.log(cardsPlayed);
 
                 // loop through cards
                 for(i = 0; i < cardsPlayed.length; i++) {
@@ -1575,9 +1609,6 @@
                 return false;
             }
             
-            // stop waiting for player to select card
-            stopWaitingForPlayer();
-
             // suit to follow
             var suitToFollow = lastGameState.SuitToFollow;
 
@@ -1681,6 +1712,9 @@
 
             // remove card
             tempSelectedCard.SelectedCard.remove();
+
+            // stop waiting for player to select card
+            stopWaitingForPlayer();
 
             // player cards ref
             var $playerCards = $(".card-holder .player-cards");
