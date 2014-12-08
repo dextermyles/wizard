@@ -95,8 +95,16 @@ namespace WizardGame
                 // save cookie
                 Response.Cookies.Add(cookie);
 
-                // valid
-                Response.Redirect("~/Home.aspx");
+                // set referring page
+                string referencepage = Convert.ToString(HttpContext.Current.Session["referencePage"]);
+
+                if(!string.IsNullOrEmpty(referencepage)) {
+                    Response.Redirect(referencepage);
+                }
+                else
+                {
+                    Response.Redirect("~/Home.aspx");
+                }
             }
             else
             {

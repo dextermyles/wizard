@@ -169,6 +169,18 @@ namespace WizardGame.Helpers
                 }
             }
 
+            // get referring page
+            var referrer = HttpContext.Current.Request.UrlReferrer;
+
+            if (referrer != null)
+            {
+                // get session
+                var currentSession = HttpContext.Current.Session;
+
+                // set referring page
+                currentSession["referencePage"] = referrer.AbsolutePath;
+            }
+
             return false;
         }
     }

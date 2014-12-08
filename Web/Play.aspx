@@ -121,7 +121,7 @@
 
         // player turn interval
         var turnInterval = 0;
-        var maxTurnWaitTime = 20; // 5 seconds to play a card
+        var maxTurnWaitTime = 45; // 5 seconds to play a card
 
         currentPlayer.PlayerId = '<%= PlayerData.PlayerId %>';
         currentPlayer.Name = '<%= PlayerData.Name %>';
@@ -291,11 +291,17 @@
             // get num of connect players
             numPlayersConnected = parseInt(numPlayersInGame);
 
+            // reset the popup timer
+            stopWaitingForPlayer();
+
+            // cancel wait timer
+            clearInterval(turnInterval);
+
             // update flag if player has played card
             hasCurrentPlayerPlayedCard();
 
             // update ui
-            updateUI();   
+            updateUI();
             
             // update empty seats
             updateEmptySeats(lastGameState.Players.length);
@@ -634,11 +640,13 @@
         };
 
         function stopWaitingForPlayer() {
+            // log
+            console.log('cleared waiting for player interval');
+
             // clear waiting interval
             clearInterval(turnInterval);
 
             // reset timers
-            turnInterval = 0;
             playerWaitTime = 0;
 
             // destroy turn popover
@@ -646,6 +654,9 @@
         };
 
         function startWaitingForPlayer() {
+            // log
+            console.log('started waiting for player interval');
+
             // make sure no existing timer set
             stopWaitingForPlayer();
 
