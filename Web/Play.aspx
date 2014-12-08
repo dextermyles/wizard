@@ -714,6 +714,9 @@
             //if paused skip
             // max time hit
             if(playerWaitTime > maxTurnWaitTime) {
+                // cap wait time
+                playerWaitTime = maxTurnWaitTime;
+
                 // auto play best card
                 playBestCard();  
 
@@ -973,8 +976,6 @@
                 // temp card inside loop
                 var tempCard = null;
 
-                console.log('looking for first wizard');
-
                 // look for first wizard
                 for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
                     // temp card ref
@@ -982,8 +983,6 @@
 
                     if(tempCard.Suit == suit.Wizard)
                     {
-                        console.log('first wizard found!');
-
                         bestCard = tempCard;
 
                         break;
@@ -994,9 +993,6 @@
                 if(bestCard == null) {
                     // trump card exists and trump card is not a fluff
                     if(lastGameState.TrumpCard != null && lastGameState.TrumpCard.Suit != suit.Fluff) {
-                        // log
-                        console.log('looking for highest trump');
-
                         // temp highest trump card
                         var tempTrumpCard = null;
 
@@ -1025,9 +1021,6 @@
 
                         // we found highest trump card
                         if(tempTrumpCard != null) {
-                            // log
-                            console.log('highest trump found!');
-
                             bestCard = tempTrumpCard;
                         }
                     }
@@ -1073,23 +1066,26 @@
 
                 // no card found that follows suit
                 if(bestCard == null) {
-                    // first fluff is best card
-                    var isAllFluffs = true;
+                    // all cards played are fluffs
+                    var isAllFluffs = false;
 
-                    // look for first wizard
+                    // num fluffs found
+                    var numFluffs = 0;
+
+                    // look for fluffs
                     for(var i = 0; i < lastGameState.CardsPlayed.length; i++) {
                         // temp card ref
                         tempCard = lastGameState.CardsPlayed[i]; 
 
-                        if(tempCard.Suit =! suit.Fluff)
+                        if(tempCard.Suit == suit.Fluff)
                         {
-                            // non fluff found
-                            isAllFluffs = false;
-
-                            // break from loop
-                            break;
+                            numFluffs++;
                         }
                     }
+
+                    // all cards played are fluffs
+                    if(numFluffs == lastGameState.CardsPlayed.length)
+                        isAllFluffs = true;
 
                     // is all fluffs
                     if(isAllFluffs) {
@@ -1452,7 +1448,7 @@
             $playerBid.html('');
 
             // add new button based on round #
-            for(var i = 0; i <= lastGameState.Round; i++) {
+            for(var i = 0; i <= currentPlayer.Cards.length; i++) {
                 $playerBid.append("<a onclick=\"verifyBid(" + i + ");\" class=\"btn btn-lg btn-default\" style=\"width: 54px !important; margin:1px 1px;\">" + i + "</a>");
             }
 
@@ -1744,8 +1740,11 @@
         function checkAndPlayPreselectedCard() {
             // check if player has preselected card
             if(preselectedCard != null) {
-                // attempt to play selected card
-                verifySelectedCard(preselectedCard.SelectedCard.get(0));
+                // delay card play by 1 second
+                setTimeout(function() {
+                    // attempt to play selected card
+                    verifySelectedCard(preselectedCard.SelectedCard.get(0));
+                }, 2000);
 
                 return true;
             }
@@ -2145,17 +2144,11 @@
                 arrayOfPlayableCards[index] = $(this);
             });
 
-            console.log('array of playable cards');
-            console.log(arrayOfPlayableCards);
-
             if(arrayOfPlayableCards.length > 0) {
                 var randomIndex = getRandomInt(0, arrayOfPlayableCards.length -1);
                 var randomCard = arrayOfPlayableCards[randomIndex];
 
                 randomCardToPlay = randomCard;
-
-                console.log('new random card to play: ');
-                console.log(randomCard);
             }
         };
 

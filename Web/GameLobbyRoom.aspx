@@ -347,13 +347,7 @@
             $chatbox.val('');
 
             // send to server
-            hub.server.sendChatMessage(currentPlayer.Name, message, groupNameId)
-                .done(function () {
-                    logMessage("-- sendChatMessage executed on server --");
-                })
-                .fail(function (error) {
-                    logMessage("-- " + msg + " --");
-                });
+            hub.server.sendChatMessage(currentPlayer.Name, message, groupNameId);
         };
 
         function clearChatWindow() {
@@ -437,80 +431,84 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <div class="page-header" style="margin-top: 14px;">
-            <h1 runat="server" id="GameLobbyTitle">Title</h1>
-        </div>
-        <div class="col-sm-8">
+        <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong>Chat window</strong>
+                    <span runat="server" id="GameLobbyTitle"></span>
+                    <span class="pull-right">
+                        Players: <span class="total-players"><%=Players.Length %></span>
+                    </span>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group">
-                        <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly></textarea>
-                        <style type="text/css">
-                            #txtChatWindow {
-                                width: 100%;
-                                border: none;
-                                resize: none;
-                                background-color: transparent;
-                            }
-                        </style>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0px;">
-                        <div class="input-group">
-                            <input type="text" id="txtChatMessage" name="txtChatMessage" class="form-control" placeholder="Send a message to other players" />
-                            <span class="input-group-btn">
-                                <input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-default" value="Clear" onclick="clearChatWindow(); return false;" />
-                                <input type="button" id="btnSendChat" name="btnSendChat" class="btn btn-primary" value="Send" onclick="sendChatMessage(); return false;" />
-                                <script>
-                                    // bind enter event to chat text box
-                                    $("#txtChatMessage").bind("keypress", function (event) {
-                                        // enter key pressed
-                                        if (event.keyCode == 13) {
-                                            sendChatMessage();
+                    <div class="col-xs-9">
+                        <div class="form-group">
+                            <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly></textarea>
+                            <style type="text/css">
+                                #txtChatWindow {
+                                    width: 100%;
+                                    resize: none;
+                                    background-color: transparent;
+                                }
+                            </style>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <input type="text" id="txtChatMessage" name="txtChatMessage" class="form-control" placeholder="Send a message to other players" />
+                                <span class="input-group-btn">
+                                    <input type="button" id="btnClearChat" name="btnClearChat" class="btn btn-default" value="Clear" onclick="clearChatWindow(); return false;" />
+                                    <input type="button" id="btnSendChat" name="btnSendChat" class="btn btn-primary" value="Send" onclick="sendChatMessage(); return false;" />
+                                    <script>
+                                        // bind enter event to chat text box
+                                        $("#txtChatMessage").bind("keypress", function (event) {
+                                            // enter key pressed
+                                            if (event.keyCode == 13) {
+                                                sendChatMessage();
 
-                                            return false;
-                                        }
-                                    });
-                                </script>
-                            </span>
+                                                return false;
+                                            }
+                                        });
+                                    </script>
+                                </span>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-xs-3">
+                        <ul class="list-group player-list">
+                            <%= ListGameLobbyPlayersHtml()%>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong>Players</strong>
-                </div>
-                <ul class="list-group player-list">
-                    <%= ListGameLobbyPlayersHtml()%>
-                </ul>
                 <div class="panel-footer">
-                    Connected: <span class="total-players"><%=Players.Length %></span>
+                    <span class="pull-right">
+                        <% 
+                        // check if player is game host
+                        if (IsGameHost)
+                        {
+                        %>
+                        <input type="button" id="btnStartGame" class="btn btn-primary" onclick="return startGame(); return false;" value="Start game" disabled />
+                        <input type="button" id="btnCancelGame" class="btn btn-danger" onclick="return cancelGame(); return false;" value="Cancel game" />
+                        <% 
+                        }
+                        else
+                        {
+                        %>
+                        <input type="button" id="btnQuitGame" class="btn btn-primary" onclick="return leaveGameLobby(); return false;" value="Quit game" />
+                        <% 
+                        }
+                        %>
+                    </span>
+                    <div class="clearfix"></div>
                 </div>
-            </div>
-            <div class="form-group">
-                <% 
-                    // check if player is game host
-                    if (IsGameHost)
-                    {
-                        // player is the game host
-                %>
-                <input type="button" id="btnStartGame" class="btn btn-lg btn-primary btn-block" onclick="return startGame(); return false;" value="Start game" disabled />
-                <input type="button" id="btnCancelGame" class="btn btn-lg btn-default btn-block" onclick="return cancelGame(); return false;" value="Cancel game" />
-                <% 
+                <style type="text/css">
+                    .panel-footer {
+                        padding: 10px 15px;
+                        background-color: #E5E5E5;
+                        border-top: 1px solid #A8A8A8;
+                        border-bottom-right-radius: 3px;
+                        border-bottom-left-radius: 3px;
                     }
-                    else
-                    {
-                        // player is not the host 
-                %>
-                <input type="button" id="btnQuitGame" class="btn btn-lg btn-primary btn-block" onclick="return leaveGameLobby(); return false;" value="Quit game" />
-                <% 
-                    }
-                %>
+                </style>
             </div>
         </div>
     </div>

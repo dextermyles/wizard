@@ -74,7 +74,7 @@
             </asp:ContentPlaceHolder>
         </div> 
     </form>
-    <footer class="footer hidden-xs">
+    <footer class="footer">
         <div class="container">
             <textarea id="logwindow" class="text-muted" style="width:100%; height: 54px; background-color: transparent; border: none; resize: none; display: none;" readonly></textarea>
             <p class="text-center" style="color: #000;">

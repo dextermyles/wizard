@@ -12,9 +12,9 @@ namespace WizardGame
         public void Configuration(IAppBuilder app)
         {
             // manage configs
-            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(30);
-            GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(30);
-            GlobalHost.Configuration.KeepAlive = TimeSpan.FromSeconds(10);
+            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(15);
+            GlobalHost.Configuration.DisconnectTimeout = TimeSpan.FromSeconds(15);
+            GlobalHost.Configuration.KeepAlive = TimeSpan.FromSeconds(5);
 
             // Any connection or hub wire up and configuration should go here
             app.MapSignalR();

@@ -207,6 +207,9 @@ namespace WizardGame.Helpers
             // validate
             if (player != null && player.PlayerId > 0)
             {
+                // not players turn
+                if (!player.IsTurn)
+                    return false;
 
                 // if no suit to follow has been set, next card can potentially be the leading suit
                 if (SuitToFollow == Suit.None)
@@ -298,7 +301,7 @@ namespace WizardGame.Helpers
             return true;
         }
 
-        public void EnterBid(int playerId, int bid)
+        public bool EnterBid(int playerId, int bid)
         {
             // get player object
             Player player = Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
@@ -306,6 +309,10 @@ namespace WizardGame.Helpers
             // validate
             if (player != null && player.PlayerId > 0)
             {
+                // not players turn
+                if (!player.IsTurn)
+                    return false;
+
                 // set bid
                 player.Bid = bid;
 
@@ -328,6 +335,8 @@ namespace WizardGame.Helpers
                 // update next player turn flag
                 Players[PlayerTurnIndex].IsTurn = true;
             }
+
+            return true;
         }
 
         public bool StartNextRound()
@@ -371,13 +380,14 @@ namespace WizardGame.Helpers
             // next dealer
             DealerPositionIndex++;
 
+            // back to first position
             if (DealerPositionIndex > Players.Length - 1)
                 DealerPositionIndex = 0;
 
             // set flag
             Players[DealerPositionIndex].IsDealer = true;
 
-            // next player turn
+            // first to act is left of dealer
             PlayerTurnIndex = DealerPositionIndex + 1;
 
             if (PlayerTurnIndex > Players.Length - 1)
