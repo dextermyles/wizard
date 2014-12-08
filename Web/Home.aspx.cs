@@ -30,15 +30,6 @@ namespace WizardGame
             
             if (!isValidSession)
             {
-                // get referring page
-                var referrer = Request.UrlReferrer;
-
-                if (referrer != null)
-                {
-                    // set referring page
-                    Session["referencePage"] = referrer.AbsolutePath;
-                }
-
                 // redirect to login page
                 Response.Redirect("~/Default.aspx?Error=Session is not valid");
             }

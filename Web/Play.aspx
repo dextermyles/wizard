@@ -145,7 +145,7 @@
             // get updated player list every 10 seconds
             keepAliveInterval = setInterval(function () {
                 sendKeepAlive();
-            }, 30000);
+            }, 10000);
         };
 
         // Start the connection
@@ -165,6 +165,9 @@
             // tell server we are joining the lobby
             joinGame(currentPlayer.PlayerId, groupNameId, true);
 
+            // stop reconnecting
+            stopReconnecting();
+
             // hide offline message
             $(".offline-message").fadeOut("fast");
 
@@ -183,8 +186,40 @@
             // show offline message
             $(".offline-message").fadeIn("fast");
 
+            // update flag
             isConnected = false;
+
+            // start reconnecting
+            startReconnecting();
+
         });
+
+
+        var reconnectInterval = 0;
+
+        // start reconnecting
+        function startReconnecting() {
+            // reconnect every 5 seconds
+            reconnectInterval = setInterval(tryToReconnect, 5000);
+        }
+
+        // stop connecting
+        function stopReconnecting() {
+            // clear interval
+            clearInterval(reconnectInterval);
+        }
+
+        function tryToReconnect() {
+            // player is not connected
+            if(!isConnected) {
+                // Start the connection
+                $.connection.hub.start().done(onConnectionInit);
+            }
+            else {
+                // stop reconnect if were connected
+                stopReconnecting();
+            }
+        }
 
         // get reference to hub
         var hub = $.connection.gameHub;

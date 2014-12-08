@@ -11,6 +11,12 @@
             this.connectionId = ""
         };
 
+        var ConnectionState = {
+            DISCONNECTED:0,
+            CONNECTED:1,
+            INACTIVE:2
+        };
+
         // playerList array
         var playerList = Array();
 
@@ -29,6 +35,9 @@
         // connected players
         var totalPlayers = 0;
 
+        // player list
+        var playerList = Array();
+
         var keepAliveInterval = 0;
 
         currentPlayer.PlayerId = '<%= PlayerData.PlayerId %>';
@@ -38,7 +47,6 @@
 
         // initialize connection
         function onConnectionInit() {
-
             // update connection flag
             isConnected = true;
 
@@ -48,27 +56,38 @@
             // append chat message
             appendChatMessage("Server", "Connected to game lobby!");
 
-            // setup keep-alive
-            keepAliveInterval = setInterval(function () {
-                sendKeepAlive();
-            }, 30000);
+            // start refreshing player list
+            startRefreshingPlayerList();
+
+            // stop reconnect interval
+            stopReconnecting();
         };
 
         // Start the connection
         $.connection.hub.start().done(onConnectionInit);
 
         $.connection.hub.reconnecting(function () {
+            // broadcast
             appendChatMessage("Server", "Attempting to reconnect to game lobby.");
 
+            // stop refreshing player list
+            stopRefreshingPlayerList();
+
+            // update flag
             isConnected = false;
         });
 
         $.connection.hub.reconnected(function () {
+            // broadcast
             appendChatMessage("Server", "Reconnected to game lobby.");
+            
+            // stop reconnect interval
+            stopReconnecting();
 
             // tell server we are joining the lobby
             joinGameLobby(currentPlayer.PlayerId, groupNameId);
 
+            // update flag
             isConnected = true;
         });
 
@@ -81,7 +100,11 @@
                 appendChatMessage("Server", "You have been disconnected from game lobby.");
             }
 
+            // update flag
             isConnected = false;
+
+            // start reconnecting
+            startReconnecting();
         });
 
         // get reference to hub
@@ -93,9 +116,6 @@
 
         // playerJoinedLobby
         hub.client.playerJoinedLobby = function (playerId, playerName, connectionId) {
-            // log message
-            logMessage("-- " + playerName + " has joined the game lobby --");
-
             // chat message player joined
             appendChatMessage(playerName, "Joined the game lobby.")
 
@@ -103,58 +123,53 @@
             if(!isPlayerInList(playerName))
                 $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
 
-            // update player count
-            updatePlayerCount();
+            // resume refreshing player list
+            startRefreshingPlayerList();
         };
 
         // playerLeftLobby
         hub.client.playerLeftLobby = function playerLeftLobby(playerId, playerName) {
-            // log message
-            logMessage("-- " + playerName + " has left the game lobby --");
-            
             // chat message player left lobby
             appendChatMessage(playerName, "Left the game lobby.");
 
             // remove name from player list
             $("#player-" + playerId).remove();
-
-            // update player count
-            updatePlayerCount();
         };
 
         // playerLeftLobby
         hub.client.playerTimedOut = function playerTimedOut(playerId, playerName) {
-            // log message
-            logMessage("-- " + playerName + " has timed out--");
-            
             // chat message player left lobby
             appendChatMessage(playerName, "Timed out.");
         };
 
         // playerReconnected
         hub.client.playerReconnected = function playerReconnected(playerId, playerName, connectionId) {
-            // log message
-            logMessage("-- " + playerName + " has reconnected--");
-            
             // chat message player left lobby
             appendChatMessage(playerName, "Reconnected.");
+
+            // resume refreshing player list
+            startRefreshingPlayerList();
         };
 
         // receiveChatMessage
         hub.client.receiveChatMessage = function receiveChatMessage(playerName, message) {
-            // log message
-            logMessage("-- message received from: " + playerName + " --");
-
             // append to chat window
             appendChatMessage(playerName, message);
-        }
+        };
+
+        // get list of players (status)
+        hub.client.refreshPlayerList = function(_playerList) {
+            console.log(_playerList);
+
+            // update player list
+            playerList = _playerList;
+
+            // redraw player list
+            drawPlayerList();
+        };
 
         // gameStarted
         hub.client.gameStarted = function gameStarted(gameData) {
-            console.log(gameData);
-
-            logMessage("-- game started by host --");
-
             appendChatMessage("Server", "Game will start in 3 seconds");
 
             // redirect to game room
@@ -165,8 +180,6 @@
 
         // gameCancelled
         hub.client.gameCancelled = function gameCancelled() {
-            logMessage("-- game cancelled by host --");
-
             appendChatMessage("Server", "Game cancelled by host");
 
             // redirect to home page in 3 seconds
@@ -188,6 +201,95 @@
         /*******************************************
          * functions that are called by the client *
          *******************************************/
+
+        var playerListInterval = 0;
+
+        function startRefreshingPlayerList() {
+            // clear existing interval
+            clearInterval(playerListInterval);
+
+            // start new interval
+            playerListInterval = setInterval(refreshPlayerList, 3000);
+        }
+
+        function stopRefreshingPlayerList() {
+            // clear existing interval
+            clearInterval(playerListInterval);
+        }
+
+        function refreshPlayerList() {
+            if(isConnected) {
+                console.log('refreshing player list');
+
+                hub.server.refreshPlayerList(gameLobbyId, groupNameId);
+            }
+        }
+
+        function drawPlayerList() {
+            $playerList = $(".player-list");
+
+            // clear list
+            $playerList.html('');
+
+            // playerlist exists
+            if(playerList != null) {
+                // loop through each player
+                for(var i = 0; i < playerList.length; i++) {
+                    // player ref
+                    var player = playerList[i];
+
+                    var connectionStateHtml = "";
+                    
+                    switch(player.ConnectionState)
+                    {
+                        case ConnectionState.DISCONNECTED:
+                            connectionStateHtml = " <span class='glyphicon glyphicon-remove-circle'></span>";
+                            break;
+                        case ConnectionState.INACTIVE:
+                            connectionStateHtml = " <span class='glyphicon glyphicon-question-sign'></span>";
+                            break;
+                        case ConnectionState.CONNECTED:
+                            connectionStateHtml = " <span class='glyphicon glyphicon-ok-sign'></span>";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // append list group item
+                    var listItemHtml = "<li class=\"list-group-item\" id=\"" + player.PlayerId + "\">" + player.Name + connectionStateHtml + "</li>";
+
+                    $playerList.append(listItemHtml);
+                }
+
+                // get total # of players
+                var totalPlayers = playerList.length;
+
+                // update player count
+                $(".total-players").html(totalPlayers.toString() + " / " + maxPlayers);
+            }
+        }
+
+        var reconnectInterval = 0;
+
+        function startReconnecting() {
+            // clear any existing reconnect interval
+            clearInterval(reconnectInterval);
+
+            // start reconnecting interval
+            reconnectInterval = setInterval(waitForReconnect, 5000);
+        }
+
+        function stopReconnecting() {
+            // clear any existing reconnect interval
+            clearInterval(reconnectInterval);
+        }
+
+        function waitForReconnect() {
+            if(!isConnected) {
+                // Start the connection
+                $.connection.hub.start().done(onConnectionInit);
+            } 
+        }
 
         function joinGameLobby(playerId, groupNameId) {
             // call joinGameLobby on server
@@ -257,24 +359,7 @@
                 psconsole.scrollTop(psconsole[0].scrollHeight - psconsole.height());
         };
 
-        function updatePlayerCount() {
-            // reset count
-            totalPlayers = 0;
-
-            // count items in player list
-            $(".player-list li").each(function (i, e) {
-                totalPlayers++;
-            });
-
-            // update player count
-            $(".total-players").html(totalPlayers.toString() + " / " + maxPlayers);
-
-            // has min players connected
-            if(totalPlayers > 2) {
-                $("#btnStartGame").removeAttr("disabled");
-            }
-        }
-
+        
         function isPlayerInList(playerName) {
             var player = $(".player-list li:contains('" + playerName + "')");
 

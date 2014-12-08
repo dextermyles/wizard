@@ -110,6 +110,17 @@ namespace WizardGame
             }
         }
 
+        public void RefreshPlayerList(int gameLobbyId, string groupNameId) {
+            // service
+            WizardService wizWS = new WizardService();
+
+            // get list of players in lobby
+            Player[] playerList = wizWS.ListPlayersByGameLobbyId(gameLobbyId);
+
+            // broadcast game cancelled
+            Clients.Caller.refreshPlayerList(playerList);
+        }
+
         public void CancelGame(int gameLobbyId, string groupNameId)
         {
             // service

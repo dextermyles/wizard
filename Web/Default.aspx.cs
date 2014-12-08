@@ -16,18 +16,6 @@ namespace WizardGame
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // get referring page
-            var referrer = Request.UrlReferrer;
-
-            if (referrer != null)
-            {
-                // previous reference page
-                var previousRef = Session["referencePage"];
-
-                // set referring page
-                Session["referencePage"] = referrer.AbsolutePath;
-            }
-
             // is valid session
             bool isValidSession = Functions.IsValidSession();
 
@@ -38,8 +26,6 @@ namespace WizardGame
             }
             else
             {
-                
-
                 // is post
                 if (Page.IsPostBack)
                 {
@@ -110,9 +96,14 @@ namespace WizardGame
                 Response.Cookies.Add(cookie);
 
                 // set referring page
-                string referencepage = Convert.ToString(HttpContext.Current.Session["referencePage"]);
+                string referencepage = Convert.ToString(Session["referencePage"]);
 
+                // reference page is set
                 if(!string.IsNullOrEmpty(referencepage)) {
+                    // clear reference page
+                    Session["referencePage"] = "";
+
+                    // redirect user
                     Response.Redirect(referencepage);
                 }
                 else

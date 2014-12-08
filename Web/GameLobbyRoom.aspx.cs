@@ -29,11 +29,33 @@ namespace WizardGame
 
             if (!isValidSession)
             {
+                // current page
+                string currentRequest = Request.RawUrl;
+
+                // set referring page
+                Session["referencePage"] = currentRequest;
+
                 // redirect to login page
                 Response.Redirect("~/Default.aspx?Error=Session is not valid");
             }
 
             base.OnLoad(e);
+        }
+
+        private void SetDefaultPlayer()
+        {
+            // players attached to users account
+            Player[] UserPlayers = wizWS.ListPlayersByUserId(UserSession.UserId);
+
+            // check player list for a player name
+            if (UserPlayers != null && UserPlayers.Length > 0)
+            {
+                // default player ref
+                Player defaultPlayer = UserPlayers[0];
+
+                // by default assign first player to session (will later be done via character select screen)
+                UserSession = wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, defaultPlayer.PlayerId, UserSession.ConnectionId);
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -44,6 +66,9 @@ namespace WizardGame
             // get user data
             UserData = wizWS.GetUserById(UserSession.UserId);
 
+            // set default player to account
+            SetDefaultPlayer();
+            
             // GET vars
             string strGameLobbyId = (string)Request.QueryString["gameLobbyId"];
 
