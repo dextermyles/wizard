@@ -315,77 +315,70 @@ namespace WizardGame.Services
             return gameHistory;
         }
 
-        public HandHistory GetHandHistoryById(int handHistoryId)
+        public HandHistory[] GetHandHistoryByGameId(int gameId)
         {
-            HandHistory handHistory = new HandHistory();
+            // history list
+            List<HandHistory> handHistoryList = new List<HandHistory>();
 
             try
             {
+                // adapters
                 Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
-                Data.Game.HandHistoryDataTable dtHandHistory = adapter.GetHandHistoryById(handHistoryId);
+                Data.Game.HandHistoryDataTable dtHistory = adapter.GetHandHistoryByGameId(gameId);
 
-                if (dtHandHistory != null && dtHandHistory.Rows.Count > 0)
+                // history exists and not empty
+                if (dtHistory != null && dtHistory.Rows.Count > 0)
                 {
-                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHandHistory.Rows[0];
+                    for(int i = 0; i < dtHistory.Rows.Count; i++) {
+                        // read row
+                        Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHistory.Rows[i];
 
-                    if (!row.IsDateCreatedNull())
-                        handHistory.DateCreated = row.DateCreated;
+                        // hand history obj
+                        HandHistory history = new HandHistory();
 
-                    if (!row.IsDateLastModifiedNull())
-                        handHistory.DateLastModified = row.DateLastModified;
+                        history.HandHistoryId = row.HandHistoryId;
+                        history.GameId = row.GameId;
+                        history.DateCreated = row.DateCreated;
+                        history.TrumpCard = JsonConvert.DeserializeObject<Card>(row.TrumpCard);
+                        history.SuitToFollow = (Suit)row.SuitToFollow;
+                        history.CardsPlayed = JsonConvert.DeserializeObject<Card[]>(row.CardsPlayed);
+                        history.WinnerPlayerId = row.WinnerPlayerId;
+                        history.Round = row.Round;
 
-                    if (!row.IsDeckDataNull())
-                        handHistory.DeckData = row.DeckData;
-
-                    handHistory.GameId = row.GameId;
-                    handHistory.HandHistoryId = row.HandHistoryId;
-
-                    if (!row.IsPlayerDataNull())
-                        handHistory.PlayerData = row.PlayerData;
-
-                    if (!row.IsTrumpNull())
-                        handHistory.Trump = row.Trump;
+                        // add to list
+                        handHistoryList.Add(history);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // error handling
-                LogError(ex);   
+                LogError(ex);
             }
 
-            return handHistory;
+            return handHistoryList.ToArray();
         }
 
-        public HandHistory GetLastHandHistoryByGameId(int gameId)
+        public HandHistory GetHandHistoryById(int handHistoryId)
         {
-            HandHistory handHistory = new HandHistory();
+            HandHistory history = new HandHistory();
 
             try
             {
                 Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
-                Data.Game.HandHistoryDataTable dtHandHistory = adapter.GetLastHandHistoryByGameId(gameId);
+                Data.Game.HandHistoryDataTable dtHistory = adapter.GetHandHistoryByGameId(handHistoryId);
 
-                if (dtHandHistory != null && dtHandHistory.Rows.Count > 0)
+                if (dtHistory != null && dtHistory.Rows.Count > 0)
                 {
-                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHandHistory.Rows[0];
+                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHistory.Rows[0];
 
-                    if (!row.IsDateCreatedNull())
-                        handHistory.DateCreated = row.DateCreated;
-
-                    if (!row.IsDateLastModifiedNull())
-                        handHistory.DateLastModified = row.DateLastModified;
-
-                    if (!row.IsDeckDataNull())
-                        handHistory.DeckData = row.DeckData;
-
-                    handHistory.GameId = row.GameId;
-                    handHistory.HandHistoryId = row.HandHistoryId;
-
-                    if (!row.IsPlayerDataNull())
-                        handHistory.PlayerData = row.PlayerData;
-
-                    if (!row.IsTrumpNull())
-                        handHistory.Trump = row.Trump;
+                    history.HandHistoryId = row.HandHistoryId;
+                    history.GameId = row.GameId;
+                    history.DateCreated = row.DateCreated;
+                    history.TrumpCard = JsonConvert.DeserializeObject<Card>(row.TrumpCard);
+                    history.SuitToFollow = (Suit)row.SuitToFollow;
+                    history.CardsPlayed = JsonConvert.DeserializeObject<Card[]>(row.CardsPlayed);
+                    history.WinnerPlayerId = row.WinnerPlayerId;
+                    history.Round = row.Round;
                 }
             }
             catch (Exception ex)
@@ -394,7 +387,39 @@ namespace WizardGame.Services
                 LogError(ex);
             }
 
-            return handHistory;
+            return history;
+        }
+
+        public HandHistory GetLastHandHistoryByGameId(int gameId)
+        {
+            HandHistory history = new HandHistory();
+
+            try
+            {
+                Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
+                Data.Game.HandHistoryDataTable dtHistory = adapter.GetLastHandHistoryByGameId(gameId);
+
+                if (dtHistory != null && dtHistory.Rows.Count > 0)
+                {
+                    Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHistory.Rows[0];
+
+                    history.HandHistoryId = row.HandHistoryId;
+                    history.GameId = row.GameId;
+                    history.DateCreated = row.DateCreated;
+                    history.TrumpCard = JsonConvert.DeserializeObject<Card>(row.TrumpCard);
+                    history.SuitToFollow = (Suit)row.SuitToFollow;
+                    history.CardsPlayed = JsonConvert.DeserializeObject<Card[]>(row.CardsPlayed);
+                    history.WinnerPlayerId = row.WinnerPlayerId;
+                    history.Round = row.Round;
+                }
+            }
+            catch (Exception ex)
+            {
+                // error handling
+                LogError(ex);
+            }
+
+            return history;
         }
 
         public Game GetLatestGameByPlayerId(int playerId)
@@ -1003,36 +1028,31 @@ namespace WizardGame.Services
             return session;
         }
 
-        public HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump)
+        public HandHistory UpdateHandHistory(int handHistoryId, int gameId, Card trumpCard, Suit suitToFollow, Card[] cardsPlayed, int winnerPlayerId, int round)
         {
             HandHistory history = new HandHistory();
 
             try
             {
+
+                string trumpCardData = JsonConvert.SerializeObject(trumpCard);
+                string cardsPlayedData = JsonConvert.SerializeObject(cardsPlayed);
+
                 Data.GameTableAdapters.HandHistoryTableAdapter adapter = new Data.GameTableAdapters.HandHistoryTableAdapter();
-                Data.Game.HandHistoryDataTable dtHistory = adapter.UpdateHandHistory(handHistoryId, gameId, deckData, playerData, trump);
+                Data.Game.HandHistoryDataTable dtHistory = adapter.UpdateHandHistory(handHistoryId, gameId, trumpCardData, (int)suitToFollow, cardsPlayedData, winnerPlayerId, round);
 
                 if (dtHistory != null && dtHistory.Rows.Count > 0)
                 {
                     Data.Game.HandHistoryRow row = (Data.Game.HandHistoryRow)dtHistory.Rows[0];
 
-                    if(!row.IsDateCreatedNull())
-                        history.DateCreated = row.DateCreated;
-
-                    if(!row.IsDateLastModifiedNull())
-                        history.DateLastModified = row.DateLastModified;
-
-                    if(!row.IsDeckDataNull())
-                        history.DeckData = row.DeckData;
-
-                    history.GameId = row.GameId;
                     history.HandHistoryId = row.HandHistoryId;
-                    
-                    if (!row.IsPlayerDataNull())
-                        history.PlayerData = row.PlayerData;
-
-                    if (!row.IsTrumpNull())
-                        history.Trump = row.Trump;
+                    history.GameId = row.GameId;
+                    history.DateCreated = row.DateCreated;
+                    history.TrumpCard = JsonConvert.DeserializeObject<Card>(row.TrumpCard);
+                    history.SuitToFollow = (Suit) row.SuitToFollow;
+                    history.CardsPlayed = JsonConvert.DeserializeObject<Card[]>(row.CardsPlayed);
+                    history.WinnerPlayerId = row.WinnerPlayerId;
+                    history.Round = row.Round;
                 }
             }
             catch (Exception ex)
@@ -1721,7 +1741,6 @@ namespace WizardGame.Services
 
             return gamePlayers;
         }
-
 
         
     }

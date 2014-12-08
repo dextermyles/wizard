@@ -359,7 +359,7 @@ namespace WizardGame
                     gameState.Players[gameState.LastToActIndex].IsLastToAct = true;
 
                     // save hand history in db before clearing cards
-
+                    wizWS.UpdateHandHistory(0, game.GameId, gameState.TrumpCard, gameState.SuitToFollow, gameState.CardsPlayed, playerWinner.PlayerId, gameState.Round);
 
                     // erase cards played
                     gameState.CardsPlayed = null;

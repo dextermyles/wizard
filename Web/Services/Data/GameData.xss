@@ -7,11 +7,11 @@
 <DiagramLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ex:showrelationlabel="False" ViewPortX="15" ViewPortY="-16" xmlns:ex="urn:schemas-microsoft-com:xml-msdatasource-layout-extended" xmlns="urn:schemas-microsoft-com:xml-msdatasource-layout">
   <Shapes>
     <Shape ID="DesignTable:GameHistory" ZOrder="6" X="339" Y="12" Height="207" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="126" />
-    <Shape ID="DesignTable:HandHistory" ZOrder="5" X="27" Y="242" Height="224" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="143" />
-    <Shape ID="DesignTable:GameLobby" ZOrder="4" X="681" Y="14" Height="292" Width="250" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="177" />
-    <Shape ID="DesignTable:GameLobbyPlayers" ZOrder="1" X="347" Y="235" Height="241" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="143" />
-    <Shape ID="DesignTable:Game" ZOrder="3" X="25" Y="8" Height="241" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="143" />
-    <Shape ID="DesignTable:GamePlayers" ZOrder="2" X="683" Y="324" Height="224" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="126" />
+    <Shape ID="DesignTable:GameLobby" ZOrder="5" X="681" Y="14" Height="292" Width="250" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="177" />
+    <Shape ID="DesignTable:GameLobbyPlayers" ZOrder="2" X="347" Y="235" Height="241" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="143" />
+    <Shape ID="DesignTable:Game" ZOrder="4" X="25" Y="8" Height="241" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="143" />
+    <Shape ID="DesignTable:GamePlayers" ZOrder="3" X="683" Y="324" Height="224" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="126" />
+    <Shape ID="DesignTable:HandHistory" ZOrder="1" X="32" Y="261" Height="241" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="160" />
   </Shapes>
   <Connectors />
 </DiagramLayout>

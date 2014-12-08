@@ -83,6 +83,9 @@ namespace WizardGame.Services
         GameHistory GetGameHistoryById(int gameHistoryId);
 
         [OperationContract]
+        HandHistory[] GetHandHistoryByGameId(int gameId);
+
+        [OperationContract]
         HandHistory GetHandHistoryById(int handHistoryId);
 
         [OperationContract]
@@ -139,7 +142,7 @@ namespace WizardGame.Services
         GameHistory UpdateGameHistory(int gameHistoryId, int gameId, int playerId, int score, int won);
 
         [OperationContract]
-        HandHistory UpdateHandHistory(int handHistoryId, int gameId, string deckData, string playerData, string trump);
+        HandHistory UpdateHandHistory(int handHistoryId, int gameId, Card trumpCard, Suit suitToFollow, Card[] cardsPlayed, int winnerPlayerId, int round);
 
         [OperationContract]
         Player UpdatePlayer(int playerId, string name, string pictureUrl, int userId);
