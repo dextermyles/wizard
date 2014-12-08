@@ -406,14 +406,8 @@
             $("#btnCancelGame").attr("disabled", "disabled");
 
             if(isConnected) {
-                if(totalPlayers > 2) {
-                    hub.server.startGame(gameLobbyId, groupNameId)
-                        .done(function() {
-                            logMessage("-- start game sent to server --");
-                        })
-                        .fail(function (msg) {
-                            logMessage("-- " + msg + " --");
-                        });
+                if(playerList.length > 2) {
+                    hub.server.startGame(gameLobbyId, groupNameId);
                 }
                 else {
                     alert("Not enough players to start the game");
@@ -425,15 +419,7 @@
 
         function cancelGame() {
             if(isConnected) {
-                hub.server.cancelGame(gameLobbyId, groupNameId).
-                    done(function() {
-                        // log msg
-                        logMessage("-- cancel game sent to server --");
-                    })
-                    .fail(function (msg) {
-                        // log error
-                        logMessage("-- " + msg + " --");
-                    });
+                hub.server.cancelGame(gameLobbyId, groupNameId);
             }
 
             return false;
