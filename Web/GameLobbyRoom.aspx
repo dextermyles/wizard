@@ -159,8 +159,6 @@
 
         // get list of players (status)
         hub.client.refreshPlayerList = function(_playerList) {
-            console.log(_playerList);
-
             // update player list
             playerList = _playerList;
 
@@ -219,8 +217,6 @@
 
         function refreshPlayerList() {
             if(isConnected) {
-                console.log('refreshing player list');
-
                 hub.server.refreshPlayerList(gameLobbyId, groupNameId);
             }
         }
