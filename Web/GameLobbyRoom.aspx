@@ -260,6 +260,13 @@
                 // get total # of players
                 var totalPlayers = playerList.length;
 
+                if(totalPlayers > 2) {
+                    $("#btnStartGame").removeAttr("disabled");
+                }
+                else {
+                    $("#btnStartGame").attr("disabled", "disabled");
+                }
+
                 // update player count
                 $(".total-players").html(totalPlayers.toString() + " / " + maxPlayers);
             }
