@@ -173,6 +173,47 @@ namespace WizardGame.Services
             return game;
         }
 
+        public Game GetGameByGameLobbyId(int gameLobbyId)
+        {
+            Game game = new Game();
+
+            try
+            {
+                Data.GameTableAdapters.GameTableAdapter adapter = new Data.GameTableAdapters.GameTableAdapter();
+                Data.Game.GameDataTable dtGame = adapter.GetGameByGameLobbyId(gameLobbyId);
+
+                if (dtGame != null && dtGame.Rows.Count > 0)
+                {
+                    Data.Game.GameRow row = (Data.Game.GameRow)dtGame.Rows[0];
+
+                    game.GameId = row.GameId;
+
+                    if (!row.IsDateCompletedNull())
+                        game.DateCompleted = row.DateCompleted;
+
+                    if (!row.IsDateCreatedNull())
+                        game.DateCreated = row.DateCreated;
+
+                    if (!row.IsOwnerPlayerIdNull())
+                        game.OwnerPlayerId = row.OwnerPlayerId;
+
+                    if (!row.IsGameStateDataNull())
+                        game.GameStateData = JsonConvert.DeserializeObject<GameState>(row.GameStateData);
+
+                    if (!row.IsGroupNameIdNull())
+                        game.GroupNameId = row.GroupNameId;
+
+                    game.GameLobbyId = row.GameLobbyId;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+
+            return game;
+        }
+
         public Game GetGameById(int gameId)
         {
             Game game = new Game();
@@ -1680,5 +1721,8 @@ namespace WizardGame.Services
 
             return gamePlayers;
         }
+
+
+        
     }
 }

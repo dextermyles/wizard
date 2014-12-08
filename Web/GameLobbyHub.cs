@@ -153,16 +153,19 @@ namespace WizardGame
                 // get game lobby players data
                 GameLobbyPlayers glp = wizWS.GetGameLobbyPlayersByGameLobbyIdAndPlayerId(gameLobbyId, playerId);
 
+                // get game if exists/created while user was disconnected
+                Game game = wizWS.GetGameByGameLobbyId(gameLobbyId);
+
                 // validation
                 if (glp != null && glp.GameLobbyPlayersId > 0)
                 {
                     // call playerJoinedLobby on client
-                    Clients.Group(groupNameId).playerReconnected(playerId, player.Name, connectionId);
+                    Clients.Group(groupNameId).playerReconnected(playerId, player.Name, connectionId, game.GameId);
                 }
                 else
                 {
                     // call playerJoinedLobby on client
-                    Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId);
+                    Clients.Group(groupNameId).playerJoinedLobby(playerId, player.Name, connectionId, game.GameId);
                 }
 
                 // add player to game lobby

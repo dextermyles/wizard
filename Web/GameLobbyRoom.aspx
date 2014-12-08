@@ -115,16 +115,23 @@
          *******************************************/
 
         // playerJoinedLobby
-        hub.client.playerJoinedLobby = function (playerId, playerName, connectionId) {
-            // chat message player joined
-            appendChatMessage(playerName, "Joined the game lobby.")
+        hub.client.playerJoinedLobby = function (playerId, playerName, connectionId, gameId) {
+            // game has started
+            if(gameId != null && gameId > 0) {
+                // redirect player to game
+                window.location = "Play.aspx?GameId=" + gameId;
+            }
+            else {
+                // chat message player joined
+                appendChatMessage(playerName, "Joined the game lobby.")
 
-            // add player to list
-            if(!isPlayerInList(playerName))
-                $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
+                // add player to list
+                if(!isPlayerInList(playerName))
+                    $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
 
-            // resume refreshing player list
-            startRefreshingPlayerList();
+                // resume refreshing player list
+                startRefreshingPlayerList();
+            }
         };
 
         // playerLeftLobby
@@ -143,12 +150,23 @@
         };
 
         // playerReconnected
-        hub.client.playerReconnected = function playerReconnected(playerId, playerName, connectionId) {
-            // chat message player left lobby
-            appendChatMessage(playerName, "Reconnected.");
+        hub.client.playerReconnected = function playerReconnected(playerId, playerName, connectionId, gameId) {
+            // game has started
+            if(gameId != null && gameId > 0) {
+                // redirect player to game
+                window.location = "Play.aspx?GameId=" + gameId;
+            }
+            else {
+                // chat message player joined
+                appendChatMessage(playerName, "Reconnect to game lobby.")
 
-            // resume refreshing player list
-            startRefreshingPlayerList();
+                // add player to list
+                if(!isPlayerInList(playerName))
+                    $(".player-list").append("<li class='list-group-item' id='player-" + playerId + "'>" + playerName + "</li>");
+
+                // resume refreshing player list
+                startRefreshingPlayerList();
+            }
         };
 
         // receiveChatMessage

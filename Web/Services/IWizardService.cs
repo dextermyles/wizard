@@ -53,6 +53,9 @@ namespace WizardGame.Services
         Game GetGameByConnectionId(string connectionId);
 
         [OperationContract]
+        Game GetGameByGameLobbyId(int gameLobbyId);
+
+        [OperationContract]
         Game GetGameById(int gameId);
 
         [OperationContract]
