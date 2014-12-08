@@ -162,15 +162,19 @@ namespace WizardGame.Helpers
                     if (firstWizard != null)
                         return firstWizard;
 
-                    // get highest trump
-                    var highestTrumpCardList = CardsPlayed.Where(c => c.Suit != Suit.Fluff && c.Suit == TrumpCard.Suit);
-
-                    if (highestTrumpCardList != null)
+                    // trump exists
+                    if (TrumpCard != null && TrumpCard.Suit != Suit.None)
                     {
-                        Card highestTrumpCard = highestTrumpCardList.OrderByDescending(c => c.Value).FirstOrDefault();
+                        // get highest trump
+                        var highestTrumpCardList = CardsPlayed.Where(c => c.Suit == TrumpCard.Suit);
 
-                        if (highestTrumpCard != null)
-                            return highestTrumpCard;
+                        if (highestTrumpCardList != null)
+                        {
+                            Card highestTrumpCard = highestTrumpCardList.OrderByDescending(c => c.Value).FirstOrDefault();
+
+                            if (highestTrumpCard != null)
+                                return highestTrumpCard;
+                        }
                     }
 
                     // get highest card from led suit
@@ -216,24 +220,27 @@ namespace WizardGame.Helpers
                             SuitToFollow = Suit.None;
                             break;
                         default:
-                            // first card played
+                            // cards have been played - still no suit to follow (fluffs and wizards played)
                             if (CardsPlayed != null && CardsPlayed.Length > 0)
                             {
                                 // get first card
-                                Card firstCard = CardsPlayed[0];
+                                Card wizardPlayed = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
 
-                                // check if first card led was wizard
-                                if (firstCard.Suit == Suit.Wizard)
+                                // wizard was played
+                                if (wizardPlayed != null)
                                 {
+                                    // no suit to follow - throw off
                                     SuitToFollow = Suit.None;
                                 }
                                 else
                                 {
+                                    // this is our first suit led
                                     SuitToFollow = card.Suit;
                                 }
                             }
                             else
                             {
+                                // first card, suit lead
                                 SuitToFollow = card.Suit;
                             }
 
