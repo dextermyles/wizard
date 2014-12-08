@@ -1,6 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="GameLobbyRoom.aspx.cs" Inherits="WizardGame.GameLobbyRoom" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <!-- viewport settings for mobile -->
+    <meta name="viewport" content="height=device-height,width=device-width,initial-scale=0.47,maximum-scale=0.85" >
+
     <script type="text/javascript">
         // player object
         var currentPlayer = new function () {
@@ -442,7 +445,7 @@
                 <div class="panel-body">
                     <div class="col-xs-9">
                         <div class="form-group">
-                            <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="6" readonly></textarea>
+                            <textarea id="txtChatWindow" name="txtChatWindow" class="form-control" rows="12" readonly></textarea>
                             <style type="text/css">
                                 #txtChatWindow {
                                     width: 100%;

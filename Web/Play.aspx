@@ -1,6 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Play.aspx.cs" Inherits="WizardGame.Play" %>
 
 <asp:Content ID="ContentHead" ContentPlaceHolderID="HeadContent" runat="server">
+    <!-- viewport settings for mobile -->
+    <meta name="viewport" content="height=device-height,width=device-width,initial-scale=0.47,maximum-scale=0.85" >
+
     <script type="text/javascript">
         // playertracker
         var numPlayersConnected = parseInt('<%= Players.Length %>');
@@ -1598,9 +1601,6 @@
                 SelectedCard: $card
             };
 
-            // log
-            console.log('temp selected card: ' + tempSelectedCard);
-
             if(lastGameState.Status != gameStateStatus.RoundInProgress) {
                 logMessage("-- you cant play a card right now --");
 
@@ -1665,9 +1665,6 @@
                 } 
             }
 
-            // log
-            console.log("card selected: " + tempSelectedCard);
-
             // dont send data if not players turn
             if(!currentPlayer.IsTurn) {
                 return false;
@@ -1684,6 +1681,12 @@
 
             // remove card
             tempSelectedCard.SelectedCard.remove();
+
+            // player cards ref
+            var $playerCards = $(".card-holder .player-cards");
+
+            // remove unplayable filter
+            $playerCards.children("a").removeClass("unplayable");
 
             // fix margin overlap
             $(".card-holder .player-cards").children("a").each(function(index) {

@@ -136,25 +136,8 @@ namespace WizardGame.Helpers
             try
             {
                 // cards have been played
-                if (CardsPlayed != null && CardsPlayed.Length > 0)
+                if (CardsPlayed != null)
                 {
-                    // check for all fluffs
-                    if (SuitToFollow == Suit.None)
-                    {
-                        // check if all fluffs played
-                        List<Card> fluffList = CardsPlayed.Where(c => c.Suit == Suit.Fluff).ToList();
-
-                        // all fluffs
-                        if (fluffList != null && fluffList.Count > 0 && fluffList.Count == CardsPlayed.Length)
-                        {
-                            // first fluff ends up winnin the trick
-                            Card firstFluff = fluffList.FirstOrDefault(c => c.Suit == Suit.Fluff);
-
-                            // return first fluff
-                            return firstFluff;
-                        }
-                    }
-
                     // look for first wizard
                     Card firstWizard = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Wizard);
 
@@ -166,25 +149,45 @@ namespace WizardGame.Helpers
                     if (TrumpCard != null && TrumpCard.Suit != Suit.None)
                     {
                         // get highest trump
-                        var highestTrumpCardList = CardsPlayed.Where(c => c.Suit == TrumpCard.Suit);
+                        var trumpCardList = CardsPlayed.Where(c => c.Suit == TrumpCard.Suit);
 
-                        if (highestTrumpCardList != null)
+                        if (trumpCardList != null)
                         {
-                            Card highestTrumpCard = highestTrumpCardList.OrderByDescending(c => c.Value).FirstOrDefault();
+                            Card highestTrumpCard = trumpCardList.OrderByDescending(c => c.Value).FirstOrDefault();
 
                             if (highestTrumpCard != null)
                                 return highestTrumpCard;
                         }
                     }
 
-                    // get highest card from led suit
-                    Card highestCard = CardsPlayed.Where(c => c.Suit == SuitToFollow) // list of cards with same suit that was lead
-                        .OrderByDescending(c => c.Value) // sort by highest card
-                        .FirstOrDefault(); // get highest card
+                    // suit lead exists
+                    if (SuitToFollow != Suit.None)
+                    {
+                        // get highest card from led suit
+                        Card highestCard = CardsPlayed.Where(c => c.Suit == SuitToFollow) // list of cards with same suit that was lead
+                            .OrderByDescending(c => c.Value) // sort by highest card
+                            .FirstOrDefault(); // get highest card
 
-                    // return highest card
-                    if (highestCard != null)
-                        return highestCard;
+                        // return highest card
+                        if (highestCard != null)
+                            return highestCard;
+                    }
+                    
+                    
+                    // list of fluff cards
+                    var fluffCardList = CardsPlayed.Where(c=>c.Suit == Suit.Fluff);
+
+                    // fluff list exists and matches num cards played
+                    if (fluffCardList != null && fluffCardList.Count() == CardsPlayed.Length)
+                    {
+                        // get first fluff in cards played
+                        var firstFluff = CardsPlayed.FirstOrDefault(c => c.Suit == Suit.Fluff);
+
+                        // first fluff found
+                        if (firstFluff != null)
+                            return firstFluff;
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -441,12 +444,16 @@ namespace WizardGame.Helpers
                     Status = GameStateStatus.SelectTrump;
                 }
             }
-            else
+
+            // last round
+            if (Round >= maxRounds)
             {
-                // final round
+                // final round - no trump
                 TrumpCard = new Card();
                 TrumpCard.Suit = Suit.Fluff;
                 TrumpCard.Value = 0;
+
+                Status = GameStateStatus.BiddingInProgress;
             }
 
             return true;
