@@ -1,10 +1,7 @@
 ﻿using System;
 using Microsoft.AspNet.SignalR;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using WizardGame.Helpers;
 using WizardGame.Services;
 
@@ -181,7 +178,7 @@ namespace WizardGame
             GameState gameState = game.GameStateData;
 
             // get player data
-            Player player = gameState.Players.Where(p => p.PlayerId == playerId).FirstOrDefault();
+            Player player = gameState.Players.FirstOrDefault(p => p.PlayerId == playerId);
 
             // set trump card
             gameState.TrumpCard = new Card();
@@ -196,9 +193,6 @@ namespace WizardGame
 
             // save game state in db
             game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, null, gameState, groupNameId);
-
-            // update player last active date
-            wizWS.UpdateGamePlayers(game.GameId, playerId, connectionId, ConnectionState.CONNECTED);
 
             // broadcast trump set
             Clients.Group(groupNameId).trumpUpdated(player, gameState.TrumpCard, game);
@@ -215,20 +209,11 @@ namespace WizardGame
             // get game data
             Game game = wizWS.GetGameById(gameId);
 
-            // get session from cookie
-            Session UserSession = Functions.GetSessionFromCookie();
-
-            // update session
-            wizWS.UpdateSession(UserSession.Secret, UserSession.UserId, player.PlayerId, connectionId);
-
             // verify player is the host
             if (playerId == game.OwnerPlayerId)
             {
-                // mark game as completed
-                game.DateCompleted = DateTime.Now;
-
-                // save game in db
-                game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, game.DateCompleted, game.GameStateData, game.GroupNameId);
+                // delete game
+                game = wizWS.UpdateGame(game.GameId, game.GameLobbyId, game.OwnerPlayerId, DateTime.Now, game.GameStateData, game.GroupNameId);
 
                 // broadcast game cancelled
                 Clients.Group(game.GroupNameId).gameCancelled();

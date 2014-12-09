@@ -119,7 +119,7 @@
 
         function quitGame() {
             // close game in progress
-            $("#gameInProgressModal").modal('close');
+            $("#gameInProgressModal").modal('hide');
 
             if(isConnected) {
                 // quit game

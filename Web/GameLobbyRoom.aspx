@@ -193,7 +193,7 @@
             // redirect to game room
             setTimeout(function() {
                 window.location = 'Play.aspx?gameId=' + gameData.GameId;
-            }, "3000");
+            }, 3000);
         }
 
         // gameCancelled
@@ -201,7 +201,9 @@
             appendChatMessage("Server", "Game cancelled by host");
 
             // redirect to home page in 3 seconds
-            setTimeout(function() { window.location = 'Home.aspx'; }, "3000");
+            setTimeout(function() { 
+                window.location = 'Home.aspx'; 
+            }, 3000);
         }
 
         // logMessage

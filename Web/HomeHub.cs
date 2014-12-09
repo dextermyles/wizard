@@ -36,31 +36,17 @@ namespace WizardGame
 
         public void QuitGame(int playerId, int gameId)
         {
-            // player ref
-            Player player = wizWS.GetPlayerById(playerId);
-
-            // game ref
-            Game game = wizWS.GetGameById(gameId);
-
             // gamePlayers ref
             GamePlayers gp = wizWS.GetGamePlayersByGameIdAndPlayerId(gameId, playerId);
+
+            // connectionId
+            string connectionId = Context.ConnectionId;
 
             // player belongs to game
             if (gp != null && gp.GamePlayersId > 0)
             {
                 // remove player from db
-                wizWS.DeletePlayerFromGame(playerId, gameId, string.Empty);
-
-                // get num remaining players
-                Player[] playersInGame = wizWS.ListPlayersByGameId(gp.GameId);
-
-                int numPlayersInGame = 0;
-
-                if (playersInGame != null)
-                    numPlayersInGame = playersInGame.Count(p => p.ConnectionState == ConnectionState.CONNECTED);
-
-                // broadcast player quit
-                Clients.Group(game.GroupNameId).playerQuit(player, numPlayersInGame, true);
+                wizWS.UpdateGamePlayers(gameId, playerId, connectionId, ConnectionState.DISCONNECTED);
             }
         }
 

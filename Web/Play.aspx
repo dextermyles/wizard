@@ -525,9 +525,6 @@
                         drawCardsPlayed();
                     }
                     else {
-                        console.log('previous game state:');
-                        console.log(previousRoundGameState);
-
                         // temp store new gamestate
                         var newGameState = gameData.GameStateData;
                         
@@ -671,6 +668,9 @@
 
         // gameCancelled
         hub.client.gameCancelled = function() {
+            // stop connecting to server
+            $.connection.hub.stop();
+
             // alert cancelled
             alert('game cancelled by game host');
 
