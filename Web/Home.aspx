@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="WizardGame.Home" %>
 
 <asp:Content ID="ContentHead" ContentPlaceHolderID="HeadContent" runat="server">
-    <script>
+    <script type="text/javascript">
         // global vars
         var isConnected = false; // connected to hub
         var hub = $.connection.homeHub; // get reference to hub
@@ -137,6 +137,8 @@
             }
         }
     </script>
+    <!-- viewport settings for mobile -->
+    <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1,maximum-scale=1" >
 </asp:Content>
 <asp:Content ID="ContentMain" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
