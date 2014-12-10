@@ -107,40 +107,43 @@ namespace WizardGame
             {
                 var gameHistoryStats = wizWS.ListGameHistoryStatsByPlayerId(UserSession.PlayerId);
 
-                for (int i = 0; i < gameHistoryStats.Length; i++)
+                if (gameHistoryStats != null && gameHistoryStats.Length > 0)
                 {
-                    // stats ref
-                    GameHistoryStats stats = gameHistoryStats[i];
-                    
-                    // win result
-                    string winResult = (stats.Won == true) ? "Win" : "Loss";
-                    string winClass = "success";
-
-                    if (!stats.Won)
+                    for (int i = 0; i < gameHistoryStats.Length; i++)
                     {
-                        winClass = "danger";
+                        // stats ref
+                        GameHistoryStats stats = gameHistoryStats[i];
 
+                        // win result
+                        string winResult = (stats.Won == true) ? "Win" : "Loss";
+                        string winClass = "success";
+
+                        if (!stats.Won)
+                        {
+                            winClass = "danger";
+
+                        }
+
+                        // date string
+                        string dateName = stats.DateCompleted.Value.ToString("d");
+
+                        if (dateName == DateTime.Now.ToString("d"))
+                        {
+                            dateName = "Today";
+                        }
+
+                        // append html
+                        html.AppendLine("<tr class='" + winClass + "'>");
+                        html.AppendLine("<td><a href='ViewHandHistory.aspx?GameId=" + stats.GameId + "' title='View hand history'>" + stats.Name + "</a></td>");
+                        html.AppendLine("<td class=\"text-center\">" + dateName + "</td>");
+                        html.AppendLine("<td class=\"text-center\">" + stats.Score + "</td>");
+                        html.AppendLine("<td class=\"text-center\">" + winResult + "</td>");
+                        html.AppendLine("</tr>");
                     }
-
-                    // date string
-                    string dateName = stats.DateCompleted.Value.ToString("d");
-
-                    if (dateName == DateTime.Now.ToString("d"))
-                    {
-                        dateName = "Today";
-                    }
-
-                    // append html
-                    html.AppendLine("<tr class='" + winClass + "'>");
-                    html.AppendLine("<td><a href='ViewHandHistory.aspx?GameId=" + stats.GameId + "' title='View hand history'>" + stats.Name + "</a></td>");
-                    html.AppendLine("<td class=\"text-center\">" + dateName + "</td>");
-                    html.AppendLine("<td class=\"text-center\">" + stats.Score + "</td>");
-                    html.AppendLine("<td class=\"text-center\">" + winResult + "</td>");
                 }
-
-                if (gameHistoryStats.Count() == 0)
+                else
                 {
-                    html.AppendLine("<tr><td colspan='3'>No games played</td></tr>");
+                    html.AppendLine("<tr><td colspan='4'>No games played</td></tr>");
                 }
             }
             
