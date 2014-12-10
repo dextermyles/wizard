@@ -114,18 +114,26 @@ namespace WizardGame
                     
                     // win result
                     string winResult = (stats.Won == true) ? "Win" : "Loss";
-
                     string winClass = "success";
 
                     if (!stats.Won)
                     {
                         winClass = "danger";
+
+                    }
+
+                    // date string
+                    string dateName = stats.DateCompleted.Value.ToString("d");
+
+                    if (dateName == DateTime.Now.ToString("d"))
+                    {
+                        dateName = "Today";
                     }
 
                     // append html
                     html.AppendLine("<tr class='" + winClass + "'>");
-                    html.AppendLine("<td>" + stats.Name + "</td>");
-                    html.AppendLine("<td class=\"text-center\">" + stats.DateCompleted.Value.ToString("d") + "</td>");
+                    html.AppendLine("<td><a href='ViewHandHistory.aspx?GameId=" + stats.GameId + "' title='View hand history'>" + stats.Name + "</a></td>");
+                    html.AppendLine("<td class=\"text-center\">" + dateName + "</td>");
                     html.AppendLine("<td class=\"text-center\">" + stats.Score + "</td>");
                     html.AppendLine("<td class=\"text-center\">" + winResult + "</td>");
                 }

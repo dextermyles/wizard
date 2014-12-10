@@ -174,13 +174,13 @@
                 </ul>
             </div>
         </div>
-        <div class="col-xs-6">
+        <div class="col-sm-6">
             <!-- available games -->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <strong>Available games to join</strong>
                 </div>
-                <table class="table table-responsive table-game-lobbies">
+                <table class="table table-hover" style="width: 100%;">
                     <thead>
                         <tr>
                             <th style="width: 40%;">Lobby</th>
@@ -204,7 +204,7 @@
                 <div class="panel-heading">
                     <strong>Match history</strong>
                 </div>
-                <table class="table table-responsive panel-body">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Game</th>
@@ -217,9 +217,6 @@
                         <%= ListMatchHistoryHtml() %>
                     </tbody>
                 </table>
-                <div class="panel-footer">
-                    <a href="#">Show all</a>
-                </div>
             </div>
         </div>
     </div>
