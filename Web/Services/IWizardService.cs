@@ -124,6 +124,9 @@ namespace WizardGame.Services
 
         [OperationContract]
         GameLobby[] ListAllGameLobbies(bool showInProgress);
+        
+        [OperationContract]
+        GameHistoryStats[] ListGameHistoryStatsByPlayerId(int playerId);
 
         // Updates
         [OperationContract]

@@ -99,6 +99,46 @@ namespace WizardGame
             }
         }
 
+        public string ListMatchHistoryHtml()
+        {
+            StringBuilder html = new StringBuilder();
+
+            if (UserSession.PlayerId > 0)
+            {
+                var gameHistoryStats = wizWS.ListGameHistoryStatsByPlayerId(UserSession.PlayerId);
+
+                for (int i = 0; i < gameHistoryStats.Length; i++)
+                {
+                    // stats ref
+                    GameHistoryStats stats = gameHistoryStats[i];
+                    
+                    // win result
+                    string winResult = (stats.Won == true) ? "Win" : "Loss";
+
+                    string winClass = "success";
+
+                    if (!stats.Won)
+                    {
+                        winClass = "danger";
+                    }
+
+                    // append html
+                    html.AppendLine("<tr class='" + winClass + "'>");
+                    html.AppendLine("<td>" + stats.Name + "</td>");
+                    html.AppendLine("<td>" + stats.DateCompleted.Value.ToString("g") + "</td>");
+                    html.AppendLine("<td>" + stats.Score + "</td>");
+                    html.AppendLine("<td>" + winResult + "</td>");
+                }
+
+                if (gameHistoryStats.Count() == 0)
+                {
+                    html.AppendLine("<tr><td colspan='3'>No games played</td></tr>");
+                }
+            }
+            
+            return html.ToString();
+        }
+
         public string ListGameLobbiesHtml()
         {
             StringBuilder html = new StringBuilder();

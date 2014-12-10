@@ -1728,7 +1728,7 @@
                     $(this).css("margin-left", "0px");
                 }
                 else {
-                    $(this).css("margin-left", "-70px");
+                    $(this).css("margin-left", "-40px");
                 }
             });
             
@@ -2117,7 +2117,7 @@
                 } 
                 
                 if(i > 0) {
-                    style = "style='margin-left: -70px'";
+                    style = "style='margin-left: -40px'";
                 }
 
                 if(is_playable) {

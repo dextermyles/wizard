@@ -1742,6 +1742,52 @@ namespace WizardGame.Services
             return gamePlayers;
         }
 
-        
+        public GameHistoryStats[] ListGameHistoryStatsByPlayerId(int playerId)
+        {
+            GameHistoryStats[] gameHistoryStats = null;
+
+            try
+            {
+                // adapters
+                Data.GameTableAdapters.GameHistoryStatsTableAdapter adapter = new Data.GameTableAdapters.GameHistoryStatsTableAdapter();
+                var dtGameHistoryStats = adapter.ListGameHistoryByPlayerId(playerId);
+
+                // has records
+                if (dtGameHistoryStats != null && dtGameHistoryStats.Rows.Count > 0)
+                {
+                    // new list
+                    List<GameHistoryStats> statsList = new List<GameHistoryStats>();
+
+                    // loop through records
+                    for (int i = 0; i < dtGameHistoryStats.Rows.Count; i++)
+                    {
+                        Data.Game.GameHistoryStatsRow row = (Data.Game.GameHistoryStatsRow)dtGameHistoryStats.Rows[i];
+
+                        GameHistoryStats stats = new GameHistoryStats();
+
+                        stats.DateCompleted = row.DateCompleted;
+                        stats.GameId = row.GameId;
+                        stats.Name = row.Name;
+                        stats.PlayerId = row.PlayerId;
+                        stats.Score = row.Score;
+                        stats.Won = (row.Won == 1) ? true : false;
+
+                        statsList.Add(stats);
+                    }
+
+                    // copy array
+                    gameHistoryStats = statsList.ToArray();
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                // log error
+                LogError(ex);
+            }
+
+            return gameHistoryStats;
+        }
     }
 }
