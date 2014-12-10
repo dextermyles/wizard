@@ -125,7 +125,7 @@ namespace WizardGame
                     // append html
                     html.AppendLine("<tr class='" + winClass + "'>");
                     html.AppendLine("<td>" + stats.Name + "</td>");
-                    html.AppendLine("<td class=\"text-center\">" + stats.DateCompleted.Value.ToString("g") + "</td>");
+                    html.AppendLine("<td class=\"text-center\">" + stats.DateCompleted.Value.ToString("d") + "</td>");
                     html.AppendLine("<td class=\"text-center\">" + stats.Score + "</td>");
                     html.AppendLine("<td class=\"text-center\">" + winResult + "</td>");
                 }
