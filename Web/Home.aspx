@@ -174,29 +174,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-sm-6">
-            <!-- match history -->
-            <div class="panel panel-default hidden-xs">
-                <div class="panel-heading">
-                    <strong>Match history</strong>
-                </div>
-                <table class="table table-responsive panel-body">
-                    <thead>
-                        <tr>
-                            <th>Game</th>
-                            <th>Completed</th>
-                            <th class="text-center">Score</th>
-                            <th class="text-center">Result</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%= ListMatchHistoryHtml() %>
-                    </tbody>
-                </table>
-                <div class="panel-footer">
-                    <a href="#">Show all</a>
-                </div>
-            </div>
+        <div class="col-xs-6">
             <!-- available games -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -220,6 +198,28 @@
                         vertical-align: middle !important;
                     }
                 </style>
+            </div>
+            <!-- match history -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Match history</strong>
+                </div>
+                <table class="table table-responsive panel-body">
+                    <thead>
+                        <tr>
+                            <th>Game</th>
+                            <th class="text-center">Completed</th>
+                            <th class="text-center">Score</th>
+                            <th class="text-center">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%= ListMatchHistoryHtml() %>
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    <a href="#">Show all</a>
+                </div>
             </div>
         </div>
     </div>
