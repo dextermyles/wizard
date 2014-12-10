@@ -103,7 +103,7 @@ namespace WizardGame
                             if (cardPlayed.OwnerPlayerId == winningPlayer.PlayerId)
                                 ownerClass = "active";
 
-                            cardsPlayed += "<li class='" + ownerClass + "'><a class='card-owner'><div>" + gamePlayers.FirstOrDefault(gp => gp.PlayerId == cardPlayed.OwnerPlayerId).Name + "</div><img src='" + cardImage + "' class='img-thumbnail' style='height: 96px;'/></a></li>";  
+                            cardsPlayed += "<li class='" + ownerClass + "'><a class='card-owner'><div>" + gamePlayers.FirstOrDefault(gp => gp.PlayerId == cardPlayed.OwnerPlayerId).Name + "</div><img src='" + cardImage + "' class='img-thumbnail' style='height: 96px; width: 64px;'/></a></li>";  
                         }
 
                         cardsPlayed += "</ul>";
@@ -122,11 +122,11 @@ namespace WizardGame
                             suitToFollowImage = "/Assets/Cards/fluff.png";
 
                         html.AppendLine("<tr>");
-                        html.AppendLine("<td class=\"text-center\">" + handNum + "</td>");
-                        html.AppendLine("<td class=\"text-center\">" + history.Round + "</td>");
+                        html.AppendLine("<td class=\"text-center\"><strong>" + handNum + "</strong></td>");
+                        html.AppendLine("<td class=\"text-center\"><strong>" + history.Round + "</strong></td>");
                         html.AppendLine("<td class=\"text-center hidden-xs\">" + cardsPlayed + "</td>");
-                        html.AppendLine("<td class=\"text-center\"><img src='" + trumpCardImage + "' class='img-thumbnail' style='height: 96px;' /></td>");
-                        html.AppendLine("<td class=\"text-center\"><img src='" + suitToFollowImage + "' class='img-thumbnail' style='height: 96px;' /></td>");
+                        html.AppendLine("<td class=\"text-center\"><img src='" + trumpCardImage + "' class='img-thumbnail' style='height: 96px; width: 64px;' /></td>");
+                        html.AppendLine("<td class=\"text-center\"><img src='" + suitToFollowImage + "' class='img-thumbnail' style='height: 96px; width: 64px;' /></td>");
                         html.AppendLine("<td class=\"text-center\"><strong>" + winningPlayer.Name + "</strong></td>");
                         html.AppendLine("</tr>");
 
