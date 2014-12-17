@@ -3,6 +3,8 @@
     <script type="text/javascript">
         // execute on dom ready
         $(document).ready(function () {
+            $(".nav li").removeClass("active");
+            $("#link-leaderboard").addClass("active");
         });
     </script>
 </asp:Content>
@@ -22,11 +24,17 @@
                 <table class="table table-striped table-responsive table-hover hand-history">
                     <thead>
                         <tr>
-                            <th class="text-center">Player</th>
+                            <th class="">Player</th>
                             <th class="text-center">Wins</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <%=LeaderboardHtml() %>
+                    </tbody>
                 </table>
+                <div class="panel-footer text-center">
+                    <a href="Home.aspx">Back to dashboard</a>
+                </div>
             </div>
         </div>
     </div>
