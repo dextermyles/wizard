@@ -128,6 +128,9 @@ namespace WizardGame.Services
         [OperationContract]
         GameHistoryStats[] ListGameHistoryStatsByPlayerId(int playerId);
 
+        [OperationContract]
+        Player[] ListLeaderboardPlayers();
+
         // Updates
         [OperationContract]
         Game UpdateGame(int gameId, int gameLobbyId, int ownerPlayerId, DateTime? dateCompleted, GameState gameState, string groupNameId);

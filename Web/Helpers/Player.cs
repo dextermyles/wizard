@@ -24,6 +24,7 @@ namespace WizardGame.Helpers
         public Card LastCardPlayed = null;
         public string ConnectionId = string.Empty;
         public ConnectionState ConnectionState = ConnectionState.DISCONNECTED;
+        public int NumWins = 0;
 
         public bool HasCards()
         {

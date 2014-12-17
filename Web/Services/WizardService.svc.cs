@@ -1789,5 +1789,50 @@ namespace WizardGame.Services
 
             return gameHistoryStats;
         }
+
+
+        public Player[] ListLeaderboardPlayers()
+        {
+            // list
+            List<Player> listLeaderboardPlayers = new List<Player>();
+
+            try
+            {
+                // adapters
+                Data.GameTableAdapters.LeaderboardPlayersTableAdapter adapter = new Data.GameTableAdapters.LeaderboardPlayersTableAdapter();
+                Data.Game.LeaderboardPlayersDataTable dtLeaderboardPlayers = adapter.ListLeaderboardPlayers();
+
+                // players exist
+                if (dtLeaderboardPlayers != null && dtLeaderboardPlayers.Rows.Count > 0)
+                {
+                    // loop rows
+                    for (int i = 0; i < dtLeaderboardPlayers.Rows.Count; i++)
+                    {
+                        // get row
+                        Data.Game.LeaderboardPlayersRow row = (Data.Game.LeaderboardPlayersRow)dtLeaderboardPlayers.Rows[i];
+
+                        // new player obj
+                        Player player = new Player();
+
+                        // assign values
+                        player.PlayerId = row.PlayerId;
+                        player.Name = row.Name;
+                        player.PictureURL = row.PictureURL;
+                        player.NumWins = row.NumWins;
+
+                        // add player to list
+                        listLeaderboardPlayers.Add(player);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // log error
+                LogError(ex);
+            }
+
+            // return results
+            return listLeaderboardPlayers.ToArray();
+        }
     }
 }

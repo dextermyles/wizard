@@ -54,7 +54,7 @@
                     <li class="active"><a href="Default.aspx">Welcome</a></li>
                     <% if (IsSessionValid())
                        { %>
-                    <li class=""><a href="#">Leaderboard</a></li>
+                    <li class=""><a href="Leaderboard.aspx">Leaderboard</a></li>
                     <li class=""><a href="#">My Account</a></li>
                     <% } // end if %>
                 </ul>
