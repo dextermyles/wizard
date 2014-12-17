@@ -206,6 +206,7 @@
     <Content Include="CronJobs\Auto.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Leaderboard.aspx" />
     <Content Include="ViewHandHistory.aspx" />
     <Content Include="Home.aspx" />
     <Content Include="HostGame.aspx" />
@@ -257,6 +258,13 @@
     </Compile>
     <Compile Include="CronJobs\Auto.aspx.designer.cs">
       <DependentUpon>Auto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Leaderboard.aspx.cs">
+      <DependentUpon>Leaderboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Leaderboard.aspx.designer.cs">
+      <DependentUpon>Leaderboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewHandHistory.aspx.cs">
       <DependentUpon>ViewHandHistory.aspx</DependentUpon>
