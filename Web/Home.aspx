@@ -208,7 +208,7 @@
                     <thead>
                         <tr>
                             <th>Game</th>
-                            <th class="text-center">Completed</th>
+                            <th class="text-center">Date</th>
                             <th class="text-center">Score</th>
                             <th class="text-center">Result</th>
                         </tr>
