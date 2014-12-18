@@ -2993,6 +2993,10 @@ namespace WizardGame.Services.Data {
             
             private global::System.Data.DataColumn columnNumWins;
             
+            private global::System.Data.DataColumn columnTotalGames;
+            
+            private global::System.Data.DataColumn columnWinRatio;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public LeaderboardPlayersDataTable() {
@@ -3060,6 +3064,22 @@ namespace WizardGame.Services.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TotalGamesColumn {
+                get {
+                    return this.columnTotalGames;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn WinRatioColumn {
+                get {
+                    return this.columnWinRatio;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -3095,13 +3115,15 @@ namespace WizardGame.Services.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public LeaderboardPlayersRow AddLeaderboardPlayersRow(int PlayerId, string Name, string PictureURL, int NumWins) {
+            public LeaderboardPlayersRow AddLeaderboardPlayersRow(int PlayerId, string Name, string PictureURL, int NumWins, int TotalGames, decimal WinRatio) {
                 LeaderboardPlayersRow rowLeaderboardPlayersRow = ((LeaderboardPlayersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         PlayerId,
                         Name,
                         PictureURL,
-                        NumWins};
+                        NumWins,
+                        TotalGames,
+                        WinRatio};
                 rowLeaderboardPlayersRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowLeaderboardPlayersRow);
                 return rowLeaderboardPlayersRow;
@@ -3128,6 +3150,8 @@ namespace WizardGame.Services.Data {
                 this.columnName = base.Columns["Name"];
                 this.columnPictureURL = base.Columns["PictureURL"];
                 this.columnNumWins = base.Columns["NumWins"];
+                this.columnTotalGames = base.Columns["TotalGames"];
+                this.columnWinRatio = base.Columns["WinRatio"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3141,10 +3165,16 @@ namespace WizardGame.Services.Data {
                 base.Columns.Add(this.columnPictureURL);
                 this.columnNumWins = new global::System.Data.DataColumn("NumWins", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNumWins);
+                this.columnTotalGames = new global::System.Data.DataColumn("TotalGames", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalGames);
+                this.columnWinRatio = new global::System.Data.DataColumn("WinRatio", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnWinRatio);
                 this.columnPlayerId.AllowDBNull = false;
                 this.columnName.MaxLength = 48;
                 this.columnPictureURL.MaxLength = 2147483647;
                 this.columnNumWins.ReadOnly = true;
+                this.columnTotalGames.ReadOnly = true;
+                this.columnWinRatio.ReadOnly = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4324,6 +4354,38 @@ namespace WizardGame.Services.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int TotalGames {
+                get {
+                    try {
+                        return ((int)(this[this.tableLeaderboardPlayers.TotalGamesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalGames\' in table \'LeaderboardPlayers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableLeaderboardPlayers.TotalGamesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal WinRatio {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableLeaderboardPlayers.WinRatioColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'WinRatio\' in table \'LeaderboardPlayers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableLeaderboardPlayers.WinRatioColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsNameNull() {
                 return this.IsNull(this.tableLeaderboardPlayers.NameColumn);
             }
@@ -4356,6 +4418,30 @@ namespace WizardGame.Services.Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetNumWinsNull() {
                 this[this.tableLeaderboardPlayers.NumWinsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTotalGamesNull() {
+                return this.IsNull(this.tableLeaderboardPlayers.TotalGamesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTotalGamesNull() {
+                this[this.tableLeaderboardPlayers.TotalGamesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsWinRatioNull() {
+                return this.IsNull(this.tableLeaderboardPlayers.WinRatioColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetWinRatioNull() {
+                this[this.tableLeaderboardPlayers.WinRatioColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -6614,6 +6700,8 @@ namespace WizardGame.Services.Data.GameTableAdapters {
             tableMapping.ColumnMappings.Add("Name", "Name");
             tableMapping.ColumnMappings.Add("PictureURL", "PictureURL");
             tableMapping.ColumnMappings.Add("NumWins", "NumWins");
+            tableMapping.ColumnMappings.Add("TotalGames", "TotalGames");
+            tableMapping.ColumnMappings.Add("WinRatio", "WinRatio");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

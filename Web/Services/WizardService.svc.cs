@@ -1819,6 +1819,10 @@ namespace WizardGame.Services
                         player.Name = row.Name;
                         player.PictureURL = row.PictureURL;
                         player.NumWins = row.NumWins;
+                        player.TotalGames = row.TotalGames;
+
+                        if(!row.IsWinRatioNull())
+                            player.WinRatio = row.WinRatio;
 
                         // add player to list
                         listLeaderboardPlayers.Add(player);

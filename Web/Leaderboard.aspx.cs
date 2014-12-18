@@ -24,6 +24,12 @@ namespace WizardGame
 
             if (!isValidSession)
             {
+                // current page
+                string currentRequest = Request.RawUrl;
+
+                // set referring page
+                Session["referencePage"] = currentRequest;
+
                 // redirect to login page
                 Response.Redirect("~/Default.aspx?Error=Session is not valid");
             }
@@ -60,9 +66,10 @@ namespace WizardGame
                     }
 
                     html.AppendLine("<tr>");
-                    html.AppendLine("<td style='vertical-align: middle'>" + imgHtml + player.Name + "</td>");
-                    html.AppendLine("<td class='text-center' style='font-size: 16px; font-weight: bold'>" + player.NumWins + "</td>");
-                    html.AppendLine("</tr>");
+                    html.AppendLine("<td style='vertical-align: middle'><strong>" + imgHtml + player.Name + "</strong></td>");
+                    html.AppendLine("<td class='vertical-align: middle text-center' style='font-size: 16px; font-weight: bold'>" + player.NumWins + "</td>");
+                    html.AppendLine("<td class='vertical-align: middle text-center' style='font-size: 16px; font-weight: bold'>" + player.TotalGames + "</td>");
+                    html.AppendLine("<td class='vertical-align: middle text-center' style='font-size: 16px; font-weight: bold'>" + Math.Round(player.WinRatio, 2) + "%</td>");
                 }
             }
             else

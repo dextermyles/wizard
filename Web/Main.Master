@@ -51,11 +51,11 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li id="link-home" class="active"><a href="Default.aspx">Welcome</a></li>
+                    <li id="link-home" class="active"><a href="Default.aspx">Home</a></li>
                     <% if (IsSessionValid())
                        { %>
                     <li id="link-leaderboard" class=""><a href="Leaderboard.aspx">Leaderboard</a></li>
-                    <li id="link-account" class=""><a href="#">My Account</a></li>
+                    <li id="link-account" class=""><a href="Account.aspx">My Account</a></li>
                     <% } // end if %>
                 </ul>
                 <% if (IsSessionValid())

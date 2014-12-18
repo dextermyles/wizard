@@ -21,17 +21,24 @@
                     </strong>
                     <div class="clearfix"></div>
                 </div>
-                <table class="table table-striped table-responsive table-hover hand-history">
+                <table class="table table-striped table-responsive table-hover leaderboard">
                     <thead>
                         <tr>
-                            <th class="">Player</th>
-                            <th class="text-center">Wins</th>
+                            <th style="width: 25%;">Player</th>
+                            <th style="width: 25%;" class="text-center">Wins</th>
+                            <th style="width: 25%;" class="text-center">Games played</th>
+                            <th style="width: 25%;" class="text-center">Win ratio</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%=LeaderboardHtml() %>
                     </tbody>
                 </table>
+                <style type="text/css">
+                    .leaderboard td {
+                        vertical-align: middle !important;
+                    }
+                </style>
                 <div class="panel-footer text-center">
                     <a href="Home.aspx">Back to dashboard</a>
                 </div>

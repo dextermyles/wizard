@@ -25,6 +25,8 @@ namespace WizardGame.Helpers
         public string ConnectionId = string.Empty;
         public ConnectionState ConnectionState = ConnectionState.DISCONNECTED;
         public int NumWins = 0;
+        public int TotalGames = 0;
+        public decimal WinRatio = 0;
 
         public bool HasCards()
         {

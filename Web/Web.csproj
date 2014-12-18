@@ -101,6 +101,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Account.aspx" />
     <Content Include="Assets\Cards\clubs_0.png" />
     <Content Include="Assets\Cards\clubs_10.png" />
     <Content Include="Assets\Cards\clubs_11.png" />
@@ -247,6 +248,13 @@
     <Content Include="Scripts\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account.aspx.cs">
+      <DependentUpon>Account.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account.aspx.designer.cs">
+      <DependentUpon>Account.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_GlobalResources\Language.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

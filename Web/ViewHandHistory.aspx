@@ -13,7 +13,15 @@
                 <div class="panel-heading">
                     <strong>
                         GameID: #<%=GameId %>
-                        <span class="pull-right">Completed on <%=GameData.DateCompleted.Value.ToString("d") %></span>
+                        <span class="pull-right">
+                            Completed on
+                            <%
+                                if (GameData.DateCompleted.HasValue)
+                                    Response.Write(GameData.DateCompleted.Value.ToString("d"));
+                                else
+                                    Response.Write("?");
+                            %>
+                        </span>
                     </strong>
                     <div class="clearfix"></div>
                 </div>
