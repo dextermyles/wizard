@@ -4,7 +4,7 @@
     <script type="text/javascript">
         // execute on dom ready
         $(document).ready(function () {
-            $(".nav li").removeClass("active");
+            $(".navbar-nav li").removeClass("active");
             $("#link-account").addClass("active");
         });
     </script>
