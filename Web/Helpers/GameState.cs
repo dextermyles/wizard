@@ -146,7 +146,7 @@ namespace WizardGame.Helpers
                         return firstWizard;
 
                     // trump exists
-                    if (TrumpCard != null && TrumpCard.Suit != Suit.None)
+                    if (TrumpCard != null && (TrumpCard.Suit != Suit.None && TrumpCard.Suit != Suit.Fluff && TrumpCard.Suit != Suit.Wizard))
                     {
                         // get highest trump
                         var trumpCardList = CardsPlayed.Where(c => c.Suit == TrumpCard.Suit);
@@ -172,10 +172,10 @@ namespace WizardGame.Helpers
                         if (highestCard != null)
                             return highestCard;
                     }
-                    
-                    
+
+
                     // list of fluff cards
-                    var fluffCardList = CardsPlayed.Where(c=>c.Suit == Suit.Fluff);
+                    var fluffCardList = CardsPlayed.Where(c => c.Suit == Suit.Fluff);
 
                     // fluff list exists and matches num cards played
                     if (fluffCardList != null && fluffCardList.Count() == CardsPlayed.Length)
